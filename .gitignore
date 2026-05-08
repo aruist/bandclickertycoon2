@@ -1,0 +1,97 @@
+# Third party packages
+Assets/Synty/
+Assets/SimpleRacer/
+Assets/SimpleApocalypse/
+
+# Unity build and cache folders
+/Library/
+/Temp/
+/Obj/
+/Build/
+/Builds/
+/Logs/
+/UserSettings/
+/MemoryCaptures/
+/obj/
+/.utmp/*
+/SerializedBuildInfo/
+
+# Package and plugin caches
+/Packages/packages-lock.json
+/Packages/packages-lock.json.meta
+/Packages/com.unity.collab-proxy/
+/Assets/AssetStoreTools*
+/Assets/StreamingAssets/*
+
+# IDE-generated
+/.vs/
+/.idea/
+/.vscode/
+/*.csproj
+/*.sln
+/*.user
+/*.userprefs
+/*.slnx
+nameTranslation.txt
+RegisterIcalls.cpp
+contributors.txt
+
+# Auto-generated project files
+/*.pidb
+/*.booproj
+/*.unityproj
+/*.svd
+/*.pdb
+/*.mdb
+/*.opendb
+
+# Burst/AOT
+*/burst.debuginformation/
+
+# Platform-specific
+*.apk
+*.aab
+*.obb
+*.ipa
+*.ds_store
+
+# Logs and crash dumps
+*.log
+*.stacktrace
+*.memcap
+*.dmp
+
+# Rider / JetBrains
+/.idea/
+*.sln.iml
+
+# Generated lighting/nav/mesh data (kept via meta files if needed)
+/**/*.navmesh
+/**/*.nmf
+/**/*.obj
+/**/*.fbx
+/**/*.blend1
+
+# Addressables/Streaming cache
+/ServerData/
+/LocalPackages/
+/AssetBundles/
+
+# Visual Scripting generated
+/Library/VisualScript*/Generated*/
+
+/Assets/_Recovery*
+mono_crash*.json
+/Assets/AssetInventory/
+/Assets/PolygonMiniFantasy/
+/Assets/PolygonMiniFantasy.meta
+/Assets/Low_Poly_Environment_World.meta
+/Assets/Low_Poly_Environment_World/
+/Assets/MeshBaker.meta
+/Assets/MeshBaker/
+Assets/Mesh Optimizer.meta
+Assets/Mesh Optimizer/
+Screenshots/
+mono_crash*
+*.af~lock~
+Recordings/

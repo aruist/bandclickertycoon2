@@ -1,0 +1,434 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<gamedata>
+  <StartingBalance>5</StartingBalance>
+  <CompanyName>Barnstorm Inc</CompanyName>
+  <GameName>The Dry Blossom</GameName>
+  <ShareHolderBonusPercent>0.02</ShareHolderBonusPercent>
+  <NumberOfStores>10</NumberOfStores>
+  <FirstStoreCount>0</FirstStoreCount>
+  <StartingCost>1</StartingCost>
+  <StartingTimer>6</StartingTimer>
+  <StartingProfit>5</StartingProfit>
+  <StartingManagerCost>1000</StartingManagerCost>
+  <StartingCostFactor>8</StartingCostFactor>
+  <StartingTimerFactor>6</StartingTimerFactor>
+  <StartingProfitFactor>4</StartingProfitFactor>
+  <StartingManagerFactor>15</StartingManagerFactor>
+  <StoreMultiplier>1.07</StoreMultiplier>
+  <StoreTimerDivision>25</StoreTimerDivision>
+  <UpgradesPerStore>5</UpgradesPerStore>
+  <UpgradeBaseFactor>50000</UpgradeBaseFactor>
+  <UpgradeCostMultiplierFactor>1.15</UpgradeCostMultiplierFactor>
+  <UpgradeMultiplier>3</UpgradeMultiplier>
+  <store>
+    <id>1</id>
+    <name>Groundhog Global</name>
+    <image>Office_building_icon</image>
+    <BaseStoreCost>1</BaseStoreCost>
+    <BaseStoreProfit>5</BaseStoreProfit>
+    <StoreTimer>6</StoreTimer>
+    <StoreMultiplier>1.07</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>1000</ManagerCost>
+      <ManagerName>Rocco Fogle</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Implement A Explicit Technical Writer Training Program</UpgradeName>
+        <UpgradeCost>57500</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Win A 2 Year Definition Contract With The City Of Drachten</UpgradeName>
+        <UpgradeCost>115000</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Utilize Axles For Configurable National Knowledge Base</UpgradeName>
+        <UpgradeCost>172500</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Logistical Store Decentralized Non-Volatile Utilisation</UpgradeName>
+        <UpgradeCost>230000</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Win A 3 Year Networked Contract With The City Of Lins</UpgradeName>
+        <UpgradeCost>287500</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>2</id>
+    <name>Live! Inland Technologies!</name>
+    <image>NLite_Logo</image>
+    <StorePrefab>StorePrefab_alt</StorePrefab>
+    <BaseStoreCost>8</BaseStoreCost>
+    <BaseStoreProfit>20</BaseStoreProfit>
+    <StoreTimer>12</StoreTimer>
+    <StoreMultiplier>1.07</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>15000</ManagerCost>
+      <ManagerName>Selene Babbitt</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Aquire A Throughput Patent From Fay Inc</UpgradeName>
+        <UpgradeCost>460000</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Win A 3 Year Sharable Contract With The City Of Tangkolo</UpgradeName>
+        <UpgradeCost>920000</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>New Customizable Product Design From Chad</UpgradeName>
+        <UpgradeCost>1380000</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Utilize Trade Shows For Mandatory Leading Edge Function</UpgradeName>
+        <UpgradeCost>1840000</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Import Stand-Alone Responsive Workforce From ?Ar?B</UpgradeName>
+        <UpgradeCost>2300000</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>3</id>
+    <name>Green Orange</name>
+    <image>news</image>
+    <BaseStoreCost>64</BaseStoreCost>
+    <BaseStoreProfit>80</BaseStoreProfit>
+    <StoreTimer>24</StoreTimer>
+    <StoreMultiplier>1.07</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>225000</ManagerCost>
+      <ManagerName>Bernie Rapier</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Recruit a implementation Account Coordinator</UpgradeName>
+        <UpgradeCost>3680000</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Import Extended Full-Range Collaboration From Kopen</UpgradeName>
+        <UpgradeCost>7360000</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>New Bandwidth-Monitored Product Design From Russia</UpgradeName>
+        <UpgradeCost>1.104E+07</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Implement A Eco-Centric Technical Writer Training Program</UpgradeName>
+        <UpgradeCost>1.472E+07</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Recruit a system engine Programmer II</UpgradeName>
+        <UpgradeCost>1.84E+07</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>4</id>
+    <name>Reporter Mix</name>
+    <image>shop</image>
+    <BaseStoreCost>512</BaseStoreCost>
+    <BaseStoreProfit>320</BaseStoreProfit>
+    <StoreTimer>48</StoreTimer>
+    <StoreMultiplier>1.07</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>3375000</ManagerCost>
+      <ManagerName>Colton Mcmahan</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Recruit a approach Financial Analyst</UpgradeName>
+        <UpgradeCost>2.944E+07</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Utilize Ucos For Profound Bandwidth-Monitored Capability</UpgradeName>
+        <UpgradeCost>5.888E+07</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Digitized Store Universal Zero Administration Installation</UpgradeName>
+        <UpgradeCost>8.832E+07</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>New Complexity Product Design From Samoa</UpgradeName>
+        <UpgradeCost>1.1776E+08</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Implement A Hub Assistant Professor Training Program</UpgradeName>
+        <UpgradeCost>1.472E+08</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>5</id>
+    <name>Imagine</name>
+    <image>semiconductor</image>
+    <BaseStoreCost>4096</BaseStoreCost>
+    <BaseStoreProfit>1280</BaseStoreProfit>
+    <StoreTimer>96</StoreTimer>
+    <StoreMultiplier>1.07</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>5.0625E+07</ManagerCost>
+      <ManagerName>Galen Homan</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Recruit a optimal Nuclear Power Engineer</UpgradeName>
+        <UpgradeCost>2.3552E+08</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Aquire A Secondary Patent From Gleichner-Thiel</UpgradeName>
+        <UpgradeCost>4.7104E+08</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Recruit a Customizable Administrative Officer</UpgradeName>
+        <UpgradeCost>7.0656E+08</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Aquire A Customer Loyalty Patent From Bashirian Llc</UpgradeName>
+        <UpgradeCost>9.4208E+08</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Solution-Oriented Business Redesign</UpgradeName>
+        <UpgradeCost>1.1776E+09</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>6</id>
+    <name>Blue Focus Inc</name>
+    <image>sciencelab</image>
+    <BaseStoreCost>32768</BaseStoreCost>
+    <BaseStoreProfit>5120</BaseStoreProfit>
+    <StoreTimer>192</StoreTimer>
+    <StoreMultiplier>1.07</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>7.59375E+08</ManagerCost>
+      <ManagerName>Contessa Atchinson</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Methodology Store Inverse Background Budgetary Management</UpgradeName>
+        <UpgradeCost>1.88416E+09</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Support Store Networked Background Hierarchy</UpgradeName>
+        <UpgradeCost>3.76832E+09</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Capability Business Redesign</UpgradeName>
+        <UpgradeCost>5.65248E+09</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>New Synergistic Product Design From China</UpgradeName>
+        <UpgradeCost>7.53664E+09</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Win A 4 Year Transitional Contract With The City Of Dayton</UpgradeName>
+        <UpgradeCost>9.4208E+09</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>7</id>
+    <name>Flying Pine LLC</name>
+    <image>tea</image>
+    <BaseStoreCost>262144</BaseStoreCost>
+    <BaseStoreProfit>20480</BaseStoreProfit>
+    <StoreTimer>384</StoreTimer>
+    <StoreMultiplier>1.07</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>1.139062E+10</ManagerCost>
+      <ManagerName>Sherron Bisbee</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Utilize Ods For Realigned Multi-State Strategy</UpgradeName>
+        <UpgradeCost>1.507328E+10</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Import Cloned Client-Driven Frame From General Villegas</UpgradeName>
+        <UpgradeCost>3.014656E+10</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Recruit a multimedia Civil Engineer</UpgradeName>
+        <UpgradeCost>4.521984E+10</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Create Synergistic Transitional Interface In Russia</UpgradeName>
+        <UpgradeCost>6.029312E+10</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Service-Desk Store Cloned Cohesive Moratorium</UpgradeName>
+        <UpgradeCost>7.53664E+10</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>8</id>
+    <name>New Dream Inc</name>
+    <image>Tapiture_Logo_Mark</image>
+    <BaseStoreCost>2097152</BaseStoreCost>
+    <BaseStoreProfit>81920</BaseStoreProfit>
+    <StoreTimer>768</StoreTimer>
+    <StoreMultiplier>1.07</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>1.708594E+11</ManagerCost>
+      <ManagerName>Nanci Davin</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Utilize Qigong For Secured Radical Projection</UpgradeName>
+        <UpgradeCost>1.205862E+11</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>New Holistic Product Design From Ghana</UpgradeName>
+        <UpgradeCost>2.411725E+11</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Import Sharable Didactic Policy From Basseterre</UpgradeName>
+        <UpgradeCost>3.617587E+11</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Manipulate Multi-Tiered Motivating Task-Force In Russia</UpgradeName>
+        <UpgradeCost>4.82345E+11</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Steal Distributed Eco-Centric Collaboration In Nigeria</UpgradeName>
+        <UpgradeCost>6.029312E+11</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>9</id>
+    <name>Reunion Systems</name>
+    <image>Tango_Style_Mushroom</image>
+    <BaseStoreCost>1.677722E+07</BaseStoreCost>
+    <BaseStoreProfit>327680</BaseStoreProfit>
+    <StoreTimer>1536</StoreTimer>
+    <StoreMultiplier>1.07</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>2.56289E+12</ManagerCost>
+      <ManagerName>Lavera Fullilove</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Implement A Software Vp Quality Control Training Program</UpgradeName>
+        <UpgradeCost>9.646899E+11</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Empowering Business Redesign</UpgradeName>
+        <UpgradeCost>1.92938E+12</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Conglomeration Store Grass-Roots Full-Range Task-Force</UpgradeName>
+        <UpgradeCost>2.89407E+12</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Win A 5 Year Executive Contract With The City Of Huangyan</UpgradeName>
+        <UpgradeCost>3.85876E+12</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Create Devolved Mobile Matrices In Indonesia</UpgradeName>
+        <UpgradeCost>4.82345E+12</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>10</id>
+    <name>Silver Rascal</name>
+    <image>Joomla_Shiny_Icon</image>
+    <BaseStoreCost>1.342177E+08</BaseStoreCost>
+    <BaseStoreProfit>1310720</BaseStoreProfit>
+    <StoreTimer>3072</StoreTimer>
+    <StoreMultiplier>1.07</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>3.844335E+13</ManagerCost>
+      <ManagerName>Selena Dahlke</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Adaptive Store Reduced Encompassing Benchmark</UpgradeName>
+        <UpgradeCost>7.717519E+12</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Recruit a protocol Financial Analyst</UpgradeName>
+        <UpgradeCost>1.543504E+13</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Utilize Jreport For Networked Background Installation</UpgradeName>
+        <UpgradeCost>2.315256E+13</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Aquire A Knowledge Base Patent From Miller-Glover</UpgradeName>
+        <UpgradeCost>3.087008E+13</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Import Monitored Motivating Strategy From Meixi</UpgradeName>
+        <UpgradeCost>3.85876E+13</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+</gamedata>

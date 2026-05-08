@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 744.09448819 1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="arkku_1.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="396.11846"
+     inkscape:cy="626.3871"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1187"
+     inkscape:window-height="895"
+     inkscape:window-x="506"
+     inkscape:window-y="53"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#ffff00;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       d="M 282.72656 127.66016 C 192.46954 125.8801 155.16374 240.51316 164.28516 278.07617 L 244.07617 317.44336 L 244.28516 309.50586 C 264.98979 313.15405 286.22529 321.3098 308.27539 336.39453 L 308.08789 349.02539 L 380 384.50586 C 371.89054 345.716 400.73828 246.53417 497.85742 230.21875 L 296.42773 128.79102 C 291.73194 128.11732 287.16543 127.7477 282.72656 127.66016 z M 510.80469 244.31641 C 498.3509 244.47538 483.31547 248.9976 466.42773 256.64844 C 405.89266 295.88551 394.60755 339.60013 396.42773 384.50586 L 548.57227 308.79102 C 550.98317 261.95572 536.30529 243.99088 510.80469 244.31641 z M 162.85742 295.21875 L 164.28516 446.64844 L 380 553.79102 L 380 402.36133 L 307.82617 366.75 L 307.52539 387.10938 L 271.21875 386.09961 L 242.85742 363.79102 L 243.61328 335.06445 L 162.85742 295.21875 z M 547.50195 328.08203 L 398 401.82422 L 396.99023 553.34766 L 547.50195 478.5957 L 547.50195 328.08203 z "
+       id="path4153"
+       inkscape:export-xdpi="54.0653"
+       inkscape:export-ydpi="54.0653"
+       inkscape:export-filename="C:\Projects\Unity5\RaceClicker\Assets\ClickerBase\Graphics\RallyUI\arkku_1.png" />
+  </g>
+</svg>

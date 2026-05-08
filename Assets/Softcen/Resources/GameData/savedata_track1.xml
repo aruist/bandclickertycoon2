@@ -1,0 +1,444 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<gamedata>
+  <StartingBalance>1</StartingBalance>
+  <CompanyName>Big Biz</CompanyName>
+  <GameName>The Dry Blossom</GameName>
+  <ShareHolderBonusPercent>0.02</ShareHolderBonusPercent>
+  <StorePrefab>StorePrefab</StorePrefab>
+  <NumberOfStores>10</NumberOfStores>
+  <FirstStoreCount>0</FirstStoreCount>
+  <StartingCost>1</StartingCost>
+  <StartingTimer>5</StartingTimer>
+  <StartingProfit>0.3</StartingProfit>
+  <StartingManagerCost>100</StartingManagerCost>
+  <StartingCostFactor>4.15</StartingCostFactor>
+  <StartingTimerFactor>1.8</StartingTimerFactor>
+  <StartingProfitFactor>4.05</StartingProfitFactor>
+  <StartingManagerFactor>8</StartingManagerFactor>
+  <StoreMultiplier>1.15</StoreMultiplier>
+  <StoreTimerDivision>25</StoreTimerDivision>
+  <UpgradesPerStore>5</UpgradesPerStore>
+  <UpgradeBaseFactor>5</UpgradeBaseFactor>
+  <UpgradeCostMultiplierFactor>1.5</UpgradeCostMultiplierFactor>
+  <UpgradeMultiplier>3</UpgradeMultiplier>
+  <store>
+    <id>1</id>
+    <name>Arch Global</name>
+    <StorePrefab>StorePrefab</StorePrefab>
+    <image>circus</image>
+    <BaseStoreCost>1</BaseStoreCost>
+    <BaseStoreProfit>0.3</BaseStoreProfit>
+    <StoreTimer>5</StoreTimer>
+    <StoreMultiplier>1.15</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>100</ManagerCost>
+      <ManagerName>Lan Masuda</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Bulldog Inc</UpgradeName>
+        <UpgradeCost>7.5</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Swoggle Works</UpgradeName>
+        <UpgradeCost>15</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Scoop Inc</UpgradeName>
+        <UpgradeCost>22.5</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Crisp Inc</UpgradeName>
+        <UpgradeCost>30</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Noah's Ark Inc</UpgradeName>
+        <UpgradeCost>37.5</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>2</id>
+    <name>Crisp Inc</name>
+    <StorePrefab>StorePrefab</StorePrefab>
+    <image>Joomla_Shiny_Icon</image>
+    <BaseStoreCost>4.15</BaseStoreCost>
+    <BaseStoreProfit>1.215</BaseStoreProfit>
+    <StoreTimer>9</StoreTimer>
+    <StoreMultiplier>1.15</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>800</ManagerCost>
+      <ManagerName>Coleen Faison</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Hotspur Autos</UpgradeName>
+        <UpgradeCost>31.125</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Thunderbolt Works</UpgradeName>
+        <UpgradeCost>62.25</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Black Punkies</UpgradeName>
+        <UpgradeCost>93.375</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Icebox</UpgradeName>
+        <UpgradeCost>124.5</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Blue Luna Worldwide</UpgradeName>
+        <UpgradeCost>155.625</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>3</id>
+    <name>Noah's Ark Inc</name>
+    <StorePrefab>StorePrefab</StorePrefab>
+    <image>Spike-aufkleber</image>
+    <BaseStoreCost>17.2225</BaseStoreCost>
+    <BaseStoreProfit>4.920751</BaseStoreProfit>
+    <StoreTimer>16.2</StoreTimer>
+    <StoreMultiplier>1.15</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>6400</ManagerCost>
+      <ManagerName>Jesusita Trace</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Main Parable</UpgradeName>
+        <UpgradeCost>129.1687</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Comfort Zone Systems</UpgradeName>
+        <UpgradeCost>258.3375</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Snapdragon International</UpgradeName>
+        <UpgradeCost>387.5063</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Grassoline Industries</UpgradeName>
+        <UpgradeCost>516.675</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Barnstorm Inc</UpgradeName>
+        <UpgradeCost>645.8438</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>4</id>
+    <name>Climax Flux</name>
+    <StorePrefab>StorePrefab</StorePrefab>
+    <image>tea</image>
+    <BaseStoreCost>71.47337</BaseStoreCost>
+    <BaseStoreProfit>19.92904</BaseStoreProfit>
+    <StoreTimer>29.16</StoreTimer>
+    <StoreMultiplier>1.15</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>51200</ManagerCost>
+      <ManagerName>Deangelo Slocumb</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Flying Pine LLC</UpgradeName>
+        <UpgradeCost>536.0503</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Humbug Inc</UpgradeName>
+        <UpgradeCost>1072.101</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Green Talkabout Inc</UpgradeName>
+        <UpgradeCost>1608.151</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Gold Cross Cut Factory</UpgradeName>
+        <UpgradeCost>2144.201</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Bubble Worldwide</UpgradeName>
+        <UpgradeCost>2680.251</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>5</id>
+    <name>Red Bandstand Technologies</name>
+    <StorePrefab>StorePrefab</StorePrefab>
+    <image>hammerscrewdriver</image>
+    <BaseStoreCost>296.6145</BaseStoreCost>
+    <BaseStoreProfit>80.71262</BaseStoreProfit>
+    <StoreTimer>52.488</StoreTimer>
+    <StoreMultiplier>1.15</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>409600</ManagerCost>
+      <ManagerName>Lilia Brigman</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Velocity Services</UpgradeName>
+        <UpgradeCost>2224.609</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Flyway Works</UpgradeName>
+        <UpgradeCost>4449.218</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Bolero International</UpgradeName>
+        <UpgradeCost>6673.826</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>The Fantastic Fire</UpgradeName>
+        <UpgradeCost>8898.436</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Oodles Inc</UpgradeName>
+        <UpgradeCost>11123.04</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>6</id>
+    <name>Lava Dome Services</name>
+    <StorePrefab>StorePrefab</StorePrefab>
+    <image>sciencelab</image>
+    <BaseStoreCost>1230.95</BaseStoreCost>
+    <BaseStoreProfit>326.8861</BaseStoreProfit>
+    <StoreTimer>94.47839</StoreTimer>
+    <StoreMultiplier>1.15</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>3276800</ManagerCost>
+      <ManagerName>Romaine Madere</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Red Bandstand Technologies</UpgradeName>
+        <UpgradeCost>9232.127</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Silver Groundhog</UpgradeName>
+        <UpgradeCost>18464.25</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Bullet Inc</UpgradeName>
+        <UpgradeCost>27696.38</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Key Grip Inc</UpgradeName>
+        <UpgradeCost>36928.51</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Green Gamma</UpgradeName>
+        <UpgradeCost>46160.63</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>7</id>
+    <name>Fireside Consulting</name>
+    <StorePrefab>StorePrefab</StorePrefab>
+    <image>videostore</image>
+    <BaseStoreCost>5108.443</BaseStoreCost>
+    <BaseStoreProfit>1323.889</BaseStoreProfit>
+    <StoreTimer>170.0611</StoreTimer>
+    <StoreMultiplier>1.15</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>2.62144E+07</ManagerCost>
+      <ManagerName>Deena Gusler</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Bug International</UpgradeName>
+        <UpgradeCost>38313.32</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Jumping Octopus</UpgradeName>
+        <UpgradeCost>76626.65</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Imagine</UpgradeName>
+        <UpgradeCost>114940</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Quartermaster Works</UpgradeName>
+        <UpgradeCost>153253.3</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Reckon Technologies</UpgradeName>
+        <UpgradeCost>191566.6</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>8</id>
+    <name>Dandelion Factory</name>
+    <StorePrefab>StorePrefab</StorePrefab>
+    <image>Saturn_icon</image>
+    <BaseStoreCost>21200.04</BaseStoreCost>
+    <BaseStoreProfit>5361.75</BaseStoreProfit>
+    <StoreTimer>306.11</StoreTimer>
+    <StoreMultiplier>1.15</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>2.097152E+08</ManagerCost>
+      <ManagerName>Genia Mohney</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Scribble Flux</UpgradeName>
+        <UpgradeCost>159000.3</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Silver Rascal</UpgradeName>
+        <UpgradeCost>318000.6</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Groove Systems</UpgradeName>
+        <UpgradeCost>477000.9</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Gold Zocolo</UpgradeName>
+        <UpgradeCost>636001.3</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Green Nana Flux</UpgradeName>
+        <UpgradeCost>795001.6</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>9</id>
+    <name>Gold Cross Cut Factory</name>
+    <StorePrefab>StorePrefab</StorePrefab>
+    <image>snow</image>
+    <BaseStoreCost>87980.17</BaseStoreCost>
+    <BaseStoreProfit>21715.09</BaseStoreProfit>
+    <StoreTimer>550.9979</StoreTimer>
+    <StoreMultiplier>1.15</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>1.677722E+09</ManagerCost>
+      <ManagerName>Ashely Cater</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Dado Flux</UpgradeName>
+        <UpgradeCost>659851.3</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Jumping Thermo Inc</UpgradeName>
+        <UpgradeCost>1319703</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Dutch Nickel Flux</UpgradeName>
+        <UpgradeCost>1979554</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Flying Popgut</UpgradeName>
+        <UpgradeCost>2639405</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Live Fuel</UpgradeName>
+        <UpgradeCost>3299257</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+  <store>
+    <id>10</id>
+    <name>Hair Glare </name>
+    <StorePrefab>StorePrefab</StorePrefab>
+    <image>wifi</image>
+    <BaseStoreCost>365117.7</BaseStoreCost>
+    <BaseStoreProfit>87946.11</BaseStoreProfit>
+    <StoreTimer>991.7963</StoreTimer>
+    <StoreMultiplier>1.15</StoreMultiplier>
+    <StoreTimerDivision>25</StoreTimerDivision>
+    <Manager>
+      <ManagerCost>1.342177E+10</ManagerCost>
+      <ManagerName>Veta Avera</ManagerName>
+    </Manager>
+    <Upgrades>
+      <Upgrade>
+        <UpgradeName>Downstream Systems</UpgradeName>
+        <UpgradeCost>2738383</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Hopster Systems</UpgradeName>
+        <UpgradeCost>5476766</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Black Mammoth Inc</UpgradeName>
+        <UpgradeCost>8215149</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Far Point Inc</UpgradeName>
+        <UpgradeCost>1.095353E+07</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+      <Upgrade>
+        <UpgradeName>Treasury Systems</UpgradeName>
+        <UpgradeCost>1.369191E+07</UpgradeCost>
+        <UpgradeMultiplier>3</UpgradeMultiplier>
+      </Upgrade>
+    </Upgrades>
+  </store>
+</gamedata>

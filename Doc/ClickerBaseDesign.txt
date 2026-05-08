@@ -1,0 +1,58 @@
+------------------------------------------------------------------
+You earned 100% of vault capacity
+while you were gone
+You earned
+1 million
+while you were gone
+
+------------------------------------------------------------------
+keRrOIn.OnkeRrOInMuuTTUnut
+kun kerroin on muuttunut
+
+------------------------------------------------------------------
+OnMultiplyChanged
+Ostetaanko 1 / 10 / 50
+pELiNhaLLitSIJa.Multiply
+------------------------------------------------------------------
+places[i]. GetProfitPerSec()
+
+Profit changes:
+- purchase item
+- kerroin osto
+- bonus multiplier
+
+
+
+Improvements items: Invest in improvements to earn bigger profits at faster rates!
+
+Purchase new and better xxx to finally claim your place ont the xxx.
+
+Profit: Profit will provide 2x, 3x or 4x multiplier bonus for all of your profits for 
+		a limited time.
+
+Boosts: can be purchased to instantly improve the profitability of your xxx.
+		- Multiplier +3x Profit Multiplier
+		- 7 Day Skip. Skip 7 days into the future
+		- Improvement Wheel. Wheel multipliers increased by 1
+		
+
+Upgrades: can be purchased to further improve the income of your xxx. 
+		  Each upgrade will improve specific xxx of xxx your xxx empire.
+
+
+Item Categories:
+
+1. Groundwork
+2. Track
+3. Lighting
+4. Pitstop
+5. Props
+6. Stadium
+7. Staff
+8. Environment
+9. Vehicles
+10. Racing
+
+----------------------------------------------------------------------------------
+
+Idle money double with AD
