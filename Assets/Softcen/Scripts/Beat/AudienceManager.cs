@@ -54,11 +54,62 @@ public class AudienceManager : MonoBehaviour
 
     private void Awake()
     {
+        SpawnAudienceFromPrefabs();
+
         if (members == null || members.Length == 0)
-            members = GetComponentsInChildren<AudienceMember>();
+            members = audienceFloor.GetComponentsInChildren<AudienceMember>();
 
         ConfigurePoseFamilies();
         ConfigureInstancedRendering();
+    }
+
+    private void SpawnAudienceFromPrefabs()
+    {
+        if (!Application.isPlaying)
+            return;
+
+        if (audiencePrefabs == null || audiencePrefabs.Length == 0 || audienceSize <= 0 || audienceFloor == null)
+            return;
+
+        Bounds localBounds = GetAudienceFloorLocalBounds();
+        float floorY = localBounds.center.y;
+        float floorYaw = audienceFloor.rotation.eulerAngles.y;
+
+        for (int i = 0; i < audienceSize; i++)
+        {
+            GameObject prefab = audiencePrefabs[Random.Range(0, audiencePrefabs.Length)];
+            if (prefab == null)
+                continue;
+
+            float localX = Random.Range(localBounds.min.x, localBounds.max.x);
+            float localZ = Random.Range(localBounds.min.z, localBounds.max.z);
+            Vector3 localPosition = new Vector3(localX, floorY, localZ);
+            Quaternion spawnRotation = Quaternion.Euler(0f, floorYaw, 0f);
+
+            Instantiate(prefab, audienceFloor.TransformPoint(localPosition), spawnRotation, audienceFloor);
+        }
+    }
+
+    private Bounds GetAudienceFloorLocalBounds()
+    {
+        MeshFilter meshFilter = audienceFloor.GetComponent<MeshFilter>();
+        if (meshFilter != null && meshFilter.sharedMesh != null)
+            return meshFilter.sharedMesh.bounds;
+
+        Collider floorCollider = audienceFloor.GetComponent<Collider>();
+        if (floorCollider != null)
+        {
+            Vector3 centerLocal = audienceFloor.InverseTransformPoint(floorCollider.bounds.center);
+            Vector3 extentsWorld = floorCollider.bounds.extents;
+            Vector3 extentsLocal = new Vector3(
+                Mathf.Abs(extentsWorld.x / Mathf.Max(0.0001f, audienceFloor.lossyScale.x)),
+                Mathf.Abs(extentsWorld.y / Mathf.Max(0.0001f, audienceFloor.lossyScale.y)),
+                Mathf.Abs(extentsWorld.z / Mathf.Max(0.0001f, audienceFloor.lossyScale.z)));
+
+            return new Bounds(centerLocal, extentsLocal * 2f);
+        }
+
+        return new Bounds(Vector3.zero, Vector3.one);
     }
 
     private void LateUpdate()
