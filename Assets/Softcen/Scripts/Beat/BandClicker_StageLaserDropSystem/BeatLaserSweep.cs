@@ -29,7 +29,6 @@ public class BeatLaserSweep : MonoBehaviour
     [SerializeField] private Transform target;
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private Renderer quadRenderer;
-    [SerializeField] private Camera facingCamera;
 
     [Header("Color Sync")]
     [SerializeField] private bool useSongColorSync = true;
@@ -53,11 +52,8 @@ public class BeatLaserSweep : MonoBehaviour
     [SerializeField] private float visibleAlphaThreshold = 0.005f;
 
     [Header("Quad Mesh Settings")]
-    [Tooltip("For a Unity Quad, keep this ON. Local X = width, local Y = length.")]
-    [SerializeField] private bool scaleQuadToBeamLength = true;
-
-    [Tooltip("Makes the quad face the camera while its local Y follows the laser direction.")]
-    [SerializeField] private bool billboardQuadToCamera = true;
+    [Tooltip("For cube mesh workflow, keep this OFF and author beam length in the mesh scale.")]
+    [SerializeField] private bool scaleQuadToBeamLength = false;
 
     [Tooltip("Small offset to prevent z-fighting if the quad is close to stage surfaces.")]
     [SerializeField] private float quadForwardOffset = 0.0f;
@@ -75,20 +71,17 @@ public class BeatLaserSweep : MonoBehaviour
 
     private MaterialPropertyBlock mpb;
     private int colorPropertyId;
-    private static readonly int BuiltInColorId = Shader.PropertyToID("_Color");
+    private static readonly int BuiltInColorId = Shader.PropertyToID("_BaseColor");
 
     private Quaternion baseRotation;
     private float pulse;
     private float jitter;
     private float randomPhase;
-    private Vector3 initialQuadScale;
-    private Vector3 initialPosition;
 
     private void Reset()
     {
         lineRenderer = GetComponent<LineRenderer>();
         quadRenderer = GetComponent<Renderer>();
-        facingCamera = Camera.main;
     }
 
     private void Awake()
@@ -97,10 +90,9 @@ public class BeatLaserSweep : MonoBehaviour
             lineRenderer = GetComponent<LineRenderer>();
 
         if (quadRenderer == null)
+        {
             quadRenderer = GetComponent<Renderer>();
-
-        if (facingCamera == null)
-            facingCamera = Camera.main;
+        }
 
         mpb = new MaterialPropertyBlock();
         colorPropertyId = Shader.PropertyToID(colorPropertyName);
@@ -117,8 +109,6 @@ public class BeatLaserSweep : MonoBehaviour
         {
             quadRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             quadRenderer.receiveShadows = false;
-            initialQuadScale = quadRenderer.transform.localScale;
-            initialPosition = transform.localPosition;
         }
 
         baseRotation = transform.rotation;
@@ -156,11 +146,7 @@ public class BeatLaserSweep : MonoBehaviour
         if (renderMode == LaserRenderMode.LineRenderer)
             UpdateLineRenderer(start, end, width, visible);
         else
-        {
-            start = initialPosition;
-            end = GetBeamEnd(start);
             UpdateQuadMesh(start, end, width, visible);
-        }
 
         ApplyColor(GetCurrentColor(), alpha);
     }
@@ -211,44 +197,19 @@ public class BeatLaserSweep : MonoBehaviour
 
         quadRenderer.enabled = visible;
 
-        Vector3 direction = end - start;
-        float length = direction.magnitude;
+        // Transform quadTransform = quadRenderer.transform;
+        // quadTransform.position = start;
+        // quadTransform.rotation = transform.rotation;
 
-        if (length <= 0.0001f)
-            return;
+        // if (quadForwardOffset != 0f)
+        //     quadTransform.position += quadTransform.forward * quadForwardOffset;
 
-        direction /= length;
-
-        Transform quadTransform = quadRenderer.transform;
-        quadTransform.position = (start + end) * 0.5f;
-
-        if (billboardQuadToCamera)
-        {
-            Vector3 forward;
-
-            if (facingCamera != null)
-                forward = -facingCamera.transform.forward;
-            else
-                forward = Vector3.forward;
-
-            // Avoid invalid rotation if camera forward is almost parallel with beam direction.
-            if (Mathf.Abs(Vector3.Dot(forward.normalized, direction)) > 0.98f)
-                forward = Vector3.Cross(direction, Vector3.right).sqrMagnitude > 0.001f
-                    ? Vector3.Cross(direction, Vector3.right)
-                    : Vector3.Cross(direction, Vector3.up);
-
-            quadTransform.rotation = Quaternion.LookRotation(forward, direction);
-        }
-        else
-        {
-            quadTransform.rotation = Quaternion.LookRotation(transform.forward, direction);
-        }
-
-        if (quadForwardOffset != 0f)
-            quadTransform.position += quadTransform.forward * quadForwardOffset;
-
-        if (scaleQuadToBeamLength)
-            quadTransform.localScale = new Vector3(width, length, initialQuadScale.z == 0f ? 1f : initialQuadScale.z);
+        // if (scaleQuadToBeamLength)
+        // {
+        //     float length = Vector3.Distance(start, end);
+        //     Vector3 scale = quadTransform.localScale;
+        //     quadTransform.localScale = new Vector3(width, scale.y, length);
+        // }
     }
 
     private Color GetCurrentColor()
@@ -258,6 +219,13 @@ public class BeatLaserSweep : MonoBehaviour
 
         return fallbackColor;
     }
+
+    // private void ApplyColor(Color color, Renderer renderer)
+    // {
+    //     if (renderer == null) return;
+    //     renderer.material.color = color;
+
+    // }
 
     private void ApplyColor(Color color, float alpha)
     {
