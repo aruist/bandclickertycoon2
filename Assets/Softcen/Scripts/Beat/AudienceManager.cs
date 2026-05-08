@@ -17,6 +17,7 @@ public class AudienceManager : MonoBehaviour
     [SerializeField] private bool useInstancedRendering = true;
     [SerializeField] private GameObject[] audiencePrefabs;
     [SerializeField] private int audienceSize;
+    [SerializeField] private Transform audienceFloor;
 
     [Header("Pose Families")]
     [Tooltip("For a 4x4 atlas where rows are pose groups and columns are personality variants.")]
