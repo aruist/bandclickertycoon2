@@ -3,7 +3,10 @@ using UnityEngine;
 
 public class AudienceManager : MonoBehaviour
 {
+    private const int MaxInstancesPerDraw = 1023;
+
     [SerializeField] private AudienceMember[] members;
+    [SerializeField] private bool useInstancedRendering = true;
 
     [Header("Pose Groups")]
     [SerializeField] private int[] idleFrames = { 0, 5, 10, 14 };
@@ -12,11 +15,30 @@ public class AudienceManager : MonoBehaviour
     [SerializeField] private int[] waveFrames = { 4, 6, 13, 15 };
 
     private readonly List<AudienceMember> tempMembers = new();
+    private readonly Matrix4x4[] matrices = new Matrix4x4[MaxInstancesPerDraw];
+    private readonly Vector4[] atlasSTs = new Vector4[MaxInstancesPerDraw];
+
+    private static readonly int BaseMap = Shader.PropertyToID("_BaseMap");
+    private static readonly int MainTex = Shader.PropertyToID("_MainTex");
+    private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
+    private static readonly int ColorId = Shader.PropertyToID("_Color");
+    private static readonly int AudienceAtlasST = Shader.PropertyToID("_AudienceAtlasST");
+
+    private Mesh instancedMesh;
+    private Material instancedMaterial;
+    private MaterialPropertyBlock instancedBlock;
 
     private void Awake()
     {
         if (members == null || members.Length == 0)
             members = GetComponentsInChildren<AudienceMember>();
+
+        ConfigureInstancedRendering();
+    }
+
+    private void LateUpdate()
+    {
+        DrawInstancedMembers();
     }
 
     private void OnEnable()
@@ -101,5 +123,73 @@ public class AudienceManager : MonoBehaviour
             return 0;
 
         return frames[Random.Range(0, frames.Length)];
+    }
+
+    private void ConfigureInstancedRendering()
+    {
+        if (!Application.isPlaying || !useInstancedRendering || members == null || members.Length == 0)
+            return;
+
+        AudienceMember firstMember = members[0];
+        instancedMesh = firstMember != null ? firstMember.Mesh : null;
+        Material sourceMaterial = firstMember != null ? firstMember.SharedMaterial : null;
+        Shader instancedShader = Shader.Find("Softcen/Audience Instanced Atlas");
+
+        if (instancedMesh == null || sourceMaterial == null || instancedShader == null)
+        {
+            useInstancedRendering = false;
+            return;
+        }
+
+        instancedMaterial = new Material(instancedShader)
+        {
+            name = $"{sourceMaterial.name} (Instanced Runtime)",
+            renderQueue = sourceMaterial.renderQueue,
+            enableInstancing = true
+        };
+
+        if (sourceMaterial.HasProperty(BaseMap))
+            instancedMaterial.SetTexture(BaseMap, sourceMaterial.GetTexture(BaseMap));
+        else if (sourceMaterial.HasProperty(MainTex))
+            instancedMaterial.SetTexture(BaseMap, sourceMaterial.GetTexture(MainTex));
+
+        if (sourceMaterial.HasProperty(BaseColor))
+            instancedMaterial.SetColor(BaseColor, sourceMaterial.GetColor(BaseColor));
+        else if (sourceMaterial.HasProperty(ColorId))
+            instancedMaterial.SetColor(BaseColor, sourceMaterial.GetColor(ColorId));
+
+        instancedBlock = new MaterialPropertyBlock();
+
+        for (int i = 0; i < members.Length; i++)
+        {
+            if (members[i] != null)
+                members[i].SetRuntimeRendererEnabled(false);
+        }
+    }
+
+    private void DrawInstancedMembers()
+    {
+        if (!Application.isPlaying || !useInstancedRendering || instancedMesh == null || instancedMaterial == null)
+            return;
+
+        int count = 0;
+
+        for (int i = 0; i < members.Length && count < MaxInstancesPerDraw; i++)
+        {
+            AudienceMember member = members[i];
+
+            if (member == null || !member.gameObject.activeInHierarchy)
+                continue;
+
+            matrices[count] = member.transform.localToWorldMatrix;
+            atlasSTs[count] = member.AtlasST;
+            count++;
+        }
+
+        if (count == 0)
+            return;
+
+        instancedBlock.SetVectorArray(AudienceAtlasST, atlasSTs);
+        Graphics.DrawMeshInstanced(instancedMesh, 0, instancedMaterial, matrices, count, instancedBlock);
     }
 }

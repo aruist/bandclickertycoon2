@@ -13,6 +13,7 @@ public class AudienceMember : MonoBehaviour
     [SerializeField] private int previewFrame = 0;
 
     private MaterialPropertyBlock block;
+    private MeshFilter meshFilter;
 
     private Vector3 baseScale;
     private Vector3 basePosition;
@@ -24,6 +25,7 @@ public class AudienceMember : MonoBehaviour
     private float randomPower = 1f;
 
     private static readonly int BaseMapST = Shader.PropertyToID("_BaseMap_ST");
+    private static readonly int AudienceAtlasST = Shader.PropertyToID("_AudienceAtlasST");
 
     private void Awake()
     {
@@ -59,8 +61,41 @@ public class AudienceMember : MonoBehaviour
         if (meshRenderer == null)
             meshRenderer = GetComponent<MeshRenderer>();
 
+        if (meshFilter == null)
+            meshFilter = GetComponent<MeshFilter>();
+
         if (block == null)
             block = new MaterialPropertyBlock();
+    }
+
+    public Mesh Mesh
+    {
+        get
+        {
+            Init();
+            return meshFilter != null ? meshFilter.sharedMesh : null;
+        }
+    }
+
+    public Material SharedMaterial
+    {
+        get
+        {
+            Init();
+            return meshRenderer != null ? meshRenderer.sharedMaterial : null;
+        }
+    }
+
+    public int PreviewFrame => previewFrame;
+
+    public Vector4 AtlasST => GetAtlasST(previewFrame);
+
+    public void SetRuntimeRendererEnabled(bool enabled)
+    {
+        Init();
+
+        if (meshRenderer != null)
+            meshRenderer.enabled = enabled;
     }
 
     public void BeatPulse(float strength)
@@ -73,26 +108,32 @@ public class AudienceMember : MonoBehaviour
 
     public void SetFrame(int frame)
     {
-        if (meshRenderer == null)
-            return;
-
         frame = Mathf.Clamp(frame, 0, atlasCols * atlasRows - 1);
         previewFrame = frame;
 
+        if (meshRenderer == null)
+            return;
+
+        meshRenderer.GetPropertyBlock(block);
+        Vector4 atlasST = GetAtlasST(frame);
+        block.SetVector(BaseMapST, atlasST);
+        block.SetVector(AudienceAtlasST, atlasST);
+        meshRenderer.SetPropertyBlock(block);
+    }
+
+    private Vector4 GetAtlasST(int frame)
+    {
         int x = frame % atlasCols;
         int y = frame / atlasCols;
 
         float scaleX = 1f / atlasCols;
         float scaleY = 1f / atlasRows;
-
         float offsetX = x * scaleX;
 
         // Unity UV origin is bottom-left, but atlas frame order is top-left.
         float offsetY = 1f - scaleY - y * scaleY;
 
-        meshRenderer.GetPropertyBlock(block);
-        block.SetVector(BaseMapST, new Vector4(scaleX, scaleY, offsetX, offsetY));
-        meshRenderer.SetPropertyBlock(block);
+        return new Vector4(scaleX, scaleY, offsetX, offsetY);
     }
 
     private void Update()
