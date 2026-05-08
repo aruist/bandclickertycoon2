@@ -4,6 +4,7 @@ using UnityEngine;
 public class AudienceMember : MonoBehaviour
 {
     [SerializeField] private MeshRenderer meshRenderer;
+    [SerializeField] private int atlasColumn = 0;
 
     [Header("Atlas")]
     [SerializeField] private int atlasCols = 4;
@@ -26,6 +27,8 @@ public class AudienceMember : MonoBehaviour
 
     private static readonly int BaseMapST = Shader.PropertyToID("_BaseMap_ST");
     private static readonly int AudienceAtlasST = Shader.PropertyToID("_AudienceAtlasST");
+
+    public int AtlasColumn => atlasColumn;
 
     private void Awake()
     {

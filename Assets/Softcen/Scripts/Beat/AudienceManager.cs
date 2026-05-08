@@ -5,8 +5,29 @@ public class AudienceManager : MonoBehaviour
 {
     private const int MaxInstancesPerDraw = 1023;
 
+    private enum PoseGroup
+    {
+        Idle,
+        Clap,
+        Cheer,
+        Wave
+    }
+
     [SerializeField] private AudienceMember[] members;
     [SerializeField] private bool useInstancedRendering = true;
+    [SerializeField] private GameObject[] audiencePrefabs;
+    [SerializeField] private int audienceSize;
+
+    [Header("Pose Families")]
+    [Tooltip("For a 4x4 atlas where rows are pose groups and columns are personality variants.")]
+    [SerializeField] private bool useAtlasRowFamilies = true;
+    [SerializeField] private int atlasColumns = 4;
+    [SerializeField] private int idleRowStartFrame = 0;
+    [SerializeField] private int clapRowStartFrame = 4;
+    [SerializeField] private int cheerRowStartFrame = 8;
+    [SerializeField] private int waveRowStartFrame = 12;
+    [SerializeField] private float minPoseHoldTime = 0.35f;
+    [SerializeField] private float maxPoseHoldTime = 0.8f;
 
     [Header("Pose Groups")]
     [SerializeField] private int[] idleFrames = { 0, 5, 10, 14 };
@@ -27,12 +48,15 @@ public class AudienceManager : MonoBehaviour
     private Mesh instancedMesh;
     private Material instancedMaterial;
     private MaterialPropertyBlock instancedBlock;
+    private int[] poseFamilyIndices;
+    private float[] nextPoseChangeTimes;
 
     private void Awake()
     {
         if (members == null || members.Length == 0)
             members = GetComponentsInChildren<AudienceMember>();
 
+        ConfigurePoseFamilies();
         ConfigureInstancedRendering();
     }
 
@@ -76,18 +100,18 @@ public class AudienceManager : MonoBehaviour
     public void OnKickBeat(float strength)
     {
         PulseRandomMembers(0.75f, strength);
-        ChangeRandomPoses(0.08f, cheerFrames);
+        ChangeRandomPoses(0.08f, PoseGroup.Cheer);
     }
 
     public void OnSnareBeat(float strength)
     {
         PulseRandomMembers(0.35f, strength * 0.7f);
-        ChangeRandomPoses(0.18f, clapFrames);
+        ChangeRandomPoses(0.18f, PoseGroup.Clap);
     }
 
     public void OnHighBeat(float strength)
     {
-        ChangeRandomPoses(0.12f, waveFrames);
+        ChangeRandomPoses(0.12f, PoseGroup.Wave);
     }
 
     public void OnDropMoment()
@@ -95,7 +119,7 @@ public class AudienceManager : MonoBehaviour
         for (int i = 0; i < members.Length; i++)
         {
             members[i].BeatPulse(1.5f);
-            members[i].SetFrame(GetRandomFrame(cheerFrames));
+            TrySetPose(i, PoseGroup.Cheer, true);
         }
     }
 
@@ -108,12 +132,104 @@ public class AudienceManager : MonoBehaviour
         }
     }
 
-    private void ChangeRandomPoses(float chance, int[] frames)
+    private void ChangeRandomPoses(float chance, PoseGroup poseGroup)
     {
         for (int i = 0; i < members.Length; i++)
         {
             if (Random.value <= chance)
-                members[i].SetFrame(GetRandomFrame(frames));
+                TrySetPose(i, poseGroup, false);
+        }
+    }
+
+    private void ConfigurePoseFamilies()
+    {
+        if (members == null)
+            return;
+
+        poseFamilyIndices = new int[members.Length];
+        nextPoseChangeTimes = new float[members.Length];
+        int familyCount = Mathf.Max(1, atlasColumns);
+
+        for (int i = 0; i < members.Length; i++)
+        {
+            poseFamilyIndices[i] = i % familyCount;
+            nextPoseChangeTimes[i] = 0f;
+
+            if (members[i] != null)
+                members[i].SetFrame(GetFrameForMember(members[i].AtlasColumn, PoseGroup.Idle));
+        }
+    }
+
+    private void TrySetPose(int memberIndex, PoseGroup poseGroup, bool ignoreCooldown)
+    {
+        if (members == null || memberIndex < 0 || memberIndex >= members.Length || members[memberIndex] == null)
+            return;
+
+        if (!ignoreCooldown && Time.time < nextPoseChangeTimes[memberIndex])
+            return;
+
+        int atlasColumn = members[memberIndex].AtlasColumn;
+        members[memberIndex].SetFrame(GetFrameForMember(atlasColumn, poseGroup));
+        float minHold = Mathf.Min(minPoseHoldTime, maxPoseHoldTime);
+        float maxHold = Mathf.Max(minPoseHoldTime, maxPoseHoldTime);
+        nextPoseChangeTimes[memberIndex] = Time.time + Random.Range(minHold, maxHold);
+    }
+
+    private int GetFrameForMember(int memberIndex, PoseGroup poseGroup)
+    {
+        if (memberIndex < 0 || memberIndex > 3) return 0;
+        switch (poseGroup)
+        {
+            case PoseGroup.Clap:
+                return clapFrames[memberIndex];
+            case PoseGroup.Cheer:
+                return cheerFrames[memberIndex];
+            case PoseGroup.Wave:
+                return waveFrames[memberIndex];
+            default:
+                return idleFrames[memberIndex];
+        }
+
+        // if (useAtlasRowFamilies)
+        // {
+        //     int familyIndex = poseFamilyIndices != null && memberIndex < poseFamilyIndices.Length
+        //         ? poseFamilyIndices[memberIndex]
+        //         : memberIndex;
+
+        //     int rowStart = GetRowStartFrame(poseGroup);
+        //     return rowStart + Mathf.Abs(familyIndex % Mathf.Max(1, atlasColumns));
+        // }
+
+        // return GetRandomFrame(GetLegacyFrames(poseGroup));
+    }
+
+    private int GetRowStartFrame(PoseGroup poseGroup)
+    {
+        switch (poseGroup)
+        {
+            case PoseGroup.Clap:
+                return clapRowStartFrame;
+            case PoseGroup.Cheer:
+                return cheerRowStartFrame;
+            case PoseGroup.Wave:
+                return waveRowStartFrame;
+            default:
+                return idleRowStartFrame;
+        }
+    }
+
+    private int[] GetLegacyFrames(PoseGroup poseGroup)
+    {
+        switch (poseGroup)
+        {
+            case PoseGroup.Clap:
+                return clapFrames;
+            case PoseGroup.Cheer:
+                return cheerFrames;
+            case PoseGroup.Wave:
+                return waveFrames;
+            default:
+                return idleFrames;
         }
     }
 
