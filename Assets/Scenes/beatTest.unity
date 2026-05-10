@@ -170,7 +170,7 @@ MonoBehaviour:
   - {fileID: 1186869782803634118, guid: ec14977ad7279407fb9fd473506fddd4, type: 3}
   - {fileID: 2709390302950329481, guid: 83abb4276a77e40468b9b95bbd620058, type: 3}
   - {fileID: 5068571738649879028, guid: f9acde072e2084b138ad60076686617d, type: 3}
-  audienceSize: 30
+  audienceSize: 100
   audienceFloor: {fileID: 567772388}
   useAtlasRowFamilies: 1
   atlasColumns: 4
