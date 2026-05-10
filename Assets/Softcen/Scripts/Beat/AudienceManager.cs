@@ -144,7 +144,7 @@ public class AudienceManager : MonoBehaviour
                 break;
 
             // case BeatDetection.BeatType.Drop:
-            //     OnDropMoment(intensity);
+            //     OnDropMoment();
             //     break;
         }
     }
@@ -166,7 +166,7 @@ public class AudienceManager : MonoBehaviour
         ChangeRandomPoses(0.12f, PoseGroup.Wave);
     }
 
-    public void OnDropMoment()
+    public void OnDropMoment(float strength)
     {
         for (int i = 0; i < members.Length; i++)
         {
