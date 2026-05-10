@@ -45,6 +45,9 @@ public class BeatPlay : MonoBehaviour
     public int BeatCount => HasData ? recordedBeatData.beatEvents.Count : 0;
     public float AudioLength => recordedBeatData != null ? recordedBeatData.audioLength : 0f;
     public int CurrentBeatIndex => currentBeatIndex;
+    public float CurrentSongTime => audioSource != null && audioSource.isPlaying ? GetSongTime() : previousSongTime;
+    public BeatData LoadedBeatData => recordedBeatData;
+    public IReadOnlyList<BeatEvent> BeatEvents => beatEvents;
 
     private BeatData recordedBeatData;
     private List<BeatEvent> beatEvents;

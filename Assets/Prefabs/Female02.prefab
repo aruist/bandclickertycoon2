@@ -136,7 +136,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudienceMember
   meshRenderer: {fileID: 1627178669197007736}
+  swayTransform: {fileID: 8307285385887849168}
+  swayRotation: 20
+  swayX: 0
   atlasColumn: 1
+  idleSwaySpeed: 1.2
+  activeSwaySpeed: 2.2
+  bobHeight: 0.08
+  jumpHeight: 0.22
+  pulseScaleBoost: 0.08
+  styleHoldTime: 0.35
   atlasCols: 4
   atlasRows: 4
   previewFrame: 1

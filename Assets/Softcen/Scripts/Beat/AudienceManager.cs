@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,20 +14,23 @@ public class AudienceManager : MonoBehaviour
         Wave
     }
 
+    private enum HypeState
+    {
+        Low,
+        Medium,
+        High
+    }
+
+    [SerializeField] private BeatPlay beatPlay;
+    [SerializeField] private bool useGlobalBeatFallback = true;
     [SerializeField] private AudienceMember[] members;
     [SerializeField] private bool useInstancedRendering = true;
     [SerializeField] private GameObject[] audiencePrefabs;
     [SerializeField] private int audienceSize;
     [SerializeField] private Transform audienceFloor;
 
-    [Header("Pose Families")]
+    [Header("Pose Timing")]
     [Tooltip("For a 4x4 atlas where rows are pose groups and columns are personality variants.")]
-    [SerializeField] private bool useAtlasRowFamilies = true;
-    [SerializeField] private int atlasColumns = 4;
-    [SerializeField] private int idleRowStartFrame = 0;
-    [SerializeField] private int clapRowStartFrame = 4;
-    [SerializeField] private int cheerRowStartFrame = 8;
-    [SerializeField] private int waveRowStartFrame = 12;
     [SerializeField] private float minPoseHoldTime = 0.35f;
     [SerializeField] private float maxPoseHoldTime = 0.8f;
 
@@ -36,7 +40,20 @@ public class AudienceManager : MonoBehaviour
     [SerializeField] private int[] clapFrames = { 2 };
     [SerializeField] private int[] waveFrames = { 4, 6, 13, 15 };
 
-    private readonly List<AudienceMember> tempMembers = new();
+    [Header("Audience Rhythm")]
+    [SerializeField] private float lookAheadSeconds = 10f;
+    [SerializeField] private int quietWindowBeatThreshold = 8;
+    [SerializeField] private float mediumBeatsPerSecond = 1.2f;
+    [SerializeField] private float highAverageIntensity = 0.55f;
+    [SerializeField] private int highUniqueBeatTypes = 5;
+    [SerializeField] private float simultaneousBeatWindow = 0.08f;
+    [SerializeField] private int moshUniqueBeatTypes = 5;
+
+    [Header("Audience Delay")]
+    [SerializeField] private float randomLatencyMax = 0.15f;
+    [SerializeField] private float backRowDelay = 0.2f;
+    [SerializeField] private bool frontIsLowerLocalZ = true;
+
     private readonly Matrix4x4[] matrices = new Matrix4x4[MaxInstancesPerDraw];
     private readonly Vector4[] atlasSTs = new Vector4[MaxInstancesPerDraw];
 
@@ -49,16 +66,21 @@ public class AudienceManager : MonoBehaviour
     private Mesh instancedMesh;
     private Material instancedMaterial;
     private MaterialPropertyBlock instancedBlock;
-    private int[] poseFamilyIndices;
     private float[] nextPoseChangeTimes;
+    private Bounds audienceLocalBounds;
+    private bool subscribedToBeatPlay;
+    private bool subscribedToGlobalBeat;
 
     private void Awake()
     {
         SpawnAudienceFromPrefabs();
 
         if (members == null || members.Length == 0)
-            members = audienceFloor.GetComponentsInChildren<AudienceMember>();
+            members = audienceFloor != null
+                ? audienceFloor.GetComponentsInChildren<AudienceMember>()
+                : GetComponentsInChildren<AudienceMember>();
 
+        audienceLocalBounds = audienceFloor != null ? GetAudienceFloorLocalBounds() : new Bounds(Vector3.zero, Vector3.one);
         ConfigurePoseFamilies();
         ConfigureInstancedRendering();
     }
@@ -119,78 +141,221 @@ public class AudienceManager : MonoBehaviour
 
     private void OnEnable()
     {
-        BeatPlay.OnBeatDetected += OnBeatDetected;
+        SubscribeToBeatEvents();
     }
 
     private void OnDisable()
     {
-        BeatPlay.OnBeatDetected -= OnBeatDetected;
+        UnsubscribeFromBeatEvents();
     }
 
-    private void OnBeatDetected(BeatDetection.BeatType beatType, float intensity)
+    private void SubscribeToBeatEvents()
     {
-        switch (beatType)
+        if (beatPlay == null)
+            beatPlay = FindFirstObjectByType<BeatPlay>();
+
+        if (beatPlay != null)
         {
-            case BeatDetection.BeatType.Kick:
-                OnKickBeat(intensity);
-                break;
+            beatPlay.BeatTotalDetected += OnAudienceBeatDetected;
+            subscribedToBeatPlay = true;
+            return;
+        }
 
-            case BeatDetection.BeatType.Snare:
-                OnSnareBeat(intensity);
-                break;
+        if (useGlobalBeatFallback)
+        {
+            BeatPlay.OnBeatDetected += OnGlobalAudienceBeatDetected;
+            subscribedToGlobalBeat = true;
+        }
+    }
 
-            case BeatDetection.BeatType.HiHat:
-                OnHighBeat(intensity);
-                break;
+    private void UnsubscribeFromBeatEvents()
+    {
+        if (subscribedToBeatPlay && beatPlay != null)
+            beatPlay.BeatTotalDetected -= OnAudienceBeatDetected;
 
-            // case BeatDetection.BeatType.Drop:
-            //     OnDropMoment();
-            //     break;
+        if (subscribedToGlobalBeat)
+            BeatPlay.OnBeatDetected -= OnGlobalAudienceBeatDetected;
+
+        subscribedToBeatPlay = false;
+        subscribedToGlobalBeat = false;
+    }
+
+    private void OnGlobalAudienceBeatDetected(BeatDetection.BeatType beatType, float intensity)
+    {
+        float songTime = beatPlay != null ? beatPlay.CurrentSongTime : Time.time;
+        OnAudienceBeatDetected(beatType, intensity, songTime);
+    }
+
+    private void OnAudienceBeatDetected(BeatDetection.BeatType beatType, float intensity, float timestamp)
+    {
+        HypeAnalysis hype = AnalyzeHype(timestamp);
+
+        if (hype.IsMoshBeat)
+        {
+            TriggerAudienceReaction(AudienceMember.MotionStyle.Jump, PoseGroup.Cheer, intensity * 1.4f, 1f, true);
+            return;
+        }
+
+        switch (hype.State)
+        {
+            case HypeState.Low:
+                HandleLowHypeBeat(beatType, intensity);
+                break;
+            case HypeState.Medium:
+                HandleMediumHypeBeat(beatType, intensity);
+                break;
+            default:
+                HandleHighHypeBeat(beatType, intensity);
+                break;
         }
     }
 
     public void OnKickBeat(float strength)
     {
-        PulseRandomMembers(0.75f, strength);
-        ChangeRandomPoses(0.08f, PoseGroup.Cheer);
+        TriggerAudienceReaction(AudienceMember.MotionStyle.HeadBob, PoseGroup.Idle, strength, 0.75f, false);
     }
 
     public void OnSnareBeat(float strength)
     {
-        PulseRandomMembers(0.35f, strength * 0.7f);
-        ChangeRandomPoses(0.18f, PoseGroup.Clap);
+        TriggerAudienceReaction(AudienceMember.MotionStyle.Clap, PoseGroup.Clap, strength * 0.8f, 0.45f, false);
     }
 
     public void OnHighBeat(float strength)
     {
-        ChangeRandomPoses(0.12f, PoseGroup.Wave);
+        TriggerAudienceReaction(AudienceMember.MotionStyle.Wave, PoseGroup.Wave, strength * 0.65f, 0.35f, false);
     }
 
     public void OnDropMoment(float strength)
     {
-        for (int i = 0; i < members.Length; i++)
+        TriggerAudienceReaction(AudienceMember.MotionStyle.Jump, PoseGroup.Cheer, strength * 1.5f, 1f, true);
+    }
+
+    private void HandleLowHypeBeat(BeatDetection.BeatType beatType, float intensity)
+    {
+        if (beatType == BeatDetection.BeatType.Kick || beatType == BeatDetection.BeatType.BassDrum)
+            TriggerAudienceReaction(AudienceMember.MotionStyle.HeadBob, PoseGroup.Idle, intensity * 0.6f, 0.45f, false);
+    }
+
+    private void HandleMediumHypeBeat(BeatDetection.BeatType beatType, float intensity)
+    {
+        if (beatType == BeatDetection.BeatType.Kick || beatType == BeatDetection.BeatType.BassDrum)
+            TriggerAudienceReaction(AudienceMember.MotionStyle.HeadBob, PoseGroup.Idle, intensity, 0.75f, false);
+        else if (beatType == BeatDetection.BeatType.Snare)
+            TriggerAudienceReaction(AudienceMember.MotionStyle.Clap, PoseGroup.Clap, intensity, 0.65f, false);
+        else if (beatType == BeatDetection.BeatType.HiHat || beatType == BeatDetection.BeatType.Cymbal)
+            TriggerAudienceReaction(AudienceMember.MotionStyle.Wave, PoseGroup.Wave, intensity, 0.45f, false);
+    }
+
+    private void HandleHighHypeBeat(BeatDetection.BeatType beatType, float intensity)
+    {
+        if (beatType == BeatDetection.BeatType.Kick ||
+            beatType == BeatDetection.BeatType.BassDrum ||
+            beatType == BeatDetection.BeatType.Energy)
         {
-            members[i].BeatPulse(1.5f);
-            TrySetPose(i, PoseGroup.Cheer, true);
+            TriggerAudienceReaction(AudienceMember.MotionStyle.Jump, PoseGroup.Cheer, intensity * 1.2f, 0.9f, true);
+        }
+        else if (beatType == BeatDetection.BeatType.Snare)
+        {
+            TriggerAudienceReaction(AudienceMember.MotionStyle.Clap, PoseGroup.Clap, intensity, 0.75f, false);
+        }
+        else if (beatType == BeatDetection.BeatType.HiHat || beatType == BeatDetection.BeatType.Cymbal)
+        {
+            TriggerAudienceReaction(AudienceMember.MotionStyle.Wave, PoseGroup.Wave, intensity, 0.65f, false);
         }
     }
 
-    private void PulseRandomMembers(float chance, float strength)
+    private void TriggerAudienceReaction(AudienceMember.MotionStyle motionStyle, PoseGroup poseGroup, float strength, float chance, bool ignorePoseCooldown)
     {
         for (int i = 0; i < members.Length; i++)
         {
-            if (Random.value <= chance)
-                members[i].BeatPulse(strength);
+            if (members[i] == null || Random.value > chance)
+                continue;
+
+            float delay = Random.Range(0f, Mathf.Max(0f, randomLatencyMax)) + GetSpatialDelay(members[i]);
+            StartCoroutine(TriggerMemberDelayed(i, motionStyle, poseGroup, strength, ignorePoseCooldown, delay));
         }
     }
 
-    private void ChangeRandomPoses(float chance, PoseGroup poseGroup)
+    private IEnumerator TriggerMemberDelayed(int memberIndex, AudienceMember.MotionStyle motionStyle, PoseGroup poseGroup, float strength, bool ignorePoseCooldown, float delay)
     {
-        for (int i = 0; i < members.Length; i++)
+        if (delay > 0f)
+            yield return new WaitForSeconds(delay);
+
+        if (members == null || memberIndex < 0 || memberIndex >= members.Length || members[memberIndex] == null)
+            yield break;
+
+        members[memberIndex].TriggerReaction(motionStyle, strength);
+        TrySetPose(memberIndex, poseGroup, ignorePoseCooldown);
+    }
+
+    private float GetSpatialDelay(AudienceMember member)
+    {
+        if (audienceFloor == null || member == null)
+            return 0f;
+
+        Vector3 localPosition = audienceFloor.InverseTransformPoint(member.transform.position);
+        float row01 = Mathf.InverseLerp(audienceLocalBounds.min.z, audienceLocalBounds.max.z, localPosition.z);
+
+        if (!frontIsLowerLocalZ)
+            row01 = 1f - row01;
+
+        return Mathf.Clamp01(row01) * Mathf.Max(0f, backRowDelay);
+    }
+
+    private HypeAnalysis AnalyzeHype(float timestamp)
+    {
+        IReadOnlyList<BeatEvent> beatEvents = beatPlay != null ? beatPlay.BeatEvents : null;
+        if (beatEvents == null || beatEvents.Count == 0)
+            return new HypeAnalysis(HypeState.Medium, false);
+
+        float windowEnd = timestamp + Mathf.Max(0.1f, lookAheadSeconds);
+        int beatCount = 0;
+        float intensitySum = 0f;
+        float firstHalfIntensity = 0f;
+        float secondHalfIntensity = 0f;
+        HashSet<BeatDetection.BeatType> highTypes = new HashSet<BeatDetection.BeatType>();
+        HashSet<BeatDetection.BeatType> simultaneousTypes = new HashSet<BeatDetection.BeatType>();
+
+        for (int i = 0; i < beatEvents.Count; i++)
         {
-            if (Random.value <= chance)
-                TrySetPose(i, poseGroup, false);
+            BeatEvent beatEvent = beatEvents[i];
+
+            if (beatEvent.timestamp < timestamp)
+                continue;
+
+            if (beatEvent.timestamp > windowEnd)
+                break;
+
+            beatCount++;
+            intensitySum += beatEvent.intensity;
+
+            if (beatEvent.timestamp < timestamp + lookAheadSeconds * 0.5f)
+                firstHalfIntensity += beatEvent.intensity;
+            else
+                secondHalfIntensity += beatEvent.intensity;
+
+            if (beatEvent.intensity >= highAverageIntensity)
+                highTypes.Add(beatEvent.beatType);
+
+            if (Mathf.Abs(beatEvent.timestamp - timestamp) <= simultaneousBeatWindow && beatEvent.intensity >= highAverageIntensity)
+                simultaneousTypes.Add(beatEvent.beatType);
         }
+
+        float beatsPerSecond = beatCount / Mathf.Max(0.1f, lookAheadSeconds);
+        float averageIntensity = beatCount > 0 ? intensitySum / beatCount : 0f;
+        bool rising = secondHalfIntensity > firstHalfIntensity * 1.15f;
+        bool quiet = beatCount <= quietWindowBeatThreshold;
+        bool high = averageIntensity >= highAverageIntensity &&
+                    highTypes.Count >= highUniqueBeatTypes &&
+                    (rising || beatsPerSecond >= mediumBeatsPerSecond);
+
+        HypeState state = HypeState.Medium;
+        if (quiet)
+            state = HypeState.Low;
+        else if (high)
+            state = HypeState.High;
+
+        return new HypeAnalysis(state, simultaneousTypes.Count >= moshUniqueBeatTypes);
     }
 
     private void ConfigurePoseFamilies()
@@ -198,13 +363,10 @@ public class AudienceManager : MonoBehaviour
         if (members == null)
             return;
 
-        poseFamilyIndices = new int[members.Length];
         nextPoseChangeTimes = new float[members.Length];
-        int familyCount = Mathf.Max(1, atlasColumns);
 
         for (int i = 0; i < members.Length; i++)
         {
-            poseFamilyIndices[i] = i % familyCount;
             nextPoseChangeTimes[i] = 0f;
 
             if (members[i] != null)
@@ -229,68 +391,40 @@ public class AudienceManager : MonoBehaviour
 
     private int GetFrameForMember(int memberIndex, PoseGroup poseGroup)
     {
-        if (memberIndex < 0 || memberIndex > 3) return 0;
+        if (memberIndex < 0)
+            return 0;
+
         switch (poseGroup)
         {
             case PoseGroup.Clap:
-                return clapFrames[memberIndex];
+                return GetFrame(clapFrames, memberIndex);
             case PoseGroup.Cheer:
-                return cheerFrames[memberIndex];
+                return GetFrame(cheerFrames, memberIndex);
             case PoseGroup.Wave:
-                return waveFrames[memberIndex];
+                return GetFrame(waveFrames, memberIndex);
             default:
-                return idleFrames[memberIndex];
-        }
-
-        // if (useAtlasRowFamilies)
-        // {
-        //     int familyIndex = poseFamilyIndices != null && memberIndex < poseFamilyIndices.Length
-        //         ? poseFamilyIndices[memberIndex]
-        //         : memberIndex;
-
-        //     int rowStart = GetRowStartFrame(poseGroup);
-        //     return rowStart + Mathf.Abs(familyIndex % Mathf.Max(1, atlasColumns));
-        // }
-
-        // return GetRandomFrame(GetLegacyFrames(poseGroup));
-    }
-
-    private int GetRowStartFrame(PoseGroup poseGroup)
-    {
-        switch (poseGroup)
-        {
-            case PoseGroup.Clap:
-                return clapRowStartFrame;
-            case PoseGroup.Cheer:
-                return cheerRowStartFrame;
-            case PoseGroup.Wave:
-                return waveRowStartFrame;
-            default:
-                return idleRowStartFrame;
+                return GetFrame(idleFrames, memberIndex);
         }
     }
 
-    private int[] GetLegacyFrames(PoseGroup poseGroup)
-    {
-        switch (poseGroup)
-        {
-            case PoseGroup.Clap:
-                return clapFrames;
-            case PoseGroup.Cheer:
-                return cheerFrames;
-            case PoseGroup.Wave:
-                return waveFrames;
-            default:
-                return idleFrames;
-        }
-    }
-
-    private static int GetRandomFrame(int[] frames)
+    private static int GetFrame(int[] frames, int index)
     {
         if (frames == null || frames.Length == 0)
             return 0;
 
-        return frames[Random.Range(0, frames.Length)];
+        return frames[Mathf.Abs(index) % frames.Length];
+    }
+
+    private readonly struct HypeAnalysis
+    {
+        public readonly HypeState State;
+        public readonly bool IsMoshBeat;
+
+        public HypeAnalysis(HypeState state, bool isMoshBeat)
+        {
+            State = state;
+            IsMoshBeat = isMoshBeat;
+        }
     }
 
     private void ConfigureInstancedRendering()

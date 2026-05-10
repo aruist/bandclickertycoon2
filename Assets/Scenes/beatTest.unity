@@ -163,6 +163,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce7e848289da4da9bb10aa0e451d01c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudienceManager
+  beatPlay: {fileID: 0}
+  useGlobalBeatFallback: 1
   members: []
   useInstancedRendering: 1
   audiencePrefabs:
@@ -170,20 +172,24 @@ MonoBehaviour:
   - {fileID: 1186869782803634118, guid: ec14977ad7279407fb9fd473506fddd4, type: 3}
   - {fileID: 2709390302950329481, guid: 83abb4276a77e40468b9b95bbd620058, type: 3}
   - {fileID: 5068571738649879028, guid: f9acde072e2084b138ad60076686617d, type: 3}
-  audienceSize: 10
+  audienceSize: 200
   audienceFloor: {fileID: 567772388}
-  useAtlasRowFamilies: 1
-  atlasColumns: 4
-  idleRowStartFrame: 0
-  clapRowStartFrame: 4
-  cheerRowStartFrame: 8
-  waveRowStartFrame: 12
   minPoseHoldTime: 0.35
   maxPoseHoldTime: 0.8
   idleFrames: 00000000010000000200000003000000
   cheerFrames: 0c0000000d0000000e0000000f000000
   clapFrames: 00000000010000000200000003000000
   waveFrames: 08000000090000000a0000000b000000
+  lookAheadSeconds: 10
+  quietWindowBeatThreshold: 8
+  mediumBeatsPerSecond: 1.2
+  highAverageIntensity: 0.55
+  highUniqueBeatTypes: 5
+  simultaneousBeatWindow: 0.08
+  moshUniqueBeatTypes: 5
+  randomLatencyMax: 0.15
+  backRowDelay: 0.2
+  frontIsLowerLocalZ: 1
 --- !u!1 &35896360
 GameObject:
   m_ObjectHideFlags: 0
@@ -967,8 +973,8 @@ Transform:
   m_GameObject: {fileID: 567772387}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.92620003, z: -0, w: -0.37703258}
-  m_LocalPosition: {x: -4.94, y: 4.745, z: -4.91}
-  m_LocalScale: {x: 0.7, y: 1, z: 0.57}
+  m_LocalPosition: {x: -5.82, y: 4.745, z: -5.81}
+  m_LocalScale: {x: 0.49, y: 1, z: 0.35}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 626890624}
