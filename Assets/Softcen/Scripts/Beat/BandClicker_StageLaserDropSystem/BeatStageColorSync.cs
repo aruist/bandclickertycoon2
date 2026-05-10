@@ -42,10 +42,10 @@ public class BeatStageColorSync : MonoBehaviour
         switch (group)
         {
             case StageLightGroup.MainBeam:
-                return currentPalette.mainBeamColor;
+                return currentPalette.GetMainBeamColor(index);
 
             case StageLightGroup.SideBeam:
-                return currentPalette.sideBeamColor;
+                return currentPalette.GetSideBeamColor(index);
 
             case StageLightGroup.Laser:
                 return currentPalette.GetLaserColor(index);
@@ -57,4 +57,28 @@ public class BeatStageColorSync : MonoBehaviour
                 return Color.white;
         }
     }
+    public Color GetPulseColor(StageLightGroup group, int index = 0)
+    {
+        if (currentPalette == null)
+            return Color.white;
+
+        switch (group)
+        {
+            case StageLightGroup.MainBeam:
+                return currentPalette.GetMainBeamPulseColor(index);
+
+            case StageLightGroup.SideBeam:
+                return currentPalette.GetSideBeamPulseColor(index);
+
+            case StageLightGroup.Laser:
+                return currentPalette.GetLaserColor(index);
+
+            case StageLightGroup.Drop:
+                return currentPalette.dropColor;
+
+            default:
+                return Color.white;
+        }
+    }
+
 }

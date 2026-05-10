@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2767461899911913398}
   - component: {fileID: 3872971450295623072}
   - component: {fileID: 4114204058801352369}
+  - component: {fileID: 3698115286856763500}
   m_Layer: 0
   m_Name: SC_SmallLightBeam
   m_TagString: Untagged
@@ -91,6 +92,40 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3698115286856763500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6238128184438468515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 381b5ccb6705d49248c9fec0d9f59541, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeatLightBeamCone
+  stageLightGroup: 0
+  stageLightGroupIndex: 0
+  beatPlay: {fileID: 0}
+  useGlobalBeatEvent: 1
+  reactToBeats: 193
+  beamRenderer: {fileID: 7783855034213962130}
+  colorPropertyName: _BaseColor
+  idleAlpha: 0.08
+  maxPulseAlpha: 0.7
+  intensityMultiplier: 1.2
+  attackSpeed: 18
+  releaseSpeed: 5
+  pulseCurvePower: 1.4
+  pulseScale: 1
+  widthScaleBoost: 0.18
+  lengthScaleBoost: 0.1
+  enableSweep: 1
+  sweepAxis: {x: 1, y: 0, z: 0}
+  sweepDegrees: 12
+  sweepSpeed: 1.5
+  sweepTransform: {fileID: 8797358303493218705}
+  randomIntensityVariation: 0.1
 --- !u!1 &7772503149193272873
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,55 +304,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a523909c374a44aa49f416e4a32617c8, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3066056034014408730}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a523909c374a44aa49f416e4a32617c8, type: 3}
 --- !u!23 &7783855034213962130 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: a523909c374a44aa49f416e4a32617c8, type: 3}
   m_PrefabInstance: {fileID: 8918353528705453334}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8576316700521803847 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a523909c374a44aa49f416e4a32617c8, type: 3}
-  m_PrefabInstance: {fileID: 8918353528705453334}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3066056034014408730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8576316700521803847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 381b5ccb6705d49248c9fec0d9f59541, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeatLightBeamCone
-  beatPlay: {fileID: 0}
-  useGlobalBeatEvent: 1
-  reactToBeats: 193
-  beamRenderer: {fileID: 7783855034213962130}
-  colorPropertyName: _BaseColor
-  baseColor: {r: 1, g: 1, b: 1, a: 0}
-  pulseColor: {r: 1, g: 1, b: 1, a: 1}
-  idleAlpha: 0.08
-  maxPulseAlpha: 0.7
-  intensityMultiplier: 1.2
-  attackSpeed: 18
-  releaseSpeed: 5
-  pulseCurvePower: 1.4
-  pulseScale: 1
-  widthScaleBoost: 0.18
-  lengthScaleBoost: 0.1
-  enableSweep: 1
-  sweepAxis: {x: 1, y: 0, z: 0}
-  sweepDegrees: 12
-  sweepSpeed: 1.5
-  sweepTransform: {fileID: 8797358303493218705}
-  randomIntensityVariation: 0.1
 --- !u!4 &8957345426506935037 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a523909c374a44aa49f416e4a32617c8, type: 3}

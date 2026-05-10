@@ -14,6 +14,8 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public sealed class BeatLightBeamCone : MonoBehaviour
 {
+    [SerializeField] private StageLightGroup stageLightGroup;
+    [SerializeField] private int stageLightGroupIndex;
     [Header("Beat Source")]
     [Tooltip("BeatPlay instance that emits beat events. If empty, the script can listen to BeatPlay.OnBeatDetected globally.")]
     [SerializeField] private BeatPlay beatPlay;
@@ -32,9 +34,6 @@ public sealed class BeatLightBeamCone : MonoBehaviour
 
     [Tooltip("Usually _BaseColor in URP Lit/Unlit, _Color in Built-in shaders.")]
     [SerializeField] private string colorPropertyName = "_BaseColor";
-
-    [SerializeField] private Color baseColor = new Color(1f, 1f, 1f, 0f);
-    [SerializeField] private Color pulseColor = new Color(1f, 1f, 1f, 1f);
 
     [Header("Alpha")]
     [Range(0f, 1f)]
@@ -85,6 +84,9 @@ public sealed class BeatLightBeamCone : MonoBehaviour
     private Vector3 baseLocalScale;
     private Quaternion baseLocalRotation;
     private bool subscribed;
+    private bool started;
+    private Color baseColor;
+    private Color pulseColor;
 
     private void Reset()
     {
@@ -94,6 +96,7 @@ public sealed class BeatLightBeamCone : MonoBehaviour
 
     private void Awake()
     {
+        started = false;
         if (beamRenderer == null)
             beamRenderer = GetComponent<Renderer>();
 
@@ -103,7 +106,25 @@ public sealed class BeatLightBeamCone : MonoBehaviour
         if (sweepTransform != null) baseLocalRotation = sweepTransform.localRotation;
         else baseLocalRotation = transform.localRotation;
 
+    }
+
+    void Start()
+    {
+        ApplyColors();
+        started = true;
         ApplyVisuals(0f);
+    }
+
+    private void ApplyColors()
+    {
+        if (BeatStageColorSync.Instance == null)
+        {
+            baseColor = Color.white;
+            pulseColor = Color.white;
+            return;
+        }
+        baseColor = BeatStageColorSync.Instance.GetColor(stageLightGroup, stageLightGroupIndex);
+        pulseColor = BeatStageColorSync.Instance.GetPulseColor(stageLightGroup, stageLightGroupIndex);
     }
 
     private void OnEnable()
@@ -167,7 +188,7 @@ public sealed class BeatLightBeamCone : MonoBehaviour
 
     private void OnBeatDetected(BeatDetection.BeatType beatType, float intensity)
     {
-        if ((reactToBeats & beatType) == 0)
+        if (!started || (reactToBeats & beatType) == 0)
             return;
 
         float variation = 1f;
