@@ -4,6 +4,9 @@ using UnityEngine;
 public class AudienceMember : MonoBehaviour
 {
     [SerializeField] private MeshRenderer meshRenderer;
+    [SerializeField] private Transform swayTransform;
+    [SerializeField] private float swayRotation = 20f;
+    [SerializeField] private float swayX = 1f;
     [SerializeField] private int atlasColumn = 0;
 
     [Header("Atlas")]
@@ -38,7 +41,7 @@ public class AudienceMember : MonoBehaviour
         {
             baseScale = transform.localScale;
             basePosition = transform.localPosition;
-            baseRotation = transform.localRotation;
+            baseRotation = swayTransform.localRotation;
 
             swayOffset = Random.value * 100f;
             randomPower = Random.Range(0.75f, 1.25f);
@@ -61,6 +64,8 @@ public class AudienceMember : MonoBehaviour
 
     private void Init()
     {
+        if (swayTransform == null) swayTransform = transform;
+
         if (meshRenderer == null)
             meshRenderer = GetComponent<MeshRenderer>();
 
@@ -148,9 +153,10 @@ public class AudienceMember : MonoBehaviour
         pulse = Mathf.Lerp(pulse, targetPulse, Time.deltaTime * 12f);
 
         float sway = Mathf.Sin(Time.time * 2.2f + swayOffset) * 0.025f;
-
-        transform.localPosition = basePosition + new Vector3(sway, pulse * 0.08f, 0f);
+        float swayXcoord = sway * swayX;
+        transform.localPosition = basePosition + new Vector3(swayXcoord, pulse * 0.08f, 0f);
         transform.localScale = baseScale * (1f + pulse * 0.08f);
-        transform.localRotation = baseRotation * Quaternion.Euler(0f, 0f, sway * 20f);
+        swayTransform.localRotation = baseRotation * Quaternion.Euler(0f, 0f, sway * swayRotation);
+        //transform.localRotation = baseRotation * Quaternion.Euler(0f, 0f, sway * 20f);
     }
 }

@@ -64,6 +64,12 @@ public sealed class BeatLightBeamCone : MonoBehaviour
     [Tooltip("Optional length scale boost at full pulse. Keep small for light cones.")]
     [SerializeField, Min(0f)] private float lengthScaleBoost = 0.0f;
 
+    [Header("Optional Point Light")]
+    [SerializeField] private Light pointLight;
+    [SerializeField] private bool pulsePointLightIntensity = false;
+    [SerializeField, Min(0f)] private float minPointLightIntensity = 0f;
+    [SerializeField, Min(0f)] private float maxPointLightIntensity = 6f;
+
     [Header("Motion")]
     [Tooltip("Optional small sweep movement. Good for stage lights.")]
     [SerializeField] private bool enableSweep = false;
@@ -92,6 +98,8 @@ public sealed class BeatLightBeamCone : MonoBehaviour
     {
         beamRenderer = GetComponent<Renderer>();
         beatPlay = FindFirstObjectByType<BeatPlay>();
+        if (pointLight == null)
+            pointLight = GetComponentInChildren<Light>();
     }
 
     private void Awake()
@@ -225,6 +233,13 @@ public sealed class BeatLightBeamCone : MonoBehaviour
             );
         }
 
+        if (pulsePointLightIntensity && pointLight != null)
+        {
+            float minIntensity = Mathf.Min(minPointLightIntensity, maxPointLightIntensity);
+            float maxIntensity = Mathf.Max(minPointLightIntensity, maxPointLightIntensity);
+            pointLight.intensity = Mathf.Lerp(minIntensity, maxIntensity, shapedPulse);
+        }
+
         if (enableSweep)
         {
             float angle = Mathf.Sin(Time.time * sweepSpeed) * sweepDegrees;
@@ -248,6 +263,8 @@ public sealed class BeatLightBeamCone : MonoBehaviour
         releaseSpeed = Mathf.Max(0.01f, releaseSpeed);
         pulseCurvePower = Mathf.Max(0.25f, pulseCurvePower);
         intensityMultiplier = Mathf.Max(0f, intensityMultiplier);
+        minPointLightIntensity = Mathf.Max(0f, minPointLightIntensity);
+        maxPointLightIntensity = Mathf.Max(0f, maxPointLightIntensity);
 
         if (beamRenderer == null)
             beamRenderer = GetComponent<Renderer>();
