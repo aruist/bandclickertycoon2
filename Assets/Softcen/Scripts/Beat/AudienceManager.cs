@@ -52,6 +52,7 @@ public class AudienceManager : MonoBehaviour
 
     private readonly Matrix4x4[] matrices = new Matrix4x4[MaxInstancesPerDraw];
     private readonly Vector4[] atlasSTs = new Vector4[MaxInstancesPerDraw];
+    private readonly List<AudienceDrawEntry> drawEntries = new List<AudienceDrawEntry>(MaxInstancesPerDraw);
 
     private static readonly int BaseMap = Shader.PropertyToID("_BaseMap");
     private static readonly int MainTex = Shader.PropertyToID("_MainTex");
@@ -70,6 +71,12 @@ public class AudienceManager : MonoBehaviour
     private bool currentMoshZone;
     private int hypeEventIndex;
     private float previousBeatTimestamp;
+
+    private struct AudienceDrawEntry
+    {
+        public AudienceMember Member;
+        public float Depth;
+    }
 
     private void Awake()
     {
@@ -566,22 +573,44 @@ public class AudienceManager : MonoBehaviour
         if (!Application.isPlaying || !useInstancedRendering || instancedMesh == null || instancedMaterial == null)
             return;
 
-        int count = 0;
+        Camera renderCamera = Camera.main;
+        if (renderCamera == null)
+            renderCamera = Camera.current;
 
-        for (int i = 0; i < members.Length && count < MaxInstancesPerDraw; i++)
+        Vector3 camPos = renderCamera != null ? renderCamera.transform.position : Vector3.zero;
+        Vector3 camForward = renderCamera != null ? renderCamera.transform.forward : Vector3.forward;
+
+        drawEntries.Clear();
+
+        for (int i = 0; i < members.Length && drawEntries.Count < MaxInstancesPerDraw; i++)
         {
             AudienceMember member = members[i];
 
             if (member == null || !member.gameObject.activeInHierarchy)
                 continue;
 
-            matrices[count] = member.RenderMatrix;
-            atlasSTs[count] = member.AtlasST;
-            count++;
+            Vector3 worldPosition = member.RenderMatrix.GetColumn(3);
+            float depth = Vector3.Dot(camForward, worldPosition - camPos);
+
+            drawEntries.Add(new AudienceDrawEntry
+            {
+                Member = member,
+                Depth = depth
+            });
         }
 
+        drawEntries.Sort((a, b) => b.Depth.CompareTo(a.Depth));
+
+        int count = drawEntries.Count;
         if (count == 0)
             return;
+
+        for (int i = 0; i < count; i++)
+        {
+            AudienceMember member = drawEntries[i].Member;
+            matrices[i] = member.RenderMatrix;
+            atlasSTs[i] = member.AtlasST;
+        }
 
         instancedBlock.SetVectorArray(AudienceAtlasST, atlasSTs);
         Graphics.DrawMeshInstanced(instancedMesh, 0, instancedMaterial, matrices, count, instancedBlock);
