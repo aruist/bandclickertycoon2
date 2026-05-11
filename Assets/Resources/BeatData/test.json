@@ -6727,5 +6727,352 @@
             "timestamp": 139.94700622558595,
             "intensity": 0.27900001406669619
         }
+    ],
+    "hypeEvents": [
+        {
+            "timestamp": 0.0,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 2.75,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 3.0,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 3.25,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 3.75,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 4.0,
+            "newState": 1,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 4.25,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 6.5,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 6.75,
+            "newState": 1,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 7.0,
+            "newState": 1,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 14.0,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 23.75,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 24.0,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 24.25,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 24.5,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 24.75,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 25.0,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 25.25,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 25.5,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 25.75,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 26.5,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 27.5,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 27.75,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 28.0,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 28.25,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 28.5,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 28.75,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 29.0,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 29.25,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 29.75,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 30.0,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 31.25,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 31.5,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 32.25,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 32.5,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 34.0,
+            "newState": 1,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 34.5,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 36.75,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 37.0,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 44.25,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 45.25,
+            "newState": 1,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 45.5,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 47.5,
+            "newState": 1,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 48.5,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 53.5,
+            "newState": 1,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 63.0,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 66.25,
+            "newState": 1,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 69.0,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 78.75,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 79.0,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 82.5,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 82.75,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 84.25,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 84.5,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 85.75,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 86.0,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 88.0,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 88.25,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 88.5,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 88.75,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 89.0,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 89.25,
+            "newState": 1,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 89.5,
+            "newState": 1,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 94.5,
+            "newState": 2,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 104.25,
+            "newState": 2,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 104.75,
+            "newState": 1,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 105.0,
+            "newState": 1,
+            "isMoshZone": true
+        },
+        {
+            "timestamp": 105.25,
+            "newState": 1,
+            "isMoshZone": false
+        },
+        {
+            "timestamp": 134.25,
+            "newState": 0,
+            "isMoshZone": false
+        }
     ]
 }

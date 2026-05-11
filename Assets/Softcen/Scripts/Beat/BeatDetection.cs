@@ -18,6 +18,7 @@ public class BeatData
     public int historyLength;
     public float minBeatSeparation;
     public List<BeatEvent> beatEvents = new List<BeatEvent>();
+    public List<HypeChange> hypeEvents = new List<HypeChange>();
 }
 
 [Serializable]
@@ -26,6 +27,21 @@ public class BeatEvent
     public BeatDetection.BeatType beatType;
     public float timestamp;
     public float intensity;
+}
+
+public enum HypeState
+{
+    Low,
+    Medium,
+    High
+}
+
+[Serializable]
+public class HypeChange
+{
+    public float timestamp;
+    public HypeState newState;
+    public bool isMoshZone;
 }
 
 public class BeatDetection : MonoBehaviour

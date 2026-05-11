@@ -172,7 +172,7 @@ MonoBehaviour:
   - {fileID: 1186869782803634118, guid: ec14977ad7279407fb9fd473506fddd4, type: 3}
   - {fileID: 2709390302950329481, guid: 83abb4276a77e40468b9b95bbd620058, type: 3}
   - {fileID: 5068571738649879028, guid: f9acde072e2084b138ad60076686617d, type: 3}
-  audienceSize: 5
+  audienceSize: 200
   audienceFloor: {fileID: 567772388}
   minPoseHoldTime: 0.35
   maxPoseHoldTime: 0.8
@@ -190,6 +190,7 @@ MonoBehaviour:
   randomLatencyMax: 0.15
   backRowDelay: 0.2
   frontIsLowerLocalZ: 1
+  useLit: 0
 --- !u!1 &35896360
 GameObject:
   m_ObjectHideFlags: 0
@@ -1562,7 +1563,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1185467454
 MonoBehaviour:
   m_ObjectHideFlags: 0

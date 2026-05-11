@@ -14,13 +14,6 @@ public class AudienceManager : MonoBehaviour
         Wave
     }
 
-    private enum HypeState
-    {
-        Low,
-        Medium,
-        High
-    }
-
     [SerializeField] private BeatPlay beatPlay;
     [SerializeField] private bool useGlobalBeatFallback = true;
     [SerializeField] private AudienceMember[] members;
@@ -54,6 +47,9 @@ public class AudienceManager : MonoBehaviour
     [SerializeField] private float backRowDelay = 0.2f;
     [SerializeField] private bool frontIsLowerLocalZ = true;
 
+    [Header("Shader")]
+    [SerializeField] private bool useLit = false;
+
     private readonly Matrix4x4[] matrices = new Matrix4x4[MaxInstancesPerDraw];
     private readonly Vector4[] atlasSTs = new Vector4[MaxInstancesPerDraw];
 
@@ -70,6 +66,10 @@ public class AudienceManager : MonoBehaviour
     private Bounds audienceLocalBounds;
     private bool subscribedToBeatPlay;
     private bool subscribedToGlobalBeat;
+    private HypeState currentHypeState = HypeState.Medium;
+    private bool currentMoshZone;
+    private int hypeEventIndex;
+    private float previousBeatTimestamp;
 
     private void Awake()
     {
@@ -83,6 +83,7 @@ public class AudienceManager : MonoBehaviour
         audienceLocalBounds = audienceFloor != null ? GetAudienceFloorLocalBounds() : new Bounds(Vector3.zero, Vector3.one);
         ConfigurePoseFamilies();
         ConfigureInstancedRendering();
+        ResetHypeState();
     }
 
     private void SpawnAudienceFromPrefabs()
@@ -188,7 +189,7 @@ public class AudienceManager : MonoBehaviour
 
     private void OnAudienceBeatDetected(BeatDetection.BeatType beatType, float intensity, float timestamp)
     {
-        HypeAnalysis hype = AnalyzeHype(timestamp);
+        HypeAnalysis hype = ResolveHype(timestamp);
 
         if (hype.IsMoshBeat)
         {
@@ -378,6 +379,76 @@ public class AudienceManager : MonoBehaviour
         return new HypeAnalysis(state, simultaneousTypes.Count >= moshUniqueBeatTypes);
     }
 
+    private HypeAnalysis ResolveHype(float timestamp)
+    {
+        if (TryGetPrecomputedHype(timestamp, out HypeAnalysis precomputed))
+            return precomputed;
+
+        return AnalyzeHype(timestamp);
+    }
+
+    private bool TryGetPrecomputedHype(float timestamp, out HypeAnalysis hype)
+    {
+        IReadOnlyList<HypeChange> hypeEvents = beatPlay != null && beatPlay.LoadedBeatData != null
+            ? beatPlay.LoadedBeatData.hypeEvents
+            : null;
+
+        if (hypeEvents == null || hypeEvents.Count == 0)
+        {
+            hype = default;
+            return false;
+        }
+
+        if (timestamp + 0.05f < previousBeatTimestamp)
+            hypeEventIndex = FindFirstHypeIndexAtOrAfter(hypeEvents, timestamp);
+
+        while (hypeEventIndex < hypeEvents.Count && hypeEvents[hypeEventIndex].timestamp <= timestamp)
+        {
+            HypeChange change = hypeEvents[hypeEventIndex];
+            currentHypeState = change.newState;
+            currentMoshZone = change.isMoshZone;
+            hypeEventIndex++;
+        }
+
+        previousBeatTimestamp = timestamp;
+        hype = new HypeAnalysis(currentHypeState, currentMoshZone);
+        return true;
+    }
+
+    private static int FindFirstHypeIndexAtOrAfter(IReadOnlyList<HypeChange> hypeEvents, float songTime)
+    {
+        if (hypeEvents == null || hypeEvents.Count == 0)
+            return 0;
+
+        int low = 0;
+        int high = hypeEvents.Count - 1;
+        int result = hypeEvents.Count;
+
+        while (low <= high)
+        {
+            int mid = low + ((high - low) / 2);
+            if (hypeEvents[mid].timestamp >= songTime)
+            {
+                result = mid;
+                high = mid - 1;
+            }
+            else
+            {
+                low = mid + 1;
+            }
+        }
+
+        return result;
+    }
+
+    private void ResetHypeState()
+    {
+        currentHypeState = HypeState.Medium;
+        currentMoshZone = false;
+        hypeEventIndex = 0;
+        previousBeatTimestamp = 0f;
+    }
+
     private void ConfigurePoseFamilies()
     {
         if (members == null)
@@ -455,7 +526,8 @@ public class AudienceManager : MonoBehaviour
         AudienceMember firstMember = members[0];
         instancedMesh = firstMember != null ? firstMember.Mesh : null;
         Material sourceMaterial = firstMember != null ? firstMember.SharedMaterial : null;
-        Shader instancedShader = Shader.Find("Softcen/Audience Instanced Atlas");
+
+        Shader instancedShader = useLit ? Shader.Find("Softcen/Audience Instanced Atlas Lit") : Shader.Find("Softcen/Audience Instanced Atlas");
 
         if (instancedMesh == null || sourceMaterial == null || instancedShader == null)
         {

@@ -315,7 +315,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &393026149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,6 +374,14 @@ MonoBehaviour:
   hopSize: 1024
   prettyPrintJson: 1
   destroyDecodedClipAfterAnalysis: 1
+  hypeLookAheadSeconds: 10
+  hypeSampleStepSeconds: 0.25
+  quietWindowBeatThreshold: 8
+  mediumBeatsPerSecond: 1.2
+  highAverageIntensity: 0.4
+  highUniqueBeatTypes: 3
+  simultaneousBeatWindow: 0.18
+  moshUniqueBeatTypes: 3
   clip: {fileID: 8300000, guid: 26418a808a183432c91a27262bb3dab3, type: 3}
 --- !u!4 &393026150
 Transform:
@@ -544,7 +552,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &2025304287
 AudioSource:
   m_ObjectHideFlags: 0

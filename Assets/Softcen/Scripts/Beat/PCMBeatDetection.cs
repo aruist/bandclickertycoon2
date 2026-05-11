@@ -17,6 +17,15 @@ public sealed class PCMBeatDetection : MonoBehaviour
     [SerializeField, Min(0)] private int hopSize = 1024;
     [SerializeField] private bool prettyPrintJson = true;
     [SerializeField] private bool destroyDecodedClipAfterAnalysis = true;
+    [Header("Hype Analysis")]
+    [SerializeField, Min(0.1f)] private float hypeLookAheadSeconds = 10f;
+    [SerializeField, Min(0.1f)] private float hypeSampleStepSeconds = 0.25f;
+    [SerializeField, Min(0)] private int quietWindowBeatThreshold = 8;
+    [SerializeField, Min(0f)] private float mediumBeatsPerSecond = 1.2f;
+    [SerializeField, Range(0f, 1f)] private float highAverageIntensity = 0.4f; //0.4 - 0.45
+    [SerializeField, Min(1)] private int highUniqueBeatTypes = 3;
+    [SerializeField, Min(0f)] private float simultaneousBeatWindow = 0.18f; // 0.12-0.18
+    [SerializeField, Min(1)] private int moshUniqueBeatTypes = 3;
 
     public float ProgressPercentage => progressPermille / 10f;
     public bool IsRunning => isRunning;
@@ -239,7 +248,15 @@ public sealed class PCMBeatDetection : MonoBehaviour
             TimestampDecimals = Math.Max(0, Math.Min(5, settings.timestampDecimals)),
             RoundIntensities = settings.roundIntensities,
             IntensityDecimals = Math.Max(0, Math.Min(5, settings.intensityDecimals)),
-            FrequencyRanges = CloneFrequencyRanges(settings.frequencyRanges)
+            FrequencyRanges = CloneFrequencyRanges(settings.frequencyRanges),
+            HypeLookAheadSeconds = Math.Max(0.1f, hypeLookAheadSeconds),
+            HypeSampleStepSeconds = Math.Max(0.1f, hypeSampleStepSeconds),
+            QuietWindowBeatThreshold = Math.Max(0, quietWindowBeatThreshold),
+            MediumBeatsPerSecond = Math.Max(0f, mediumBeatsPerSecond),
+            HighAverageIntensity = Mathf.Clamp01(highAverageIntensity),
+            HighUniqueBeatTypes = Math.Max(1, highUniqueBeatTypes),
+            SimultaneousBeatWindow = Math.Max(0f, simultaneousBeatWindow),
+            MoshUniqueBeatTypes = Math.Max(1, moshUniqueBeatTypes)
         };
     }
 
@@ -343,6 +360,14 @@ public sealed class PCMBeatDetection : MonoBehaviour
         public bool RoundIntensities;
         public int IntensityDecimals;
         public BeatDetection.FrequencyRange[] FrequencyRanges;
+        public float HypeLookAheadSeconds;
+        public float HypeSampleStepSeconds;
+        public int QuietWindowBeatThreshold;
+        public float MediumBeatsPerSecond;
+        public float HighAverageIntensity;
+        public int HighUniqueBeatTypes;
+        public float SimultaneousBeatWindow;
+        public int MoshUniqueBeatTypes;
         public volatile int ProgressPermille;
     }
 
@@ -428,7 +453,108 @@ public sealed class PCMBeatDetection : MonoBehaviour
             }
 
             input.ProgressPermille = 1000;
+            beatData.hypeEvents = BuildHypeTimeline(beatData.beatEvents, input.AudioLength);
             return beatData;
+        }
+
+        private List<HypeChange> BuildHypeTimeline(List<BeatEvent> beatEvents, float audioLength)
+        {
+            List<HypeChange> timeline = new List<HypeChange>();
+            if (beatEvents == null || beatEvents.Count == 0)
+                return timeline;
+
+            float duration = Math.Max(0.1f, audioLength);
+            float step = Math.Max(0.1f, input.HypeSampleStepSeconds);
+            HypeState? lastState = null;
+            bool? lastMosh = null;
+
+            for (float t = 0f; t <= duration + 0.001f; t += step)
+            {
+                HypeSample sample = AnalyzeWindowAtTime(beatEvents, t);
+                if (!lastState.HasValue || sample.State != lastState.Value || sample.IsMoshZone != lastMosh.Value)
+                {
+                    timeline.Add(new HypeChange
+                    {
+                        timestamp = input.RoundTimestamps ? Round(t, input.TimestampDecimals) : t,
+                        newState = sample.State,
+                        isMoshZone = sample.IsMoshZone
+                    });
+
+                    lastState = sample.State;
+                    lastMosh = sample.IsMoshZone;
+                }
+            }
+
+            return timeline;
+        }
+
+        private HypeSample AnalyzeWindowAtTime(List<BeatEvent> beatEvents, float timestamp)
+        {
+            float lookAhead = Math.Max(0.1f, input.HypeLookAheadSeconds);
+            float windowEnd = timestamp + lookAhead;
+            float halfTime = timestamp + lookAhead * 0.5f;
+
+            int beatCount = 0;
+            float intensitySum = 0f;
+            float firstHalfIntensity = 0f;
+            float secondHalfIntensity = 0f;
+            HashSet<BeatDetection.BeatType> highTypes = new HashSet<BeatDetection.BeatType>();
+            HashSet<BeatDetection.BeatType> simultaneousTypes = new HashSet<BeatDetection.BeatType>();
+
+            for (int i = 0; i < beatEvents.Count; i++)
+            {
+                BeatEvent beatEvent = beatEvents[i];
+                if (beatEvent.timestamp < timestamp)
+                    continue;
+                if (beatEvent.timestamp > windowEnd)
+                    break;
+
+                beatCount++;
+                intensitySum += beatEvent.intensity;
+
+                if (beatEvent.timestamp < halfTime)
+                    firstHalfIntensity += beatEvent.intensity;
+                else
+                    secondHalfIntensity += beatEvent.intensity;
+
+                if (beatEvent.intensity >= input.HighAverageIntensity)
+                    highTypes.Add(beatEvent.beatType);
+
+                if (Math.Abs(beatEvent.timestamp - timestamp) <= input.SimultaneousBeatWindow &&
+                    beatEvent.intensity >= input.HighAverageIntensity)
+                {
+                    simultaneousTypes.Add(beatEvent.beatType);
+                }
+            }
+
+            float beatsPerSecond = beatCount / lookAhead;
+            float averageIntensity = beatCount > 0 ? intensitySum / beatCount : 0f;
+            bool rising = secondHalfIntensity > firstHalfIntensity * 1.15f;
+            bool quiet = beatCount <= input.QuietWindowBeatThreshold;
+            bool high = averageIntensity >= input.HighAverageIntensity &&
+                        highTypes.Count >= input.HighUniqueBeatTypes &&
+                        (rising || beatsPerSecond >= input.MediumBeatsPerSecond);
+
+            HypeState state = HypeState.Medium;
+            if (quiet)
+                state = HypeState.Low;
+            else if (high)
+                state = HypeState.High;
+
+            bool isMoshZone = simultaneousTypes.Count >= input.MoshUniqueBeatTypes;
+            return new HypeSample(state, isMoshZone);
+        }
+
+        private readonly struct HypeSample
+        {
+            public readonly HypeState State;
+            public readonly bool IsMoshZone;
+
+            public HypeSample(HypeState state, bool isMoshZone)
+            {
+                State = state;
+                IsMoshZone = isMoshZone;
+            }
         }
 
         private void FillWindow(int frameOffset)
