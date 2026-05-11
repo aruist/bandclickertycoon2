@@ -266,6 +266,9 @@ public class AudienceManager : MonoBehaviour
 
     private void TriggerAudienceReaction(AudienceMember.MotionStyle motionStyle, PoseGroup poseGroup, float strength, float chance, bool ignorePoseCooldown)
     {
+        if (members == null)
+            return;
+
         for (int i = 0; i < members.Length; i++)
         {
             if (members[i] == null || Random.value > chance)
@@ -286,6 +289,23 @@ public class AudienceManager : MonoBehaviour
 
         members[memberIndex].TriggerReaction(motionStyle, strength);
         TrySetPose(memberIndex, poseGroup, ignorePoseCooldown);
+    }
+
+
+    private static int GetMotionPriority(AudienceMember.MotionStyle motionStyle)
+    {
+        switch (motionStyle)
+        {
+            case AudienceMember.MotionStyle.Jump:
+                return 4;
+            case AudienceMember.MotionStyle.Clap:
+            case AudienceMember.MotionStyle.Wave:
+                return 3;
+            case AudienceMember.MotionStyle.HeadBob:
+                return 2;
+            default:
+                return 1;
+        }
     }
 
     private float GetSpatialDelay(AudienceMember member)
@@ -483,7 +503,7 @@ public class AudienceManager : MonoBehaviour
             if (member == null || !member.gameObject.activeInHierarchy)
                 continue;
 
-            matrices[count] = member.transform.localToWorldMatrix;
+            matrices[count] = member.RenderMatrix;
             atlasSTs[count] = member.AtlasST;
             count++;
         }

@@ -16,6 +16,7 @@ public class AudienceMember : MonoBehaviour
     [SerializeField] private Transform swayTransform;
     [SerializeField] private float swayRotation = 20f;
     [SerializeField] private float swayX = 1f;
+    [SerializeField] private bool useBottomPivotSway = true;
     [SerializeField] private int atlasColumn = 0;
 
     [Header("Motion")]
@@ -39,6 +40,8 @@ public class AudienceMember : MonoBehaviour
     private Vector3 baseScale;
     private Vector3 basePosition;
     private Quaternion baseRotation;
+    private Vector3 meshBottomPivot;
+    private Matrix4x4 renderMatrix = Matrix4x4.identity;
 
     private float pulse;
     private float targetPulse;
@@ -54,6 +57,7 @@ public class AudienceMember : MonoBehaviour
     private static readonly int AudienceAtlasST = Shader.PropertyToID("_AudienceAtlasST");
 
     public int AtlasColumn => atlasColumn;
+    public Matrix4x4 RenderMatrix => renderMatrix;
 
     private void Awake()
     {
@@ -94,6 +98,12 @@ public class AudienceMember : MonoBehaviour
 
         if (meshFilter == null)
             meshFilter = GetComponent<MeshFilter>();
+
+        if (meshFilter != null && meshFilter.sharedMesh != null)
+        {
+            Bounds bounds = meshFilter.sharedMesh.bounds;
+            meshBottomPivot = new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
+        }
 
         if (block == null)
             block = new MaterialPropertyBlock();
@@ -199,9 +209,28 @@ public class AudienceMember : MonoBehaviour
         float sway = Mathf.Sin(Time.time * currentSwaySpeed + swayOffset) * 0.025f;
         float swayXcoord = sway * swayX;
         float height = pulse * bobHeight + jumpPulse * jumpHeight;
+        float swayAngle = sway * swayRotation;
 
         transform.localPosition = basePosition + new Vector3(swayXcoord, height, 0f);
         transform.localScale = baseScale * (1f + pulse * pulseScaleBoost);
-        swayTransform.localRotation = baseRotation * Quaternion.Euler(0f, 0f, sway * swayRotation);
+        Matrix4x4 baseMatrix = transform.localToWorldMatrix;
+
+        if (useBottomPivotSway)
+        {
+            Vector3 worldPivot = transform.TransformPoint(meshBottomPivot);
+            Quaternion rotation = Quaternion.AngleAxis(swayAngle, transform.forward);
+            renderMatrix =
+                Matrix4x4.Translate(worldPivot) *
+                Matrix4x4.Rotate(rotation) *
+                Matrix4x4.Translate(-worldPivot) *
+                baseMatrix;
+
+            swayTransform.localRotation = baseRotation;
+        }
+        else
+        {
+            renderMatrix = baseMatrix;
+            swayTransform.localRotation = baseRotation * Quaternion.Euler(0f, 0f, swayAngle);
+        }
     }
 }

@@ -27,9 +27,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2881995481852273237}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.999, z: 0}
-  m_LocalScale: {x: 1.6, y: 2, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1736264919859322289}
@@ -105,8 +105,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudienceMember
   meshRenderer: {fileID: 753565096702581391}
   swayTransform: {fileID: 6290374099637070055}
-  swayRotation: 20
+  swayRotation: 1
   swayX: 0
+  useBottomPivotSway: 1
   atlasColumn: 3
   idleSwaySpeed: 1.2
   activeSwaySpeed: 2.2
