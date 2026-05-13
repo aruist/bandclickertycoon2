@@ -41,6 +41,7 @@ public class BandPerformerMember : MonoBehaviour
     [SerializeField] private float frameChangeSpeed = 0.25f;
     [Range(0, 15)]
     [SerializeField] private int previewFrame = 0;
+    [SerializeField] private int startFrame = 0;
 
     private Vector3 baseLocalPosition;
     private Quaternion baseLocalRotation;
@@ -96,7 +97,7 @@ public class BandPerformerMember : MonoBehaviour
 
         if (block == null)
             block = new MaterialPropertyBlock();
-        SetFrame(previewFrame);
+        SetFrame(startFrame);
 
     }
 
@@ -109,7 +110,7 @@ public class BandPerformerMember : MonoBehaviour
         {
             frameTimer = 0;
             previewFrame++;
-            if (previewFrame > 3) previewFrame = 0;
+            if (previewFrame > startFrame + 3) previewFrame = startFrame;
             SetFrame(previewFrame);
         }
         //if (Application.isPlaying) return;
