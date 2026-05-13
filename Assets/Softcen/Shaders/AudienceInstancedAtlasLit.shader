@@ -5,7 +5,6 @@ Shader "Softcen/Audience Instanced Atlas Lit"
         _BaseMap("Texture", 2D) = "white" {}
         _BaseColor("Color", Color) = (1, 1, 1, 1)
         _AudienceAtlasST("Atlas ST", Vector) = (1, 1, 0, 0)
-        _Smoothness("Smoothness", Range(0, 1)) = 0.5
     }
 
     SubShader
@@ -30,7 +29,6 @@ Shader "Softcen/Audience Instanced Atlas Lit"
             #pragma vertex Vert
             #pragma fragment Frag
 
-            // Required for URP Lighting & Shadows
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
@@ -44,7 +42,6 @@ Shader "Softcen/Audience Instanced Atlas Lit"
 
             CBUFFER_START(UnityPerMaterial)
                 half4 _BaseColor;
-                half _Smoothness;
             CBUFFER_END
 
             UNITY_INSTANCING_BUFFER_START(Props)
@@ -54,17 +51,18 @@ Shader "Softcen/Audience Instanced Atlas Lit"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                float2 uv         : TEXCOORD0;
-                float3 normalOS   : NORMAL; // Added for lighting
+                float2 uv : TEXCOORD0;
+                float3 normalOS : NORMAL;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             struct Varyings
             {
                 float4 positionCS : SV_POSITION;
-                float2 uv         : TEXCOORD0;
-                float3 normalWS   : TEXCOORD1; // Added for lighting
-                float3 positionWS : TEXCOORD2; // Added for lighting
+                float2 uv : TEXCOORD0;
+                float3 normalWS : TEXCOORD1;
+                float3 positionWS : TEXCOORD2;
+                float4 shadowCoord : TEXCOORD3;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -81,8 +79,9 @@ Shader "Softcen/Audience Instanced Atlas Lit"
 
                 output.positionCS = posInputs.positionCS;
                 output.positionWS = posInputs.positionWS;
-                output.normalWS = normInputs.normalWS;
+                output.normalWS = NormalizeNormalPerVertex(normInputs.normalWS);
                 output.uv = input.uv * atlasST.xy + atlasST.zw;
+                output.shadowCoord = TransformWorldToShadowCoord(posInputs.positionWS);
 
                 return output;
             }
@@ -91,26 +90,26 @@ Shader "Softcen/Audience Instanced Atlas Lit"
             {
                 UNITY_SETUP_INSTANCE_ID(input);
 
-                // 1. Sample Base Color
                 half4 texColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * _BaseColor;
+                half3 normalWS = normalize(input.normalWS);
 
-                // 2. Setup Lighting Data
-                InputData inputData = (InputData)0;
-                inputData.normalWS = normalize(input.normalWS);
-                inputData.positionWS = input.positionWS;
-                inputData.viewDirectionWS = GetWorldSpaceViewDir(input.positionWS);
-                inputData.shadowCoord = GetShadowCoord(GetVertexPositionInputs(input.positionWS));
+                half3 lighting = SampleSH(normalWS);
 
-                // 3. Get Main Light
-                Light mainLight = GetMainLight(inputData.shadowCoord);
+                Light mainLight = GetMainLight(input.shadowCoord);
+                half mainNdotL = saturate(dot(normalWS, mainLight.direction));
+                lighting += mainLight.color * (mainNdotL * mainLight.distanceAttenuation * mainLight.shadowAttenuation);
 
-                // 4. Calculate Simple Shading (Lambert/Diffuse)
-                half3 diffuse = LightingLambert(mainLight.color, mainLight.direction, inputData.normalWS);
+                #ifdef _ADDITIONAL_LIGHTS
+                uint additionalLightCount = GetAdditionalLightsCount();
+                for (uint lightIndex = 0u; lightIndex < additionalLightCount; lightIndex++)
+                {
+                    Light light = GetAdditionalLight(lightIndex, input.positionWS);
+                    half ndotl = saturate(dot(normalWS, light.direction));
+                    lighting += light.color * (ndotl * light.distanceAttenuation * light.shadowAttenuation);
+                }
+                #endif
 
-                // 5. Combine (Ambient + Diffuse)
-                // Sample baked GI or just use a flat ambient color
-                half3 ambient = SampleSH(inputData.normalWS);
-                half3 finalRGB = texColor.rgb * (diffuse + ambient);
+                half3 finalRGB = texColor.rgb * lighting;
 
                 return half4(finalRGB, texColor.a);
             }

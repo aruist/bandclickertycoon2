@@ -172,7 +172,7 @@ MonoBehaviour:
   - {fileID: 1186869782803634118, guid: ec14977ad7279407fb9fd473506fddd4, type: 3}
   - {fileID: 2709390302950329481, guid: 83abb4276a77e40468b9b95bbd620058, type: 3}
   - {fileID: 5068571738649879028, guid: f9acde072e2084b138ad60076686617d, type: 3}
-  audienceSize: 200
+  audienceSize: 300
   audienceFloor: {fileID: 567772388}
   minPoseHoldTime: 0.35
   maxPoseHoldTime: 0.8
@@ -3224,7 +3224,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1128075702739499374, guid: 26cd34013183e4d2fa9c9876e8e89254, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.94
+      value: -5.866
       objectReference: {fileID: 0}
     - target: {fileID: 1128075702739499374, guid: 26cd34013183e4d2fa9c9876e8e89254, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3232,7 +3232,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1128075702739499374, guid: 26cd34013183e4d2fa9c9876e8e89254, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.44
+      value: -5.56
       objectReference: {fileID: 0}
     - target: {fileID: 1128075702739499374, guid: 26cd34013183e4d2fa9c9876e8e89254, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3275,16 +3275,28 @@ PrefabInstance:
       value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 6105848491551375353, guid: 26cd34013183e4d2fa9c9876e8e89254, type: 3}
+      propertyPath: idleSwaySpeed
+      value: 2.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6105848491551375353, guid: 26cd34013183e4d2fa9c9876e8e89254, type: 3}
       propertyPath: swayTransform
       value: 
       objectReference: {fileID: 1973135212026175172}
+    - target: {fileID: 6105848491551375353, guid: 26cd34013183e4d2fa9c9876e8e89254, type: 3}
+      propertyPath: activeSwaySpeed
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 6105848491551375353, guid: 26cd34013183e4d2fa9c9876e8e89254, type: 3}
+      propertyPath: useBottomPivotSway
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9007620357413338216, guid: 26cd34013183e4d2fa9c9876e8e89254, type: 3}
       propertyPath: m_Name
       value: Female01
       objectReference: {fileID: 0}
     - target: {fileID: 9007620357413338216, guid: 26cd34013183e4d2fa9c9876e8e89254, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

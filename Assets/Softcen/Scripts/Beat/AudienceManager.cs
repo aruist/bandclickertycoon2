@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class AudienceManager : MonoBehaviour
 {
+    public static AudienceManager Instance;
     private const int MaxInstancesPerDraw = 1023;
 
-    private enum PoseGroup
+    public enum PoseGroup
     {
         Idle,
         Clap,
@@ -61,8 +62,8 @@ public class AudienceManager : MonoBehaviour
     private static readonly int ColorId = Shader.PropertyToID("_Color");
     private static readonly int AudienceAtlasST = Shader.PropertyToID("_AudienceAtlasST");
 
-    private Mesh instancedMesh;
-    private Material instancedMaterial;
+    public Mesh instancedMesh;
+    public Material instancedMaterial;
     private MaterialPropertyBlock instancedBlock;
     private float[] nextPoseChangeTimes;
     private Bounds audienceLocalBounds;
@@ -125,6 +126,12 @@ public class AudienceManager : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
         SpawnAudienceFromPrefabs();
 
         if (members == null || members.Length == 0)
@@ -329,7 +336,8 @@ public class AudienceManager : MonoBehaviour
                 continue;
 
             float delay = Random.Range(0f, Mathf.Max(0f, randomLatencyMax)) + GetSpatialDelay(members[i]);
-            StartCoroutine(TriggerMemberDelayed(i, motionStyle, poseGroup, strength, ignorePoseCooldown, delay));
+            members[i].SetPose(i, motionStyle, poseGroup, strength, ignorePoseCooldown, delay);
+            // StartCoroutine(TriggerMemberDelayed(i, motionStyle, poseGroup, strength, ignorePoseCooldown, delay));
         }
     }
 
@@ -518,7 +526,7 @@ public class AudienceManager : MonoBehaviour
         }
     }
 
-    private void TrySetPose(int memberIndex, PoseGroup poseGroup, bool ignoreCooldown)
+    public void TrySetPose(int memberIndex, PoseGroup poseGroup, bool ignoreCooldown)
     {
         if (members == null || memberIndex < 0 || memberIndex >= members.Length || members[memberIndex] == null)
             return;

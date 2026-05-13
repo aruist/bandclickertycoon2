@@ -1,4 +1,7 @@
+using System;
+using UnityEditor.Build.Content;
 using UnityEngine;
+using static AudienceManager;
 
 [ExecuteAlways]
 public class AudienceMember : MonoBehaviour
@@ -47,9 +50,9 @@ public class AudienceMember : MonoBehaviour
     private float targetPulse;
     private float jumpPulse;
     private float targetJumpPulse;
-    private float currentSwaySpeed;
+    public  float currentSwaySpeed;
     private float styleTimer;
-    private float swayOffset;
+    public float swayOffset;
     private float randomPower = 1f;
     private MotionStyle motionStyle = MotionStyle.IdleSway;
 
@@ -69,8 +72,8 @@ public class AudienceMember : MonoBehaviour
             basePosition = transform.localPosition;
             baseRotation = swayTransform.localRotation;
 
-            swayOffset = Random.value * 100f;
-            randomPower = Random.Range(0.75f, 1.25f);
+            swayOffset = UnityEngine.Random.value * 100f;
+            randomPower = UnityEngine.Random.Range(0.75f, 1.25f);
             currentSwaySpeed = idleSwaySpeed;
 
             SetFrame(previewFrame);
@@ -188,10 +191,45 @@ public class AudienceMember : MonoBehaviour
         return new Vector4(scaleX, scaleY, offsetX, offsetY);
     }
 
+    private int memberIndex;
+    private MotionStyle newMotionStyle;
+    private PoseGroup newMotionPoseGroup;
+    private float newMotionStrength;
+    private float motionChangeDelayTimer;
+    private bool motionChangeWaiting;
+    private bool newMotionIgnorePoseCooldown;
+
+    public void SetPose(int index, MotionStyle mStyle, PoseGroup poseGroup, float strength, bool ignorePoseCooldown, float delay)
+    {
+        memberIndex = index;
+        newMotionStyle = mStyle;
+        newMotionPoseGroup = poseGroup;
+        newMotionStrength = strength;
+        newMotionIgnorePoseCooldown = ignorePoseCooldown;
+        motionChangeDelayTimer = delay;
+        motionChangeWaiting = true;
+
+        // Should start delay wait:
+        // TriggerMemberDelayed(int memberIndex, AudienceMember.MotionStyle motionStyle, PoseGroup poseGroup, float strength, bool ignorePoseCooldown, float delay)
+    }
+
     private void Update()
     {
         if (!Application.isPlaying)
             return;
+        if (motionChangeWaiting)
+        {
+            motionChangeDelayTimer -= Time.deltaTime;
+            if (motionChangeDelayTimer <= 0f)
+            {
+                motionChangeWaiting = false;
+                // TODO change motion:
+                Debug.Log($"MotionChange: {newMotionStyle}, strength: {newMotionStrength}");
+                TriggerReaction(newMotionStyle, newMotionStrength);
+                if (AudienceManager.Instance != null) AudienceManager.Instance.TrySetPose(memberIndex, newMotionPoseGroup, newMotionIgnorePoseCooldown);
+                return;
+            }
+        }
 
         targetPulse = Mathf.MoveTowards(targetPulse, 0f, Time.deltaTime * 2.5f);
         pulse = Mathf.Lerp(pulse, targetPulse, Time.deltaTime * 12f);
@@ -205,8 +243,9 @@ public class AudienceMember : MonoBehaviour
 
         float targetSwaySpeed = motionStyle == MotionStyle.IdleSway ? idleSwaySpeed : activeSwaySpeed;
         currentSwaySpeed = Mathf.Lerp(currentSwaySpeed, targetSwaySpeed, Time.deltaTime * 4f);
-
-        float sway = Mathf.Sin(Time.time * currentSwaySpeed + swayOffset) * 0.025f;
+        // float sway = Mathf.Sin(Time.time * 2.2f + swayOffset) * 0.025f;
+        // float sway = Mathf.Sin(Time.time * currentSwaySpeed + swayOffset) * 0.025f;
+        float sway = Mathf.Sin(Time.time * idleSwaySpeed + swayOffset) * 0.025f;
         float swayXcoord = sway * swayX;
         float height = pulse * bobHeight + jumpPulse * jumpHeight;
         float swayAngle = sway * swayRotation;
@@ -233,4 +272,5 @@ public class AudienceMember : MonoBehaviour
             swayTransform.localRotation = baseRotation * Quaternion.Euler(0f, 0f, swayAngle);
         }
     }
+
 }

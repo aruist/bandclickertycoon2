@@ -105,19 +105,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudienceMember
   meshRenderer: {fileID: 7165042517782169335}
   swayTransform: {fileID: 4402084358101079203}
-  swayRotation: 1
-  swayX: 0
+  swayRotation: 50
+  swayX: 0.1
   useBottomPivotSway: 1
   atlasColumn: 0
   idleSwaySpeed: 1.2
   activeSwaySpeed: 2.2
   bobHeight: 0.08
-  jumpHeight: 0.22
+  jumpHeight: 0.1
   pulseScaleBoost: 0.08
   styleHoldTime: 0.35
   atlasCols: 4
   atlasRows: 4
   previewFrame: 0
+  currentSwaySpeed: 0
+  swayOffset: 0
 --- !u!1 &9007620357413338216
 GameObject:
   m_ObjectHideFlags: 0
