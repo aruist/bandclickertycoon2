@@ -44,8 +44,9 @@ public class AudienceManager : MonoBehaviour
     [SerializeField] private int moshUniqueBeatTypes = 5;
 
     [Header("Audience Delay")]
-    [SerializeField] private float randomLatencyMax = 0.15f;
-    [SerializeField] private float backRowDelay = 0.2f;
+    [SerializeField] private float randomLatencyMax = 0.07f;
+    [SerializeField] private float backRowDelay = 0.1f;
+    [SerializeField] private float audienceTimingOffset = 0f;
     [SerializeField] private bool frontIsLowerLocalZ = true;
 
     [Header("Shader")]
@@ -73,6 +74,7 @@ public class AudienceManager : MonoBehaviour
     private bool currentMoshZone;
     private int hypeEventIndex;
     private float previousBeatTimestamp;
+    public float CurrentAudienceSongTime => beatPlay != null ? beatPlay.CurrentSongTime : Time.time;
 
     private struct AudienceDrawEntry
     {
@@ -253,79 +255,79 @@ public class AudienceManager : MonoBehaviour
 
         if (hype.IsMoshBeat)
         {
-            TriggerAudienceReaction(AudienceMember.MotionStyle.Jump, PoseGroup.Cheer, intensity * 1.4f, 1f, true);
+            TriggerAudienceReaction(AudienceMember.MotionStyle.Jump, PoseGroup.Cheer, intensity * 1.4f, 1f, true, timestamp);
             return;
         }
 
         switch (hype.State)
         {
             case HypeState.Low:
-                HandleLowHypeBeat(beatType, intensity);
+                HandleLowHypeBeat(beatType, intensity, timestamp);
                 break;
             case HypeState.Medium:
-                HandleMediumHypeBeat(beatType, intensity);
+                HandleMediumHypeBeat(beatType, intensity, timestamp);
                 break;
             default:
-                HandleHighHypeBeat(beatType, intensity);
+                HandleHighHypeBeat(beatType, intensity, timestamp);
                 break;
         }
     }
 
     public void OnKickBeat(float strength)
     {
-        TriggerAudienceReaction(AudienceMember.MotionStyle.HeadBob, PoseGroup.Idle, strength, 0.75f, false);
+        TriggerAudienceReaction(AudienceMember.MotionStyle.HeadBob, PoseGroup.Idle, strength, 0.75f, false, CurrentAudienceSongTime);
     }
 
     public void OnSnareBeat(float strength)
     {
-        TriggerAudienceReaction(AudienceMember.MotionStyle.Clap, PoseGroup.Clap, strength * 0.8f, 0.45f, false);
+        TriggerAudienceReaction(AudienceMember.MotionStyle.Clap, PoseGroup.Clap, strength * 0.8f, 0.45f, false, CurrentAudienceSongTime);
     }
 
     public void OnHighBeat(float strength)
     {
-        TriggerAudienceReaction(AudienceMember.MotionStyle.Wave, PoseGroup.Wave, strength * 0.65f, 0.35f, false);
+        TriggerAudienceReaction(AudienceMember.MotionStyle.Wave, PoseGroup.Wave, strength * 0.65f, 0.35f, false, CurrentAudienceSongTime);
     }
 
     public void OnDropMoment(float strength)
     {
-        TriggerAudienceReaction(AudienceMember.MotionStyle.Jump, PoseGroup.Cheer, strength * 1.5f, 1f, true);
+        TriggerAudienceReaction(AudienceMember.MotionStyle.Jump, PoseGroup.Cheer, strength * 1.5f, 1f, true, CurrentAudienceSongTime);
     }
 
-    private void HandleLowHypeBeat(BeatDetection.BeatType beatType, float intensity)
+    private void HandleLowHypeBeat(BeatDetection.BeatType beatType, float intensity, float timestamp)
     {
         if (beatType == BeatDetection.BeatType.Kick || beatType == BeatDetection.BeatType.BassDrum)
-            TriggerAudienceReaction(AudienceMember.MotionStyle.HeadBob, PoseGroup.Idle, intensity * 0.6f, 0.45f, false);
+            TriggerAudienceReaction(AudienceMember.MotionStyle.HeadBob, PoseGroup.Idle, intensity * 0.6f, 0.45f, false, timestamp);
     }
 
-    private void HandleMediumHypeBeat(BeatDetection.BeatType beatType, float intensity)
+    private void HandleMediumHypeBeat(BeatDetection.BeatType beatType, float intensity, float timestamp)
     {
         if (beatType == BeatDetection.BeatType.Kick || beatType == BeatDetection.BeatType.BassDrum)
-            TriggerAudienceReaction(AudienceMember.MotionStyle.HeadBob, PoseGroup.Idle, intensity, 0.75f, false);
+            TriggerAudienceReaction(AudienceMember.MotionStyle.HeadBob, PoseGroup.Idle, intensity, 0.75f, false, timestamp);
         else if (beatType == BeatDetection.BeatType.Snare)
-            TriggerAudienceReaction(AudienceMember.MotionStyle.Clap, PoseGroup.Clap, intensity, 0.65f, false);
+            TriggerAudienceReaction(AudienceMember.MotionStyle.Clap, PoseGroup.Clap, intensity, 0.65f, false, timestamp);
         else if (beatType == BeatDetection.BeatType.HiHat || beatType == BeatDetection.BeatType.Cymbal)
-            TriggerAudienceReaction(AudienceMember.MotionStyle.Wave, PoseGroup.Wave, intensity, 0.45f, false);
+            TriggerAudienceReaction(AudienceMember.MotionStyle.Wave, PoseGroup.Wave, intensity, 0.45f, false, timestamp);
     }
 
-    private void HandleHighHypeBeat(BeatDetection.BeatType beatType, float intensity)
+    private void HandleHighHypeBeat(BeatDetection.BeatType beatType, float intensity, float timestamp)
     {
         if (beatType == BeatDetection.BeatType.Kick ||
             beatType == BeatDetection.BeatType.BassDrum ||
             beatType == BeatDetection.BeatType.Energy)
         {
-            TriggerAudienceReaction(AudienceMember.MotionStyle.Jump, PoseGroup.Cheer, intensity * 1.2f, 0.9f, true);
+            TriggerAudienceReaction(AudienceMember.MotionStyle.Jump, PoseGroup.Cheer, intensity * 1.2f, 0.9f, true, timestamp);
         }
         else if (beatType == BeatDetection.BeatType.Snare)
         {
-            TriggerAudienceReaction(AudienceMember.MotionStyle.Clap, PoseGroup.Clap, intensity, 0.75f, false);
+            TriggerAudienceReaction(AudienceMember.MotionStyle.Clap, PoseGroup.Clap, intensity, 0.75f, false, timestamp);
         }
         else if (beatType == BeatDetection.BeatType.HiHat || beatType == BeatDetection.BeatType.Cymbal)
         {
-            TriggerAudienceReaction(AudienceMember.MotionStyle.Wave, PoseGroup.Wave, intensity, 0.65f, false);
+            TriggerAudienceReaction(AudienceMember.MotionStyle.Wave, PoseGroup.Wave, intensity, 0.65f, false, timestamp);
         }
     }
 
-    private void TriggerAudienceReaction(AudienceMember.MotionStyle motionStyle, PoseGroup poseGroup, float strength, float chance, bool ignorePoseCooldown)
+    private void TriggerAudienceReaction(AudienceMember.MotionStyle motionStyle, PoseGroup poseGroup, float strength, float chance, bool ignorePoseCooldown, float beatTimestamp)
     {
         if (members == null)
             return;
@@ -336,37 +338,8 @@ public class AudienceManager : MonoBehaviour
                 continue;
 
             float delay = Random.Range(0f, Mathf.Max(0f, randomLatencyMax)) + GetSpatialDelay(members[i]);
-            members[i].SetPose(i, motionStyle, poseGroup, strength, ignorePoseCooldown, delay);
-            // StartCoroutine(TriggerMemberDelayed(i, motionStyle, poseGroup, strength, ignorePoseCooldown, delay));
-        }
-    }
-
-    private IEnumerator TriggerMemberDelayed(int memberIndex, AudienceMember.MotionStyle motionStyle, PoseGroup poseGroup, float strength, bool ignorePoseCooldown, float delay)
-    {
-        if (delay > 0f)
-            yield return new WaitForSeconds(delay);
-
-        if (members == null || memberIndex < 0 || memberIndex >= members.Length || members[memberIndex] == null)
-            yield break;
-
-        members[memberIndex].TriggerReaction(motionStyle, strength);
-        TrySetPose(memberIndex, poseGroup, ignorePoseCooldown);
-    }
-
-
-    private static int GetMotionPriority(AudienceMember.MotionStyle motionStyle)
-    {
-        switch (motionStyle)
-        {
-            case AudienceMember.MotionStyle.Jump:
-                return 4;
-            case AudienceMember.MotionStyle.Clap:
-            case AudienceMember.MotionStyle.Wave:
-                return 3;
-            case AudienceMember.MotionStyle.HeadBob:
-                return 2;
-            default:
-                return 1;
+            float triggerSongTime = beatTimestamp + audienceTimingOffset + delay;
+            members[i].SetPose(i, motionStyle, poseGroup, strength, ignorePoseCooldown, triggerSongTime);
         }
     }
 

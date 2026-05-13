@@ -24,6 +24,7 @@ public class AudienceMember : MonoBehaviour
     [Header("Motion")]
     [SerializeField] private float idleSwaySpeed = 1.2f;
     [SerializeField] private float activeSwaySpeed = 2.2f;
+    [SerializeField] private float swayFrequency = 1.2f;
     [SerializeField] private float bobHeight = 0.08f;
     [SerializeField] private float jumpHeight = 0.22f;
     [SerializeField] private float pulseScaleBoost = 0.08f;
@@ -49,7 +50,7 @@ public class AudienceMember : MonoBehaviour
     private float targetPulse;
     private float jumpPulse;
     private float targetJumpPulse;
-    public  float currentSwaySpeed;
+    public float currentSwaySpeed;
     private float styleTimer;
     public float swayOffset;
     private float randomPower = 1f;
@@ -73,7 +74,7 @@ public class AudienceMember : MonoBehaviour
 
             swayOffset = UnityEngine.Random.value * 100f;
             randomPower = UnityEngine.Random.Range(0.75f, 1.25f);
-            currentSwaySpeed = idleSwaySpeed;
+            currentSwaySpeed = swayFrequency;
 
             SetFrame(previewFrame);
         }
@@ -194,22 +195,26 @@ public class AudienceMember : MonoBehaviour
     private MotionStyle newMotionStyle;
     private PoseGroup newMotionPoseGroup;
     private float newMotionStrength;
-    private float motionChangeDelayTimer;
+    private float scheduledSongTime;
     private bool motionChangeWaiting;
     private bool newMotionIgnorePoseCooldown;
+    private int pendingPriority;
 
-    public void SetPose(int index, MotionStyle mStyle, PoseGroup poseGroup, float strength, bool ignorePoseCooldown, float delay)
+    public void SetPose(int index, MotionStyle mStyle, PoseGroup poseGroup, float strength, bool ignorePoseCooldown, float triggerSongTime)
     {
+        int priority = GetMotionPriority(mStyle);
+
+        if (motionChangeWaiting && priority < pendingPriority)
+            return;
+
         memberIndex = index;
         newMotionStyle = mStyle;
         newMotionPoseGroup = poseGroup;
         newMotionStrength = strength;
         newMotionIgnorePoseCooldown = ignorePoseCooldown;
-        motionChangeDelayTimer = delay;
+        scheduledSongTime = triggerSongTime;
         motionChangeWaiting = true;
-
-        // Should start delay wait:
-        // TriggerMemberDelayed(int memberIndex, AudienceMember.MotionStyle motionStyle, PoseGroup poseGroup, float strength, bool ignorePoseCooldown, float delay)
+        pendingPriority = priority;
     }
 
     private void Update()
@@ -218,12 +223,11 @@ public class AudienceMember : MonoBehaviour
             return;
         if (motionChangeWaiting)
         {
-            motionChangeDelayTimer -= Time.deltaTime;
-            if (motionChangeDelayTimer <= 0f)
+            float currentSongTime = AudienceManager.Instance != null ? AudienceManager.Instance.CurrentAudienceSongTime : Time.time;
+            if (currentSongTime >= scheduledSongTime)
             {
                 motionChangeWaiting = false;
-                // TODO change motion:
-                // Debug.Log($"MotionChange: {newMotionStyle}, strength: {newMotionStrength}");
+                pendingPriority = 0;
                 TriggerReaction(newMotionStyle, newMotionStrength);
                 if (AudienceManager.Instance != null) AudienceManager.Instance.TrySetPose(memberIndex, newMotionPoseGroup, newMotionIgnorePoseCooldown);
                 return;
@@ -240,11 +244,7 @@ public class AudienceMember : MonoBehaviour
         else
             motionStyle = MotionStyle.IdleSway;
 
-        float targetSwaySpeed = motionStyle == MotionStyle.IdleSway ? idleSwaySpeed : activeSwaySpeed;
-        currentSwaySpeed = Mathf.Lerp(currentSwaySpeed, targetSwaySpeed, Time.deltaTime * 4f);
-        // float sway = Mathf.Sin(Time.time * 2.2f + swayOffset) * 0.025f;
-        // float sway = Mathf.Sin(Time.time * currentSwaySpeed + swayOffset) * 0.025f;
-        float sway = Mathf.Sin(Time.time * idleSwaySpeed + swayOffset) * 0.025f;
+        float sway = Mathf.Sin(Time.time * swayFrequency + swayOffset) * 0.025f;
         float swayXcoord = sway * swayX;
         float height = pulse * bobHeight + jumpPulse * jumpHeight;
         float swayAngle = sway * swayRotation;
@@ -269,6 +269,22 @@ public class AudienceMember : MonoBehaviour
         {
             renderMatrix = baseMatrix;
             swayTransform.localRotation = baseRotation * Quaternion.Euler(0f, 0f, swayAngle);
+        }
+    }
+
+    private static int GetMotionPriority(MotionStyle motionStyle)
+    {
+        switch (motionStyle)
+        {
+            case MotionStyle.Jump:
+                return 4;
+            case MotionStyle.Clap:
+            case MotionStyle.Wave:
+                return 3;
+            case MotionStyle.HeadBob:
+                return 2;
+            default:
+                return 1;
         }
     }
 
