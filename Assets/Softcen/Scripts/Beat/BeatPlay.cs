@@ -15,6 +15,7 @@ public class BeatPlay : MonoBehaviour
     [Header("Playback")]
     [SerializeField] private bool loadOnAwake = true;
     [SerializeField] private bool playOnStart = false;
+    [SerializeField] private bool useDspClock = true;
     [SerializeField] private bool useTimeSamples = true;
 
     [Tooltip("Positive value fires beat events slightly before the audio timestamp. Useful if visuals feel late.")]
@@ -54,6 +55,9 @@ public class BeatPlay : MonoBehaviour
     private int currentBeatIndex;
     private float previousSongTime;
     private bool wasPlaying;
+    private double dspSongStartTime;
+    private float dspSongOffset;
+    private bool dspClockInitialized;
 
     private void Reset()
     {
@@ -163,6 +167,7 @@ public class BeatPlay : MonoBehaviour
         ResetPlaybackState(0f);
         audioSource.Stop();
         audioSource.time = 0f;
+        InitializeDspClock(0f);
         audioSource.Play();
     }
 
@@ -172,6 +177,7 @@ public class BeatPlay : MonoBehaviour
             audioSource.Stop();
 
         ResetPlaybackState(0f);
+        dspClockInitialized = false;
     }
 
     public void ResetPlaybackState(float songTime)
@@ -179,6 +185,8 @@ public class BeatPlay : MonoBehaviour
         currentBeatIndex = FindFirstBeatIndexAtOrAfter(songTime);
         previousSongTime = songTime;
         wasPlaying = false;
+        if (useDspClock)
+            InitializeDspClock(songTime);
     }
 
     private void Tick()
@@ -192,7 +200,13 @@ public class BeatPlay : MonoBehaviour
             return;
         }
 
+        float reportedSongTime = GetReportedAudioTime();
+        if (!wasPlaying)
+            InitializeDspClock(reportedSongTime);
+
         float songTime = GetSongTime();
+        RebaseDspClockIfNeeded(songTime, reportedSongTime);
+        songTime = GetSongTime();
         float triggerTime = songTime + visualLeadTime;
 
         // Detect loop, rewind, or manual seek backwards.
@@ -235,10 +249,42 @@ public class BeatPlay : MonoBehaviour
 
     private float GetSongTime()
     {
+        if (useDspClock && audioSource != null && audioSource.isPlaying && dspClockInitialized)
+        {
+            float elapsed = (float)(AudioSettings.dspTime - dspSongStartTime);
+            float songTime = dspSongOffset + elapsed;
+
+            if (audioSource.loop && audioSource.clip != null && audioSource.clip.length > 0f)
+                songTime = Mathf.Repeat(songTime, audioSource.clip.length);
+
+            return songTime;
+        }
+
+        return GetReportedAudioTime();
+    }
+
+    private float GetReportedAudioTime()
+    {
         if (useTimeSamples && audioSource.clip != null && audioSource.clip.frequency > 0)
             return audioSource.timeSamples / (float)audioSource.clip.frequency;
 
         return audioSource.time;
+    }
+
+    private void InitializeDspClock(float songTime)
+    {
+        dspSongStartTime = AudioSettings.dspTime;
+        dspSongOffset = songTime;
+        dspClockInitialized = true;
+    }
+
+    private void RebaseDspClockIfNeeded(float dspSongTime, float reportedSongTime)
+    {
+        if (!useDspClock || !dspClockInitialized)
+            return;
+
+        if (Mathf.Abs(dspSongTime - reportedSongTime) > 0.08f)
+            InitializeDspClock(reportedSongTime);
     }
 
     private void EmitBeat(BeatEvent beatEvent)
