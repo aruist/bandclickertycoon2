@@ -16,8 +16,10 @@ public class BandPerformanceDirector : MonoBehaviour
     [SerializeField] private bool logTriggers = false;
 
     private HypeState currentHypeState = HypeState.Medium;
-    private int hypeEventIndex;
-    private float lastBeatTimestamp = -999f;
+    [SerializeField] private float lastBeatTimestamp = -999f;
+    private bool hypeEventsSorted;
+    private float previousSongTime = -1f;
+    private BeatData cachedBeatData;
 
     private void Awake()
     {
@@ -35,14 +37,26 @@ public class BandPerformanceDirector : MonoBehaviour
         if (beatPlay == null)
             beatPlay = FindFirstObjectByType<BeatPlay>();
 
+        ResetHypeState();
+
         if (beatPlay != null)
+        {
             beatPlay.BeatTotalDetected += OnBeatDetected;
+            beatPlay.SongChanged += OnSongChanged;
+            beatPlay.SongLooped += OnSongLooped;
+            beatPlay.SongSeeked += OnSongSeeked;
+        }
     }
 
     private void OnDisable()
     {
         if (beatPlay != null)
+        {
             beatPlay.BeatTotalDetected -= OnBeatDetected;
+            beatPlay.SongChanged -= OnSongChanged;
+            beatPlay.SongLooped -= OnSongLooped;
+            beatPlay.SongSeeked -= OnSongSeeked;
+        }
     }
 
     private void Update()
@@ -50,8 +64,20 @@ public class BandPerformanceDirector : MonoBehaviour
         if (beatPlay == null)
             return;
 
-        float songTime = beatPlay.CurrentSongTime + performerLeadTime;
-        UpdateHypeState(songTime);
+        if (beatPlay.LoadedBeatData != cachedBeatData)
+        {
+            cachedBeatData = beatPlay.LoadedBeatData;
+            ResetHypeState();
+        }
+
+        float songTime = beatPlay.CurrentSongTime;
+
+        // Handle looping/restart: if timeline wraps backwards, clear carried hype state.
+        if (previousSongTime >= 0f && songTime + 0.05f < previousSongTime)
+            ResetHypeState();
+
+        previousSongTime = songTime;
+        UpdateHypeState(songTime + performerLeadTime);
     }
 
     private void OnBeatDetected(BeatDetection.BeatType beatType, float intensity, float timestamp)
@@ -80,47 +106,70 @@ public class BandPerformanceDirector : MonoBehaviour
             Debug.Log($"[BandPerformanceDirector] Beat={beatType}, intensity={intensity:0.00}, hype={currentHypeState}, accent={isAccent}");
     }
 
+    private void OnSongChanged(BeatData previousData, BeatData newData)
+    {
+        cachedBeatData = newData;
+        ResetHypeState();
+    }
+
+    private void OnSongLooped(int loopCount, float fromTime, float toTime)
+    {
+        ResetHypeState();
+    }
+
+    private void OnSongSeeked(float fromTime, float toTime)
+    {
+        ResetHypeState();
+    }
+
     private void UpdateHypeState(float timestamp)
     {
         BeatData data = beatPlay != null ? beatPlay.LoadedBeatData : null;
-        IReadOnlyList<HypeChange> hypeEvents = data != null ? data.hypeEvents : null;
+        List<HypeChange> hypeEvents = data != null ? data.hypeEvents : null;
 
         if (hypeEvents == null || hypeEvents.Count == 0)
             return;
 
-        if (hypeEventIndex >= hypeEvents.Count || (hypeEventIndex > 0 && timestamp < hypeEvents[hypeEventIndex - 1].timestamp))
-            hypeEventIndex = FindFirstHypeIndexAtOrAfter(hypeEvents, timestamp);
-
-        while (hypeEventIndex < hypeEvents.Count && hypeEvents[hypeEventIndex].timestamp <= timestamp)
+        if (!hypeEventsSorted)
         {
-            currentHypeState = hypeEvents[hypeEventIndex].newState;
-            hypeEventIndex++;
+            hypeEvents.Sort((a, b) => a.timestamp.CompareTo(b.timestamp));
+            hypeEventsSorted = true;
         }
+
+        int eventIndex = FindLastHypeIndexAtOrBefore(hypeEvents, timestamp);
+        if (eventIndex >= 0)
+            currentHypeState = hypeEvents[eventIndex].newState;
     }
 
     private void ResetHypeState()
     {
+        #if SOFTCEN_DEBUG
+        Debug.Log("BandPerformanceDirector ResetHypeState");
+        #endif
+
         currentHypeState = HypeState.Medium;
-        hypeEventIndex = 0;
+        hypeEventsSorted = false;
+        previousSongTime = -1f;
+        lastBeatTimestamp = -999f;
     }
 
-    private static int FindFirstHypeIndexAtOrAfter(IReadOnlyList<HypeChange> hypeEvents, float songTime)
+    private static int FindLastHypeIndexAtOrBefore(IReadOnlyList<HypeChange> hypeEvents, float songTime)
     {
         int low = 0;
         int high = hypeEvents.Count - 1;
-        int result = hypeEvents.Count;
+        int result = -1;
 
         while (low <= high)
         {
             int mid = low + ((high - low) / 2);
-            if (hypeEvents[mid].timestamp >= songTime)
+            if (hypeEvents[mid].timestamp <= songTime)
             {
                 result = mid;
-                high = mid - 1;
+                low = mid + 1;
             }
             else
             {
-                low = mid + 1;
+                high = mid - 1;
             }
         }
 

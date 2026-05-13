@@ -30,12 +30,18 @@ public class BeatPlay : MonoBehaviour
 
     public delegate void BeatEventHandler(BeatDetection.BeatType beatType, float intensity);
     public delegate void BeatEventTotalHandler(BeatDetection.BeatType beatType, float intensity, float timestamp);
+    public delegate void SongChangedHandler(BeatData previousData, BeatData newData);
+    public delegate void SongTimeEventHandler(float fromTime, float toTime);
+    public delegate void SongLoopedHandler(int loopCount, float fromTime, float toTime);
 
     /// <summary>
     /// Prefer subscribing to the instance event when possible.
     /// </summary>
     public event BeatEventHandler BeatDetected;
     public event BeatEventTotalHandler BeatTotalDetected;
+    public event SongChangedHandler SongChanged;
+    public event SongTimeEventHandler SongSeeked;
+    public event SongLoopedHandler SongLooped;
 
     /// <summary>
     /// Optional global event for simple projects. Be careful with duplicate BeatPlay instances.
@@ -59,6 +65,7 @@ public class BeatPlay : MonoBehaviour
     private float dspSongOffset;
     private bool dspClockInitialized;
     public float songtime;
+    private int loopCount;
 
     private void Reset()
     {
@@ -88,6 +95,7 @@ public class BeatPlay : MonoBehaviour
 
     public void LoadPreRecordedData()
     {
+        BeatData previousData = recordedBeatData;
         currentBeatIndex = 0;
         previousSongTime = 0f;
         recordedBeatData = null;
@@ -120,6 +128,8 @@ public class BeatPlay : MonoBehaviour
                       $"Clip: {recordedBeatData.clipName}, length: {recordedBeatData.audioLength:0.00}s", this);
         }
 
+        loopCount = 0;
+        SongChanged?.Invoke(previousData, recordedBeatData);
         enabled = true;
     }
 
@@ -137,11 +147,14 @@ public class BeatPlay : MonoBehaviour
         if (data == null || data.beatEvents == null)
             return false;
 
+        BeatData previousData = recordedBeatData;
         currentBeatIndex = 0;
         previousSongTime = 0f;
         recordedBeatData = data;
         beatEvents = recordedBeatData.beatEvents;
         beatEvents.Sort((a, b) => a.timestamp.CompareTo(b.timestamp));
+        loopCount = 0;
+        SongChanged?.Invoke(previousData, recordedBeatData);
         enabled = true;
         return true;
     }
@@ -184,6 +197,10 @@ public class BeatPlay : MonoBehaviour
 
     public void ResetPlaybackState(float songTime)
     {
+        #if SOFTCEN_DEBUG
+        Debug.Log("BeatPlay ResetPlaybackState");
+        #endif
+
         currentBeatIndex = FindFirstBeatIndexAtOrAfter(songTime);
         previousSongTime = songTime;
         wasPlaying = false;
@@ -213,12 +230,28 @@ public class BeatPlay : MonoBehaviour
 
         // Detect loop, rewind, or manual seek backwards.
         if (wasPlaying && songTime + 0.05f < previousSongTime)
+        {
+            bool consideredLoop = audioSource.loop && previousSongTime > 0.2f;
+            if (consideredLoop)
+            {
+                loopCount++;
+                SongLooped?.Invoke(loopCount, previousSongTime, songTime);
+            }
+            else
+            {
+                SongSeeked?.Invoke(previousSongTime, songTime);
+            }
+
             ResetPlaybackState(songTime);
+        }
 
         // Detect large forward seeks so old missed events are not fired in one burst.
         // Small frame-to-frame movement is handled normally.
         if (wasPlaying && songTime - previousSongTime > 1.0f)
+        {
+            SongSeeked?.Invoke(previousSongTime, songTime);
             currentBeatIndex = FindFirstBeatIndexAtOrAfter(previousSongTime);
+        }
 
         int eventsThisFrame = 0;
 

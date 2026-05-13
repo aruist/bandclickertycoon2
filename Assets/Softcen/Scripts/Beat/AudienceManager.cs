@@ -79,6 +79,7 @@ public class AudienceManager : MonoBehaviour
     private bool currentMoshZone;
     private int hypeEventIndex;
     private float previousBeatTimestamp;
+    private bool hypeEventsSorted;
     public float CurrentAudienceSongTime => beatPlay != null ? beatPlay.CurrentSongTime : Time.time;
 
     private struct AudienceDrawEntry
@@ -237,6 +238,9 @@ public class AudienceManager : MonoBehaviour
         if (beatPlay != null)
         {
             beatPlay.BeatTotalDetected += OnAudienceBeatDetected;
+            beatPlay.SongChanged += OnBeatPlaySongChanged;
+            beatPlay.SongLooped += OnBeatPlaySongLooped;
+            beatPlay.SongSeeked += OnBeatPlaySongSeeked;
             subscribedToBeatPlay = true;
             return;
         }
@@ -251,7 +255,12 @@ public class AudienceManager : MonoBehaviour
     private void UnsubscribeFromBeatEvents()
     {
         if (subscribedToBeatPlay && beatPlay != null)
+        {
             beatPlay.BeatTotalDetected -= OnAudienceBeatDetected;
+            beatPlay.SongChanged -= OnBeatPlaySongChanged;
+            beatPlay.SongLooped -= OnBeatPlaySongLooped;
+            beatPlay.SongSeeked -= OnBeatPlaySongSeeked;
+        }
 
         if (subscribedToGlobalBeat)
             BeatPlay.OnBeatDetected -= OnGlobalAudienceBeatDetected;
@@ -288,6 +297,21 @@ public class AudienceManager : MonoBehaviour
                 HandleHighHypeBeat(beatType, intensity, timestamp);
                 break;
         }
+    }
+
+    private void OnBeatPlaySongChanged(BeatData previousData, BeatData newData)
+    {
+        ResetHypeState();
+    }
+
+    private void OnBeatPlaySongLooped(int loopCount, float fromTime, float toTime)
+    {
+        ResetHypeState();
+    }
+
+    private void OnBeatPlaySongSeeked(float fromTime, float toTime)
+    {
+        ResetHypeState();
     }
 
     public void OnKickBeat(float strength)
@@ -440,7 +464,7 @@ public class AudienceManager : MonoBehaviour
 
     private bool TryGetPrecomputedHype(float timestamp, out HypeAnalysis hype)
     {
-        IReadOnlyList<HypeChange> hypeEvents = beatPlay != null && beatPlay.LoadedBeatData != null
+        List<HypeChange> hypeEvents = beatPlay != null && beatPlay.LoadedBeatData != null
             ? beatPlay.LoadedBeatData.hypeEvents
             : null;
 
@@ -450,15 +474,25 @@ public class AudienceManager : MonoBehaviour
             return false;
         }
 
-        if (timestamp + 0.05f < previousBeatTimestamp)
-            hypeEventIndex = FindFirstHypeIndexAtOrAfter(hypeEvents, timestamp);
-
-        while (hypeEventIndex < hypeEvents.Count && hypeEvents[hypeEventIndex].timestamp <= timestamp)
+        if (!hypeEventsSorted)
         {
-            HypeChange change = hypeEvents[hypeEventIndex];
+            hypeEvents.Sort((a, b) => a.timestamp.CompareTo(b.timestamp));
+            hypeEventsSorted = true;
+        }
+
+        int eventIndex = FindLastHypeIndexAtOrBefore(hypeEvents, timestamp);
+        if (eventIndex >= 0)
+        {
+            HypeChange change = hypeEvents[eventIndex];
             currentHypeState = change.newState;
             currentMoshZone = change.isMoshZone;
-            hypeEventIndex++;
+            hypeEventIndex = eventIndex + 1;
+        }
+        else
+        {
+            currentHypeState = HypeState.Medium;
+            currentMoshZone = false;
+            hypeEventIndex = 0;
         }
 
         previousBeatTimestamp = timestamp;
@@ -466,26 +500,26 @@ public class AudienceManager : MonoBehaviour
         return true;
     }
 
-    private static int FindFirstHypeIndexAtOrAfter(IReadOnlyList<HypeChange> hypeEvents, float songTime)
+    private static int FindLastHypeIndexAtOrBefore(IReadOnlyList<HypeChange> hypeEvents, float songTime)
     {
         if (hypeEvents == null || hypeEvents.Count == 0)
-            return 0;
+            return -1;
 
         int low = 0;
         int high = hypeEvents.Count - 1;
-        int result = hypeEvents.Count;
+        int result = -1;
 
         while (low <= high)
         {
             int mid = low + ((high - low) / 2);
-            if (hypeEvents[mid].timestamp >= songTime)
+            if (hypeEvents[mid].timestamp <= songTime)
             {
                 result = mid;
-                high = mid - 1;
+                low = mid + 1;
             }
             else
             {
-                low = mid + 1;
+                high = mid - 1;
             }
         }
 
@@ -494,10 +528,14 @@ public class AudienceManager : MonoBehaviour
 
     private void ResetHypeState()
     {
+        #if SOFTCEN_DEBUG
+        Debug.Log("AudienceManager ResetHypeState");
+        #endif
         currentHypeState = HypeState.Medium;
         currentMoshZone = false;
         hypeEventIndex = 0;
         previousBeatTimestamp = 0f;
+        hypeEventsSorted = false;
     }
 
     private void ConfigurePoseFamilies()
@@ -577,9 +615,21 @@ public class AudienceManager : MonoBehaviour
             return;
         }
 
-        AudienceMember firstMember = members[0];
-        instancedMesh = firstMember != null ? firstMember.Mesh : null;
-        Material sourceMaterial = firstMember != null ? firstMember.SharedMaterial : null;
+        AudienceMember firstValidMember = null;
+        for (int i = 0; i < members.Length; i++)
+        {
+            if (members[i] == null)
+                continue;
+
+            if (members[i].Mesh != null && members[i].SharedMaterial != null)
+            {
+                firstValidMember = members[i];
+                break;
+            }
+        }
+
+        instancedMesh = firstValidMember != null ? firstValidMember.Mesh : null;
+        Material sourceMaterial = firstValidMember != null ? firstValidMember.SharedMaterial : null;
 
         Shader instancedShader = Shader.Find(useLit ? InstancedLitShaderName : InstancedUnlitShaderName);
 
@@ -646,7 +696,8 @@ public class AudienceManager : MonoBehaviour
             members[i].SetRuntimeRendererEnabled(true);
             if (fallbackMaterial != null)
                 members[i].SetRuntimeSharedMaterial(fallbackMaterial);
-            members[i].SetRuntimeRenderQueue(targetQueue);
+            else
+                members[i].SetRuntimeRenderQueue(targetQueue);
         }
     }
 
