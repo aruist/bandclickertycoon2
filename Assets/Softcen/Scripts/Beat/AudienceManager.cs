@@ -51,6 +51,7 @@ public class AudienceManager : MonoBehaviour
 
     [Header("Shader")]
     [SerializeField] private bool useLit = false;
+    [SerializeField] private int audienceRenderQueueOffset = -50;
 
     private readonly Matrix4x4[] matrices = new Matrix4x4[MaxInstancesPerDraw];
     private readonly Vector4[] atlasSTs = new Vector4[MaxInstancesPerDraw];
@@ -572,9 +573,11 @@ public class AudienceManager : MonoBehaviour
         instancedMaterial = new Material(instancedShader)
         {
             name = $"{sourceMaterial.name} (Instanced Runtime)",
-            renderQueue = sourceMaterial.renderQueue,
             enableInstancing = true
         };
+
+        int baseQueue = sourceMaterial.renderQueue > 0 ? sourceMaterial.renderQueue : 3000;
+        instancedMaterial.renderQueue = Mathf.Clamp(baseQueue + audienceRenderQueueOffset, 1000, 5000);
 
         if (sourceMaterial.HasProperty(BaseMap))
             instancedMaterial.SetTexture(BaseMap, sourceMaterial.GetTexture(BaseMap));
