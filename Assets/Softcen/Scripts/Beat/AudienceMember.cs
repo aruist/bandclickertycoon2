@@ -224,7 +224,7 @@ public class AudienceMember : MonoBehaviour
             {
                 motionChangeWaiting = false;
                 // TODO change motion:
-                Debug.Log($"MotionChange: {newMotionStyle}, strength: {newMotionStrength}");
+                // Debug.Log($"MotionChange: {newMotionStyle}, strength: {newMotionStrength}");
                 TriggerReaction(newMotionStyle, newMotionStrength);
                 if (AudienceManager.Instance != null) AudienceManager.Instance.TrySetPose(memberIndex, newMotionPoseGroup, newMotionIgnorePoseCooldown);
                 return;

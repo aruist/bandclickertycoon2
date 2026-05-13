@@ -113,6 +113,43 @@ public class BeatPlay : MonoBehaviour
             Debug.Log($"Loaded {beatEvents.Count} beat events from {preRecordedBeatData.name}. " +
                       $"Clip: {recordedBeatData.clipName}, length: {recordedBeatData.audioLength:0.00}s", this);
         }
+
+        enabled = true;
+    }
+
+    public bool LoadRuntimeBeatData(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return false;
+
+        BeatData data = JsonUtility.FromJson<BeatData>(json);
+        return LoadRuntimeBeatData(data);
+    }
+
+    public bool LoadRuntimeBeatData(BeatData data)
+    {
+        if (data == null || data.beatEvents == null)
+            return false;
+
+        currentBeatIndex = 0;
+        previousSongTime = 0f;
+        recordedBeatData = data;
+        beatEvents = recordedBeatData.beatEvents;
+        beatEvents.Sort((a, b) => a.timestamp.CompareTo(b.timestamp));
+        enabled = true;
+        return true;
+    }
+
+    public bool SetRuntimeSong(AudioClip clip, BeatData beatData)
+    {
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+
+        if (audioSource == null || clip == null || beatData == null || beatData.beatEvents == null)
+            return false;
+
+        audioSource.clip = clip;
+        return LoadRuntimeBeatData(beatData);
     }
 
     public void PlayFromStart()

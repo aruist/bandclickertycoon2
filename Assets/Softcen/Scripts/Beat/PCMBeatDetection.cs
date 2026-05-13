@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -64,30 +63,6 @@ public sealed class PCMBeatDetection : MonoBehaviour
     private BeatData lastBeatData;
     private string lastJson;
     private Coroutine analysisCoroutine;
-
-    public AudioClip clip;
-    void Start()
-    {
-        if (clip == null) return;
-
-        string path = AssetDatabase.GetAssetPath(clip);
-        Debug.Log($"{path}");
-        AnalyzeMp3File(path, "Temp/test.json");
-    }
-
-    void OnEnable()
-    {
-        ProgressChanged += percent => Debug.Log(percent);
-        AnalysisCompleted += (data, json) => Debug.Log($"AnalysisCompleted, beatEvent count: {data.beatEvents.Count}");
-        AnalysisFailed += error => Debug.LogError(error);
-    }
-
-    void OnDisable()
-    {
-        ProgressChanged -= percent => Debug.Log(percent);
-        AnalysisCompleted -= (data, json) => Debug.Log($"AnalysisCompleted, beatEvent count: {data.beatEvents.Count}");
-        AnalysisFailed -= error => Debug.LogError(error);
-    }
 
     public void AnalyzeMp3File(string mp3Path, string outputJsonPath = null)
     {
