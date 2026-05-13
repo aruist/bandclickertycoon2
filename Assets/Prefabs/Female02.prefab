@@ -99,7 +99,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 09bc20af9c1bf4558a1b221d0c5e2c57, type: 2}
+  - {fileID: 2100000, guid: 7e8b61ec581bc462ca70dd010b52a261, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -143,6 +143,7 @@ MonoBehaviour:
   atlasColumn: 1
   idleSwaySpeed: 1.2
   activeSwaySpeed: 2.2
+  swayFrequency: 1.2
   bobHeight: 0.08
   jumpHeight: 0.1
   pulseScaleBoost: 0.08

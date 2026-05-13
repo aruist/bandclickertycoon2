@@ -142,6 +142,41 @@ public class AudienceMember : MonoBehaviour
             meshRenderer.enabled = enabled;
     }
 
+    public void SetRuntimeSharedMaterial(Material sharedMaterial)
+    {
+        Init();
+        if (meshRenderer == null)
+            return;
+
+        meshRenderer.sharedMaterial = sharedMaterial;
+    }
+
+    public void SetRuntimeRenderQueue(int renderQueue)
+    {
+        Init();
+        if (meshRenderer == null)
+            return;
+
+        Material runtimeMaterial = meshRenderer.material;
+        if (runtimeMaterial == null)
+            return;
+
+        runtimeMaterial.renderQueue = Mathf.Clamp(renderQueue, 1000, 5000);
+    }
+
+    public int GetCurrentRenderQueue()
+    {
+        Init();
+        if (meshRenderer == null)
+            return -1;
+
+        Material runtimeMaterial = meshRenderer.material;
+        if (runtimeMaterial != null)
+            return runtimeMaterial.renderQueue;
+
+        return meshRenderer.sharedMaterial != null ? meshRenderer.sharedMaterial.renderQueue : -1;
+    }
+
     public void BeatPulse(float strength)
     {
         TriggerReaction(MotionStyle.HeadBob, strength);

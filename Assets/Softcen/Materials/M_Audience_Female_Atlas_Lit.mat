@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Audience_Female_Atlas 1
+  m_Name: M_Audience_Female_Atlas_Lit
   m_Shader: {fileID: 4800000, guid: 39ce923a6e6de413cb7a21de26964ae1, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0

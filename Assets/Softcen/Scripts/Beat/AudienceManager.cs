@@ -52,6 +52,7 @@ public class AudienceManager : MonoBehaviour
     [Header("Shader")]
     [SerializeField] private bool useLit = false;
     [SerializeField] private int audienceRenderQueueOffset = -50;
+    [SerializeField] private bool logRenderPathOnDevice = true;
 
     private readonly Matrix4x4[] matrices = new Matrix4x4[MaxInstancesPerDraw];
     private readonly Vector4[] atlasSTs = new Vector4[MaxInstancesPerDraw];
@@ -63,9 +64,12 @@ public class AudienceManager : MonoBehaviour
     private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
     private static readonly int ColorId = Shader.PropertyToID("_Color");
     private static readonly int AudienceAtlasST = Shader.PropertyToID("_AudienceAtlasST");
+    private const string InstancedUnlitShaderName = "Softcen/Audience Instanced Atlas";
+    private const string InstancedLitShaderName = "Softcen/Audience Instanced Atlas Lit";
 
     public Mesh instancedMesh;
     public Material instancedMaterial;
+    private Material fallbackRuntimeMaterial;
     private MaterialPropertyBlock instancedBlock;
     private float[] nextPoseChangeTimes;
     private Bounds audienceLocalBounds;
@@ -147,6 +151,7 @@ public class AudienceManager : MonoBehaviour
         ConfigureInstancedRendering();
         ResetHypeState();
         CacheDrawOrder();
+        LogRenderDiagnosticsOnce();
     }
 
     private void SpawnAudienceFromPrefabs()
@@ -211,6 +216,17 @@ public class AudienceManager : MonoBehaviour
     private void OnDisable()
     {
         UnsubscribeFromBeatEvents();
+    }
+
+    private void OnDestroy()
+    {
+        if (Application.isPlaying)
+        {
+            if (instancedMaterial != null)
+                Destroy(instancedMaterial);
+            if (fallbackRuntimeMaterial != null)
+                Destroy(fallbackRuntimeMaterial);
+        }
     }
 
     private void SubscribeToBeatEvents()
@@ -556,17 +572,21 @@ public class AudienceManager : MonoBehaviour
     private void ConfigureInstancedRendering()
     {
         if (!Application.isPlaying || !useInstancedRendering || members == null || members.Length == 0)
+        {
+            ApplyRenderQueueToNonInstancedMembers();
             return;
+        }
 
         AudienceMember firstMember = members[0];
         instancedMesh = firstMember != null ? firstMember.Mesh : null;
         Material sourceMaterial = firstMember != null ? firstMember.SharedMaterial : null;
 
-        Shader instancedShader = useLit ? Shader.Find("Softcen/Audience Instanced Atlas Lit") : Shader.Find("Softcen/Audience Instanced Atlas");
+        Shader instancedShader = Shader.Find(useLit ? InstancedLitShaderName : InstancedUnlitShaderName);
 
         if (instancedMesh == null || sourceMaterial == null || instancedShader == null)
         {
             useInstancedRendering = false;
+            ApplyRenderQueueToNonInstancedMembers();
             return;
         }
 
@@ -596,6 +616,98 @@ public class AudienceManager : MonoBehaviour
             if (members[i] != null)
                 members[i].SetRuntimeRendererEnabled(false);
         }
+    }
+
+    private void ApplyRenderQueueToNonInstancedMembers()
+    {
+        if (!Application.isPlaying || members == null || members.Length == 0)
+            return;
+
+        Material sourceMaterial = null;
+        for (int i = 0; i < members.Length; i++)
+        {
+            if (members[i] == null)
+                continue;
+
+            sourceMaterial = members[i].SharedMaterial;
+            if (sourceMaterial != null)
+                break;
+        }
+
+        int baseQueue = sourceMaterial != null && sourceMaterial.renderQueue > 0 ? sourceMaterial.renderQueue : 3000;
+        int targetQueue = Mathf.Clamp(baseQueue + audienceRenderQueueOffset, 1000, 5000);
+        Material fallbackMaterial = BuildFallbackRuntimeMaterial(sourceMaterial, targetQueue);
+
+        for (int i = 0; i < members.Length; i++)
+        {
+            if (members[i] == null)
+                continue;
+
+            members[i].SetRuntimeRendererEnabled(true);
+            if (fallbackMaterial != null)
+                members[i].SetRuntimeSharedMaterial(fallbackMaterial);
+            members[i].SetRuntimeRenderQueue(targetQueue);
+        }
+    }
+
+    private Material BuildFallbackRuntimeMaterial(Material sourceMaterial, int targetQueue)
+    {
+        Shader fallbackShader = Shader.Find(useLit ? InstancedLitShaderName : InstancedUnlitShaderName);
+        if (fallbackShader == null)
+            fallbackShader = sourceMaterial != null ? sourceMaterial.shader : null;
+
+        if (fallbackShader == null)
+            return sourceMaterial;
+
+        if (fallbackRuntimeMaterial == null || fallbackRuntimeMaterial.shader != fallbackShader)
+        {
+            fallbackRuntimeMaterial = new Material(fallbackShader)
+            {
+                name = $"Audience Fallback Runtime ({fallbackShader.name})"
+            };
+        }
+
+        if (sourceMaterial != null)
+        {
+            if (sourceMaterial.HasProperty(BaseMap))
+                fallbackRuntimeMaterial.SetTexture(BaseMap, sourceMaterial.GetTexture(BaseMap));
+            else if (sourceMaterial.HasProperty(MainTex))
+                fallbackRuntimeMaterial.SetTexture(BaseMap, sourceMaterial.GetTexture(MainTex));
+
+            if (sourceMaterial.HasProperty(BaseColor))
+                fallbackRuntimeMaterial.SetColor(BaseColor, sourceMaterial.GetColor(BaseColor));
+            else if (sourceMaterial.HasProperty(ColorId))
+                fallbackRuntimeMaterial.SetColor(BaseColor, sourceMaterial.GetColor(ColorId));
+        }
+
+        fallbackRuntimeMaterial.renderQueue = targetQueue;
+        return fallbackRuntimeMaterial;
+    }
+
+    private void LogRenderDiagnosticsOnce()
+    {
+        if (!logRenderPathOnDevice)
+            return;
+
+#if UNITY_EDITOR
+        return;
+#else
+        int instancedQueue = instancedMaterial != null ? instancedMaterial.renderQueue : -1;
+        int memberQueue = -1;
+        if (members != null)
+        {
+            for (int i = 0; i < members.Length; i++)
+            {
+                if (members[i] == null)
+                    continue;
+
+                memberQueue = members[i].GetCurrentRenderQueue();
+                break;
+            }
+        }
+
+        Debug.Log($"[AudienceManager] RenderPath={ (useInstancedRendering && instancedMaterial != null ? "Instanced" : "NonInstanced") }, InstancedQueue={instancedQueue}, MemberQueue={memberQueue}, QueueOffset={audienceRenderQueueOffset}, UseLit={useLit}");
+#endif
     }
 
     private void DrawInstancedMembers()
