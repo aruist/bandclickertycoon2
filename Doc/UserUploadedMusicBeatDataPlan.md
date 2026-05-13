@@ -2,7 +2,7 @@
 
 ## Goal
 
-Allow the player to import a local MP3 file on Android, iOS, or in the Unity Editor. The game should decode the MP3 into an `AudioClip`, run `BeatDetection` once to create pre-recorded `BeatData` JSON, save both song metadata and generated beat data locally, and then make the song selectable as background music.
+Allow the player to import a local MP3 file on Android, iOS, or in the Unity Editor. The game should decode the MP3 into PCM and run `PCMBeatDetection` once to create pre-recorded `BeatData` JSON, save both song metadata and generated beat data locally, and then make the song selectable as background music.
 
 This feature should not depend on `Resources` for user songs, because imported songs are runtime data and must live under `Application.persistentDataPath`.
 
@@ -14,6 +14,11 @@ The current beat pipeline is split into two parts:
 - `BeatDetection.SaveBeatData()` currently writes JSON only in the Unity Editor, under `Assets/Resources/BeatData`, guarded by `#if UNITY_EDITOR`.
 - `BeatPlay` reads a `TextAsset` from the inspector, parses it into `BeatData`, and emits beat events while its `AudioSource` plays.
 - Existing generated beat JSON lives in `Assets/Resources/BeatData`.
+
+New offline path already available:
+
+- `PCMBeatDetection` decodes MP3 to PCM, analyzes in a background `Task`, and can write runtime JSON output.
+- `PCMBeatDetection` already supports progress, completion, and failure events.
 
 For user-uploaded music, this needs a runtime path:
 
@@ -73,7 +78,7 @@ Keep the Editor path close to mobile behavior. The selected file should still be
 
 ### Android
 
-Use Android's Storage Access Framework through a Unity native file picker plugin or a small custom Android plugin.
+Use `Assets/Plugins/NativeFilePicker` for Android file picking (Storage Access Framework under the hood).
 
 Recommended behavior:
 
@@ -94,7 +99,7 @@ Permissions:
 
 ### iOS
 
-Use `UIDocumentPickerViewController` through a Unity native file picker plugin or a small custom iOS plugin.
+Use `Assets/Plugins/NativeFilePicker` for iOS file picking (`UIDocumentPickerViewController` under the hood).
 
 Recommended behavior:
 
@@ -136,17 +141,14 @@ Fallback plan if MP3 decoding is unreliable on a target:
 
 ## Beat Analysis Runtime Changes
 
-The current `BeatDetection` analyzes in real time while the `AudioSource` plays. That means a 3 minute song takes about 3 minutes to analyze unless the analyzer is rewritten to process raw samples offline.
+Use `PCMBeatDetection` as the primary analyzer for imported songs.
 
-Recommended first version: real-time analysis with progress UI.
+Reason:
 
-Required changes:
-
-1. Add a runtime analysis API around `BeatDetection`.
-2. Allow `BeatDetection` to return or expose `BeatData` when complete.
-3. Allow runtime JSON save outside the Editor.
-4. Add progress reporting based on `audioSource.time / clip.length`.
-5. Allow muted analysis, so the user does not need to hear the song during import.
+- It decodes MP3 to PCM and analyzes without real-time playback.
+- It can run faster than song length.
+- It runs analysis math on a background thread and keeps UI responsive.
+- It already clears PCM buffers after analysis to reduce memory pressure.
 
 Implementation shape:
 
@@ -154,24 +156,28 @@ Implementation shape:
 UserSongImportService
   PickFile()
   CopyToPersistentStorage()
-  DecodeAudioClip()
-  AnalyzeClip()
+  AnalyzeWithPCMBeatDetection()
   SaveBeatDataJson()
   SaveManifest()
 
-BeatDetection
-  AnalyzeClip(AudioClip clip, AnalysisOptions options)
+PCMBeatDetection
+  AnalyzeMp3File(string mp3Path, string outputJsonPath = null)
+  CancelAnalysis()
+  ProgressPercentage / IsRunning / IsComplete / ErrorMessage
   event OnAnalysisProgress(float progress)
   event OnAnalysisComplete(BeatData data)
   event OnAnalysisFailed(string error)
 ```
 
-`BeatDetection.SaveBeatData()` should be split:
+Current `PCMBeatDetection` API surface in project:
 
-- Editor asset export path for prebuilt songs.
-- Runtime JSON string/file output for user songs.
-
-Do not use `AssetDatabase` in runtime code.
+- `AnalyzeMp3File(string mp3Path, string outputJsonPath = null)`
+- `CancelAnalysis()`
+- `ProgressChanged` event
+- `AnalysisCompleted` event returning both `BeatData` and JSON string
+- `AnalysisFailed` event
+- Runtime status fields: `ProgressPercentage`, `IsRunning`, `IsComplete`, `ErrorMessage`
+- Result access fields: `LastBeatData`, `LastJson`
 
 ## Playback Runtime Changes
 
@@ -199,6 +205,13 @@ Keep existing `TextAsset` behavior for built-in songs.
 
 ## UI Flow
 
+UI tech stack for this feature:
+
+- Unity UI `Canvas`
+- `TextMeshProUGUI` for all status and error texts
+- Standard Unity `Button` controls for import/cancel/select actions
+- Optional Unity `Slider` for analysis progress visualization
+
 Recommended user-facing states:
 
 1. `Import Song`
@@ -208,6 +221,15 @@ Recommended user-facing states:
 5. `Analyzing beats... 0-100%`
 6. `Song ready`
 7. Song appears in background music selection list.
+
+Recommended UI layout on Canvas:
+
+1. `Import Song` button
+2. Current state label (`TextMeshProUGUI`)
+3. Progress percent label (`TextMeshProUGUI`)
+4. Progress bar (`Slider`)
+5. `Cancel Analysis` button visible only while analysis is running
+6. Song list panel for imported tracks
 
 Failure states:
 
@@ -222,33 +244,34 @@ Add a maximum song duration for mobile. A practical first limit is 8-10 minutes.
 
 ## Mobile Performance and UX
 
-Real-time analysis has predictable cost but slow UX. For a first version it is acceptable if the import UI is explicit: "Analyzing song, this may take the length of the track."
+`PCMBeatDetection` removes the "wait full song length" limitation, but mobile safeguards are still needed.
 
 Consider these safeguards:
 
 - Mute the analysis `AudioSource` or route it to a muted mixer group.
 - Prevent device sleep during analysis, then restore normal sleep settings.
 - Cancel analysis if the app is backgrounded.
-- Save an `analysisVersion` and settings hash. If BeatDetection settings change later, mark old beat data for re-analysis.
+- Save an `analysisVersion` and settings hash. If PCMBeatDetection settings change later, mark old beat data for re-analysis.
 - Avoid analyzing while gameplay is running.
 
-## Future Offline Analyzer
+## PCMBeatDetection API TODOs
 
-The better long-term implementation is an offline sample analyzer:
+The current API is already usable, but these additions will make integration cleaner:
 
-- Decode MP3 to PCM samples.
-- Process sample windows manually.
-- Run the same energy/frequency beat logic without playing through an `AudioSource`.
-- Generate `BeatData` faster than real time if CPU allows.
-
-This requires refactoring `BeatDetection` because it currently depends on:
-
-- `AudioSource.GetSpectrumData`
-- `AudioSource.GetOutputData`
-- `audioSource.timeSamples`
-- playback ending to trigger save
-
-The offline analyzer is more work but better for UX and batch imports.
+1. Add a pure async entrypoint without `MonoBehaviour` coroutine coupling, for example:
+   - `Task<BeatData> AnalyzeMp3FileAsync(string mp3Path, CancellationToken token, IProgress<float> progress = null)`
+2. Add overload for already-decoded clip/PCM input to avoid duplicate decode steps:
+   - `AnalyzeClip(AudioClip clip, string outputJsonPath = null)` or
+   - `AnalyzePcm(float[] samples, int channels, int sampleRate, float length, ...)`
+3. Add configurable analysis profile input per call (not only serialized inspector fields):
+   - `AnalyzeMp3File(string mp3Path, PCMAnalysisOptions options, string outputJsonPath = null)`
+4. Add explicit state reset and completion payload API to reduce polling:
+   - `ClearLastResult()`
+   - `TryGetLastResult(out BeatData data, out string json)`
+5. Add deterministic output versioning and metadata in `BeatData`:
+   - `analysisVersion`
+   - `analysisSettingsHash`
+6. Add optional callback/event for generated `hypeEvents` summary stats to support tuning UI quickly.
 
 ## Suggested Implementation Order
 
@@ -256,16 +279,15 @@ The offline analyzer is more work but better for UX and batch imports.
 2. Add Editor-only MP3 picker using `EditorUtility.OpenFilePanel`.
 3. Add MP3 copy-to-persistent-storage path.
 4. Add `RuntimeAudioClipLoader` using `UnityWebRequestMultimedia.GetAudioClip`.
-5. Refactor `BeatDetection` so runtime code can receive `BeatData` and save JSON without `AssetDatabase`.
-6. Add analysis progress/cancel UI.
-7. Add runtime `BeatPlay` loading API for `BeatData` and `AudioClip`.
-8. Add Android native picker or file picker plugin.
-9. Add iOS document picker or file picker plugin.
-10. Test on physical Android and iOS devices with short, medium, and long MP3 files.
+5. Integrate `PCMBeatDetection` pipeline into `UserSongImportService` with progress/cancel UI.
+6. Add runtime `BeatPlay` loading API for `BeatData` and `AudioClip`.
+7. Add Android native picker or file picker plugin.
+8. Add iOS document picker or file picker plugin.
+9. Test on physical Android and iOS devices with short, medium, and long MP3 files.
 
 ## Recommended Plugin Decision
 
-Use a proven Unity native file picker plugin unless there is a strong reason to write native platform code.
+Use the already added `Assets/Plugins/NativeFilePicker` for Android and iOS import flow.
 
 Needed plugin capabilities:
 
