@@ -38,6 +38,7 @@ public class UserSongImportUI : MonoBehaviour
     [Header("UI")]
     [SerializeField] private Button importSongButton;
     [SerializeField] private Button cancelAnalysisButton;
+    [SerializeField] private Button selectSongButton;
     [SerializeField] private Button playSelectedButton;
     [SerializeField] private TMP_Dropdown songsDropdown;
     [SerializeField] private Slider progressSlider;
@@ -49,6 +50,7 @@ public class UserSongImportUI : MonoBehaviour
 
     private UserSongManifest manifest = new UserSongManifest();
     private Coroutine importCoroutine;
+    private int selectedSongIndex;
 
     private string UserSongsRoot => Path.Combine(Application.persistentDataPath, "UserSongs");
     private string ManifestPath => Path.Combine(UserSongsRoot, "songs_manifest.json");
@@ -83,6 +85,12 @@ public class UserSongImportUI : MonoBehaviour
 
         if (playSelectedButton != null)
             playSelectedButton.onClick.AddListener(OnPlaySelectedClicked);
+
+        if (selectSongButton != null)
+            selectSongButton.onClick.AddListener(OnSelectSongClicked);
+
+        if (songsDropdown != null)
+            songsDropdown.onValueChanged.AddListener(OnSongDropdownValueChanged);
     }
 
     private void OnDisable()
@@ -95,6 +103,12 @@ public class UserSongImportUI : MonoBehaviour
 
         if (playSelectedButton != null)
             playSelectedButton.onClick.RemoveListener(OnPlaySelectedClicked);
+
+        if (selectSongButton != null)
+            selectSongButton.onClick.RemoveListener(OnSelectSongClicked);
+
+        if (songsDropdown != null)
+            songsDropdown.onValueChanged.RemoveListener(OnSongDropdownValueChanged);
     }
 
     private void OnImportSongClicked()
@@ -103,7 +117,22 @@ public class UserSongImportUI : MonoBehaviour
             return;
 
         UpdateStatus("Opening file picker...");
-        NativeFilePicker.PickFile(OnFilePicked, "audio/*", ".mp3");
+        NativeFilePicker.PickFile(OnFilePicked, GetPickerFileTypes());
+    }
+
+    private static string[] GetPickerFileTypes()
+    {
+#if UNITY_IOS && !UNITY_EDITOR
+        string mp3Uti = NativeFilePicker.ConvertExtensionToFileType("mp3");
+        if (string.IsNullOrEmpty(mp3Uti))
+            mp3Uti = "public.mp3";
+
+        return new[] { "public.audio", mp3Uti };
+#elif UNITY_ANDROID && !UNITY_EDITOR
+        return new[] { "audio/*" };
+#else
+        return new[] { "audio/*", ".mp3" };
+#endif
     }
 
     private void OnCancelAnalysisClicked()
@@ -113,6 +142,33 @@ public class UserSongImportUI : MonoBehaviour
             pcmBeatDetection.CancelAnalysis();
             UpdateStatus("Cancelling analysis...");
         }
+    }
+
+    private void OnSelectSongClicked()
+    {
+        if (manifest == null || manifest.songs == null || manifest.songs.Count == 0)
+        {
+            UpdateStatus("No imported songs.");
+            return;
+        }
+
+        if (songsDropdown != null)
+        {
+            songsDropdown.gameObject.SetActive(true);
+            songsDropdown.Show();
+            UpdateStatus("Select a song from the list.");
+            return;
+        }
+
+        selectedSongIndex = Mathf.Clamp(selectedSongIndex, 0, manifest.songs.Count - 1);
+        UpdateStatus($"Selected: {manifest.songs[selectedSongIndex].displayName}");
+    }
+
+    private void OnSongDropdownValueChanged(int index)
+    {
+        selectedSongIndex = Mathf.Clamp(index, 0, manifest.songs.Count - 1);
+        if (manifest.songs != null && selectedSongIndex >= 0 && selectedSongIndex < manifest.songs.Count)
+            UpdateStatus($"Selected: {manifest.songs[selectedSongIndex].displayName}");
     }
 
     private void OnPlaySelectedClicked()
@@ -126,6 +182,8 @@ public class UserSongImportUI : MonoBehaviour
         int index = manifest.songs.Count - 1;
         if (songsDropdown != null && songsDropdown.options.Count > 0)
             index = Mathf.Clamp(songsDropdown.value, 0, manifest.songs.Count - 1);
+        else
+            index = Mathf.Clamp(selectedSongIndex, 0, manifest.songs.Count - 1);
 
         if (index < 0 || index >= manifest.songs.Count)
             return;
@@ -329,8 +387,14 @@ public class UserSongImportUI : MonoBehaviour
             labels.Add("No songs");
 
         songsDropdown.AddOptions(labels);
-        songsDropdown.value = 0;
+        if (manifest.songs.Count > 0)
+            selectedSongIndex = Mathf.Clamp(selectedSongIndex, 0, manifest.songs.Count - 1);
+        else
+            selectedSongIndex = 0;
+
+        songsDropdown.value = selectedSongIndex;
         songsDropdown.RefreshShownValue();
+        songsDropdown.gameObject.SetActive(manifest.songs.Count > 0);
     }
 
     private UserSongManifestEntry FindEntryById(string id)
@@ -372,6 +436,9 @@ public class UserSongImportUI : MonoBehaviour
 
         if (cancelAnalysisButton != null)
             cancelAnalysisButton.gameObject.SetActive(false);
+
+        if (selectSongButton != null)
+            selectSongButton.interactable = manifest != null && manifest.songs != null && manifest.songs.Count > 0;
     }
 
     private void UpdateStatus(string text)
