@@ -52,12 +52,13 @@ public class BeatPlay : MonoBehaviour
 
     private BeatData recordedBeatData;
     private List<BeatEvent> beatEvents;
-    private int currentBeatIndex;
+    public int currentBeatIndex;
     private float previousSongTime;
     private bool wasPlaying;
     private double dspSongStartTime;
     private float dspSongOffset;
     private bool dspClockInitialized;
+    public float songtime;
 
     private void Reset()
     {
@@ -82,6 +83,7 @@ public class BeatPlay : MonoBehaviour
     private void Update()
     {
         Tick();
+        songtime = CurrentSongTime;
     }
 
     public void LoadPreRecordedData()
