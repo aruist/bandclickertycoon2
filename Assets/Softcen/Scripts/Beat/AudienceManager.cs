@@ -1,6 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WhiteCat;
 
 /*
 The AudienceManager.cs script effectively bridges the gap between the high-precision beat data from PCMBeatDetection
@@ -25,6 +25,7 @@ public class AudienceManager : MonoBehaviour
     [SerializeField] private AudienceMember[] members;
     [SerializeField] private bool useInstancedRendering = true;
     [SerializeField] private GameObject[] audiencePrefabs;
+    [Max(MaxInstancesPerDraw)]
     [SerializeField] private int audienceSize;
     [SerializeField] private Transform audienceFloor;
 
@@ -81,7 +82,7 @@ public class AudienceManager : MonoBehaviour
     private Bounds audienceLocalBounds;
     private bool subscribedToBeatPlay;
     private bool subscribedToGlobalBeat;
-    private HypeState currentHypeState = HypeState.Medium;
+    private HypeState currentHypeState = HypeState.Low;
     private bool currentMoshZone;
     private int hypeEventIndex;
     private float previousBeatTimestamp;
@@ -204,15 +205,15 @@ public class AudienceManager : MonoBehaviour
         Bounds localBounds = GetAudienceFloorLocalBounds();
         float floorY = localBounds.center.y;
         float floorYaw = audienceFloor.rotation.eulerAngles.y;
-
+        if (audienceSize > MaxInstancesPerDraw) audienceSize = MaxInstancesPerDraw;
         for (int i = 0; i < audienceSize; i++)
         {
-            GameObject prefab = audiencePrefabs[Random.Range(0, audiencePrefabs.Length)];
+            GameObject prefab = audiencePrefabs[UnityEngine.Random.Range(0, audiencePrefabs.Length)];
             if (prefab == null)
                 continue;
 
-            float localX = Random.Range(localBounds.min.x, localBounds.max.x);
-            float localZ = Random.Range(localBounds.min.z, localBounds.max.z);
+            float localX = UnityEngine.Random.Range(localBounds.min.x, localBounds.max.x);
+            float localZ = UnityEngine.Random.Range(localBounds.min.z, localBounds.max.z);
             Vector3 localPosition = new Vector3(localX, floorY, localZ);
             Quaternion spawnRotation = Quaternion.Euler(0f, floorYaw, 0f);
 
@@ -269,6 +270,7 @@ public class AudienceManager : MonoBehaviour
         if (beatPlay != null)
         {
             beatPlay.BeatTotalDetected += OnAudienceBeatDetected;
+            beatPlay.HypeDetected += OnBeatPlayHypeDetected;
             beatPlay.SongChanged += OnBeatPlaySongChanged;
             beatPlay.SongLooped += OnBeatPlaySongLooped;
             beatPlay.SongSeeked += OnBeatPlaySongSeeked;
@@ -288,6 +290,7 @@ public class AudienceManager : MonoBehaviour
         if (subscribedToBeatPlay && beatPlay != null)
         {
             beatPlay.BeatTotalDetected -= OnAudienceBeatDetected;
+            beatPlay.HypeDetected -= OnBeatPlayHypeDetected;
             beatPlay.SongChanged -= OnBeatPlaySongChanged;
             beatPlay.SongLooped -= OnBeatPlaySongLooped;
             beatPlay.SongSeeked -= OnBeatPlaySongSeeked;
@@ -308,15 +311,13 @@ public class AudienceManager : MonoBehaviour
 
     private void OnAudienceBeatDetected(BeatDetection.BeatType beatType, float intensity, float timestamp)
     {
-        HypeAnalysis hype = ResolveHype(timestamp);
-
-        if (hype.IsMoshBeat)
+        if (currentMoshZone)
         {
             TriggerAudienceReaction(AudienceMember.MotionStyle.Jump, PoseGroup.Cheer, intensity * 1.4f, 1f, true, timestamp);
             return;
         }
 
-        switch (hype.State)
+        switch (currentHypeState)
         {
             case HypeState.Low:
                 HandleLowHypeBeat(beatType, intensity, timestamp);
@@ -328,6 +329,12 @@ public class AudienceManager : MonoBehaviour
                 HandleHighHypeBeat(beatType, intensity, timestamp);
                 break;
         }
+    }
+
+    private void OnBeatPlayHypeDetected(HypeState hypeState, bool isMoshZone, float timestamp)
+    {
+        currentHypeState = hypeState;
+        currentMoshZone = isMoshZone;
     }
 
     private void OnBeatPlaySongChanged(BeatData previousData, BeatData newData)
@@ -406,10 +413,10 @@ public class AudienceManager : MonoBehaviour
 
         for (int i = 0; i < members.Length; i++)
         {
-            if (members[i] == null || Random.value > chance)
+            if (members[i] == null || UnityEngine.Random.value > chance)
                 continue;
 
-            float delay = Random.Range(0f, Mathf.Max(0f, randomLatencyMax)) + GetSpatialDelay(i, members[i]);
+            float delay = UnityEngine.Random.Range(0f, Mathf.Max(0f, randomLatencyMax)) + GetSpatialDelay(i, members[i]);
             float triggerSongTime = beatTimestamp + audienceTimingOffset + delay;
             members[i].SetPose(i, motionStyle, poseGroup, strength, ignorePoseCooldown, triggerSongTime);
         }
@@ -585,7 +592,7 @@ public class AudienceManager : MonoBehaviour
         #if SOFTCEN_DEBUG
         Debug.Log("AudienceManager ResetHypeState");
         #endif
-        currentHypeState = HypeState.Medium;
+        currentHypeState = HypeState.Low;
         currentMoshZone = false;
         hypeEventIndex = 0;
         previousBeatTimestamp = 0f;
@@ -620,7 +627,7 @@ public class AudienceManager : MonoBehaviour
         members[memberIndex].SetFrame(GetFrameForMember(atlasColumn, poseGroup));
         float minHold = Mathf.Min(minPoseHoldTime, maxPoseHoldTime);
         float maxHold = Mathf.Max(minPoseHoldTime, maxPoseHoldTime);
-        nextPoseChangeTimes[memberIndex] = Time.time + Random.Range(minHold, maxHold);
+        nextPoseChangeTimes[memberIndex] = Time.time + UnityEngine.Random.Range(minHold, maxHold);
     }
 
     private int GetFrameForMember(int memberIndex, PoseGroup poseGroup)

@@ -30,6 +30,7 @@ public class BeatPlay : MonoBehaviour
 
     public delegate void BeatEventHandler(BeatDetection.BeatType beatType, float intensity);
     public delegate void BeatEventTotalHandler(BeatDetection.BeatType beatType, float intensity, float timestamp);
+    public delegate void HypeEventHandler(HypeState hypeState, bool isMoshZone, float timestamp);
     public delegate void SongChangedHandler(BeatData previousData, BeatData newData);
     public delegate void SongTimeEventHandler(float fromTime, float toTime);
     public delegate void SongLoopedHandler(int loopCount, float fromTime, float toTime);
@@ -39,6 +40,7 @@ public class BeatPlay : MonoBehaviour
     /// </summary>
     public event BeatEventHandler BeatDetected;
     public event BeatEventTotalHandler BeatTotalDetected;
+    public event HypeEventHandler HypeDetected;
     public event SongChangedHandler SongChanged;
     public event SongTimeEventHandler SongSeeked;
     public event SongLoopedHandler SongLooped;
@@ -55,6 +57,8 @@ public class BeatPlay : MonoBehaviour
     public float CurrentSongTime => audioSource != null && audioSource.isPlaying ? GetSongTime() : previousSongTime;
     public BeatData LoadedBeatData => recordedBeatData;
     public IReadOnlyList<BeatEvent> BeatEvents => beatEvents;
+    public HypeState CurrentHypeState => currentHypeState;
+    public bool CurrentMoshZone => currentMoshZone;
 
     private BeatData recordedBeatData;
     private List<BeatEvent> beatEvents;
@@ -66,6 +70,10 @@ public class BeatPlay : MonoBehaviour
     private bool dspClockInitialized;
     public float songtime;
     private int loopCount;
+    private List<HypeChange> hypeEvents;
+    private int currentHypeIndex;
+    private HypeState currentHypeState = HypeState.Low;
+    private bool currentMoshZone;
 
     private void Reset()
     {
@@ -119,9 +127,12 @@ public class BeatPlay : MonoBehaviour
         }
 
         beatEvents = recordedBeatData.beatEvents;
+        hypeEvents = recordedBeatData.hypeEvents;
 
         // Make playback robust even if the JSON order is not perfect.
         beatEvents.Sort((a, b) => a.timestamp.CompareTo(b.timestamp));
+        if (hypeEvents != null && hypeEvents.Count > 0)
+            hypeEvents.Sort((a, b) => a.timestamp.CompareTo(b.timestamp));
 
         if (logLoadedData)
         {
@@ -130,6 +141,7 @@ public class BeatPlay : MonoBehaviour
         }
 
         loopCount = 0;
+        ResetHypePlaybackState(0f);
         SongChanged?.Invoke(previousData, recordedBeatData);
         enabled = true;
     }
@@ -153,8 +165,12 @@ public class BeatPlay : MonoBehaviour
         previousSongTime = 0f;
         recordedBeatData = data;
         beatEvents = recordedBeatData.beatEvents;
+        hypeEvents = recordedBeatData.hypeEvents;
         beatEvents.Sort((a, b) => a.timestamp.CompareTo(b.timestamp));
+        if (hypeEvents != null && hypeEvents.Count > 0)
+            hypeEvents.Sort((a, b) => a.timestamp.CompareTo(b.timestamp));
         loopCount = 0;
+        ResetHypePlaybackState(0f);
         SongChanged?.Invoke(previousData, recordedBeatData);
         enabled = true;
         return true;
@@ -207,6 +223,7 @@ public class BeatPlay : MonoBehaviour
         wasPlaying = false;
         if (useDspClock)
             InitializeDspClock(songTime);
+        ResetHypePlaybackState(songTime);
     }
 
     private void Tick()
@@ -228,6 +245,7 @@ public class BeatPlay : MonoBehaviour
         RebaseDspClockIfNeeded(songTime, reportedSongTime);
         songTime = GetSongTime();
         float triggerTime = songTime + visualLeadTime;
+        UpdateHype(triggerTime);
 
         // Detect loop, rewind, or manual seek backwards.
         if (wasPlaying && songTime + 0.05f < previousSongTime)
@@ -335,6 +353,74 @@ public class BeatPlay : MonoBehaviour
         BeatDetected?.Invoke(beatEvent.beatType, intensity);
         BeatTotalDetected?.Invoke(beatEvent.beatType, intensity, beatEvent.timestamp);
         OnBeatDetected?.Invoke(beatEvent.beatType, intensity);
+    }
+
+    private void ResetHypePlaybackState(float songTime)
+    {
+        currentHypeState = HypeState.Low;
+        currentMoshZone = false;
+        currentHypeIndex = 0;
+        UpdateHype(songTime);
+        HypeDetected?.Invoke(currentHypeState, currentMoshZone, songTime);
+    }
+
+    private void UpdateHype(float songTime)
+    {
+        if (hypeEvents == null || hypeEvents.Count == 0)
+        {
+            if (currentHypeState != HypeState.Low || currentMoshZone)
+            {
+                currentHypeState = HypeState.Low;
+                currentMoshZone = false;
+                HypeDetected?.Invoke(currentHypeState, currentMoshZone, songTime);
+            }
+            return;
+        }
+
+        if (currentHypeIndex >= hypeEvents.Count || (currentHypeIndex > 0 && songTime < hypeEvents[currentHypeIndex - 1].timestamp))
+            currentHypeIndex = FindFirstHypeIndexAtOrAfter(songTime);
+
+        bool changed = false;
+        while (currentHypeIndex < hypeEvents.Count && hypeEvents[currentHypeIndex].timestamp <= songTime)
+        {
+            HypeChange change = hypeEvents[currentHypeIndex];
+            if (change.newState != currentHypeState || change.isMoshZone != currentMoshZone)
+            {
+                currentHypeState = change.newState;
+                currentMoshZone = change.isMoshZone;
+                changed = true;
+            }
+            currentHypeIndex++;
+        }
+
+        if (changed)
+            HypeDetected?.Invoke(currentHypeState, currentMoshZone, songTime);
+    }
+
+    private int FindFirstHypeIndexAtOrAfter(float songTime)
+    {
+        if (hypeEvents == null || hypeEvents.Count == 0)
+            return 0;
+
+        int low = 0;
+        int high = hypeEvents.Count - 1;
+        int result = hypeEvents.Count;
+
+        while (low <= high)
+        {
+            int mid = low + ((high - low) / 2);
+            if (hypeEvents[mid].timestamp >= songTime)
+            {
+                result = mid;
+                high = mid - 1;
+            }
+            else
+            {
+                low = mid + 1;
+            }
+        }
+
+        return result;
     }
 
     private int FindFirstBeatIndexAtOrAfter(float songTime)

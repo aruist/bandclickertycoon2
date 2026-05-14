@@ -254,8 +254,8 @@ public class AudienceMember : MonoBehaviour
 
     private void Update()
     {
-        if (!Application.isPlaying)
-            return;
+        if (!Application.isPlaying) return;
+
         if (motionChangeWaiting)
         {
             float currentSongTime = AudienceManager.Instance != null ? AudienceManager.Instance.CurrentAudienceSongTime : Time.time;

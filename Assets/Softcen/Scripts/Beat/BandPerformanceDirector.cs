@@ -17,9 +17,7 @@ public class BandPerformanceDirector : MonoBehaviour
 
     private HypeState currentHypeState = HypeState.Medium;
     [SerializeField] private float lastBeatTimestamp = -999f;
-    private bool hypeEventsSorted;
     private float previousSongTime = -1f;
-    private BeatData cachedBeatData;
 
     private void Awake()
     {
@@ -42,6 +40,7 @@ public class BandPerformanceDirector : MonoBehaviour
         if (beatPlay != null)
         {
             beatPlay.BeatTotalDetected += OnBeatDetected;
+            beatPlay.HypeDetected += OnHypeDetected;
             beatPlay.SongChanged += OnSongChanged;
             beatPlay.SongLooped += OnSongLooped;
             beatPlay.SongSeeked += OnSongSeeked;
@@ -53,6 +52,7 @@ public class BandPerformanceDirector : MonoBehaviour
         if (beatPlay != null)
         {
             beatPlay.BeatTotalDetected -= OnBeatDetected;
+            beatPlay.HypeDetected -= OnHypeDetected;
             beatPlay.SongChanged -= OnSongChanged;
             beatPlay.SongLooped -= OnSongLooped;
             beatPlay.SongSeeked -= OnSongSeeked;
@@ -64,12 +64,6 @@ public class BandPerformanceDirector : MonoBehaviour
         if (beatPlay == null)
             return;
 
-        if (beatPlay.LoadedBeatData != cachedBeatData)
-        {
-            cachedBeatData = beatPlay.LoadedBeatData;
-            ResetHypeState();
-        }
-
         float songTime = beatPlay.CurrentSongTime;
 
         // Handle looping/restart: if timeline wraps backwards, clear carried hype state.
@@ -77,7 +71,6 @@ public class BandPerformanceDirector : MonoBehaviour
             ResetHypeState();
 
         previousSongTime = songTime;
-        UpdateHypeState(songTime + performerLeadTime);
     }
 
     private void OnBeatDetected(BeatDetection.BeatType beatType, float intensity, float timestamp)
@@ -90,7 +83,6 @@ public class BandPerformanceDirector : MonoBehaviour
 
         lastBeatTimestamp = timestamp;
         float triggerTime = timestamp + performerLeadTime;
-        UpdateHypeState(triggerTime);
         bool isAccent = intensity >= accentThreshold || beatType == BeatDetection.BeatType.Energy;
 
         for (int i = 0; i < performers.Length; i++)
@@ -106,9 +98,13 @@ public class BandPerformanceDirector : MonoBehaviour
             Debug.Log($"[BandPerformanceDirector] Beat={beatType}, intensity={intensity:0.00}, hype={currentHypeState}, accent={isAccent}");
     }
 
+    private void OnHypeDetected(HypeState hypeState, bool isMoshZone, float timestamp)
+    {
+        currentHypeState = hypeState;
+    }
+
     private void OnSongChanged(BeatData previousData, BeatData newData)
     {
-        cachedBeatData = newData;
         ResetHypeState();
     }
 
@@ -122,57 +118,14 @@ public class BandPerformanceDirector : MonoBehaviour
         ResetHypeState();
     }
 
-    private void UpdateHypeState(float timestamp)
-    {
-        BeatData data = beatPlay != null ? beatPlay.LoadedBeatData : null;
-        List<HypeChange> hypeEvents = data != null ? data.hypeEvents : null;
-
-        if (hypeEvents == null || hypeEvents.Count == 0)
-            return;
-
-        if (!hypeEventsSorted)
-        {
-            hypeEvents.Sort((a, b) => a.timestamp.CompareTo(b.timestamp));
-            hypeEventsSorted = true;
-        }
-
-        int eventIndex = FindLastHypeIndexAtOrBefore(hypeEvents, timestamp);
-        if (eventIndex >= 0)
-            currentHypeState = hypeEvents[eventIndex].newState;
-    }
-
     private void ResetHypeState()
     {
         #if SOFTCEN_DEBUG
         Debug.Log("BandPerformanceDirector ResetHypeState");
         #endif
 
-        currentHypeState = HypeState.Medium;
-        hypeEventsSorted = false;
+        currentHypeState = HypeState.Low;
         previousSongTime = -1f;
         lastBeatTimestamp = -999f;
-    }
-
-    private static int FindLastHypeIndexAtOrBefore(IReadOnlyList<HypeChange> hypeEvents, float songTime)
-    {
-        int low = 0;
-        int high = hypeEvents.Count - 1;
-        int result = -1;
-
-        while (low <= high)
-        {
-            int mid = low + ((high - low) / 2);
-            if (hypeEvents[mid].timestamp <= songTime)
-            {
-                result = mid;
-                low = mid + 1;
-            }
-            else
-            {
-                high = mid - 1;
-            }
-        }
-
-        return result;
     }
 }
