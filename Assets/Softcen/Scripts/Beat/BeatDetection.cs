@@ -82,7 +82,7 @@ public class BeatDetection : MonoBehaviour
         [Min(64)] public int numSamples = 2048;
         [Min(1)] public int historyLength = 43;
         [Min(1)] public int minHistoryBeforeDetection = 8;
-        [Min(0.01f)] public float minBeatSeparation = 0.05f;
+        [Min(0.01f)] public float minBeatSeparation = 0.06f;
 
         [Header("Sensitivity")]
         [Tooltip("Higher value = fewer global energy beats.")]

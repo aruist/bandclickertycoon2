@@ -2614,8 +2614,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.052, y: 0.9185486, z: -0.12909359, w: -0.36999923}
-  m_LocalPosition: {x: 4.3086452, y: 11.900001, z: 4.785422}
+  m_LocalRotation: {x: -0.048185077, y: 0.9396666, z: -0.14882858, w: -0.3042286}
+  m_LocalPosition: {x: 4.008603, y: 12.6, z: 7.1005845}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3690,6 +3690,10 @@ MonoBehaviour:
   moshUniqueBeatTypes: 3
   hypeDropDetectionWindowSeconds: 2
   hypeDropRiseMultiplier: 1.2
+  highFrequencyPreEmphasis: 1
+  centerCoherenceWeight: 0.25
+  centerCoherencePower: 1.5
+  hypeRecentBeatWeightMax: 1.35
 --- !u!114 &1389544964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6493,18 +6497,6 @@ PrefabInstance:
       propertyPath: defaultBeatPlay
       value: 
       objectReference: {fileID: 334142566}
-    - target: {fileID: 6159895042676596390, guid: a5b588ed0b79b4524b702427b63cf126, type: 3}
-      propertyPath: hypeLookAheadSeconds
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6159895042676596390, guid: a5b588ed0b79b4524b702427b63cf126, type: 3}
-      propertyPath: hypeDropRiseMultiplier
-      value: 1.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 6159895042676596390, guid: a5b588ed0b79b4524b702427b63cf126, type: 3}
-      propertyPath: simultaneousBeatWindow
-      value: 0.12
-      objectReference: {fileID: 0}
     - target: {fileID: 8145292612178395988, guid: a5b588ed0b79b4524b702427b63cf126, type: 3}
       propertyPath: m_Name
       value: SongLibraryManager

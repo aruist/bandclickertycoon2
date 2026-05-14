@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+The AudienceManager.cs script effectively bridges the gap between the high-precision beat data from PCMBeatDetection
+and the visual representation of the audience. It utilizes an instanced rendering approach to handle large audience
+sizes efficiently while providing rhythmic behaviors based on song "Hype" levels.
+*/
 public class AudienceManager : MonoBehaviour
 {
     public static AudienceManager Instance;

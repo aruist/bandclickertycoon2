@@ -70,7 +70,7 @@ MonoBehaviour:
     numSamples: 2048
     historyLength: 43
     minHistoryBeforeDetection: 8
-    minBeatSeparation: 0.05
+    minBeatSeparation: 0.06
     energySensitivity: 1.5
     frequencySensitivity: 1.8
     minEnergyThreshold: 0.001
@@ -121,3 +121,7 @@ MonoBehaviour:
   moshUniqueBeatTypes: 3
   hypeDropDetectionWindowSeconds: 2
   hypeDropRiseMultiplier: 1.25
+  highFrequencyPreEmphasis: 1
+  centerCoherenceWeight: 0.25
+  centerCoherencePower: 1.5
+  hypeRecentBeatWeightMax: 1.35

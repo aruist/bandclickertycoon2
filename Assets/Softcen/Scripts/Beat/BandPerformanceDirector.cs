@@ -10,7 +10,7 @@ public class BandPerformanceDirector : MonoBehaviour
     [Header("Timing")]
     [SerializeField] private float performerLeadTime = 0.02f;
     [SerializeField] private float accentThreshold = 0.75f;
-    [SerializeField] private float minBeatSeparation = 0.02f;
+    [SerializeField] private float minBeatSeparation = 0.06f;
 
     [Header("Debug")]
     [SerializeField] private bool logTriggers = false;
