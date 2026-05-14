@@ -14,7 +14,7 @@ public class PlaceObjectItem : MonoBehaviour {
     [SerializeField] private ScenePoolPrewarm.ParticleFX particleFX;
 
     public bool isActiveUp = true;
-    public float delayBeforeStart = 5f;
+    public float delayBeforeStart = 0f;
     public float moveTime = 2f;
     public ParticleSystem _particleSystem;
 	private ObjectPooler _effectPool;

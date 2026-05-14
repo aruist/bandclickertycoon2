@@ -112,10 +112,10 @@ public class BeatDetection : MonoBehaviour
         [Header("Frequency Ranges")]
         public FrequencyRange[] frequencyRanges = new FrequencyRange[]
         {
-            new FrequencyRange(20f, 60f, BeatType.BassDrum),
-            new FrequencyRange(60f, 120f, BeatType.Kick),
-            new FrequencyRange(120f, 250f, BeatType.Bass),
-            new FrequencyRange(250f, 500f, BeatType.Snare),
+            new FrequencyRange(30f, 80f, BeatType.BassDrum), // Captures the physical "weight" of the sub. Original: 20-60
+            new FrequencyRange(40f, 150f, BeatType.Kick), // Includes the fundamental "thump" of most kicks. Original: 60-120
+            new FrequencyRange(80f, 400f, BeatType.Bass), // Bass guitars and synths often extend into the low-mids. Original: 120-250
+            new FrequencyRange(1000f, 3000f, BeatType.Snare), // Focuses on the "crack" transient for better detection. Original: 250-500
             new FrequencyRange(500f, 1000f, BeatType.Tom),
             new FrequencyRange(1000f, 3000f, BeatType.Mid),
             new FrequencyRange(3000f, 8000f, BeatType.HiHat),
