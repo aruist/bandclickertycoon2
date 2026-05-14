@@ -6494,20 +6494,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 334142566}
     - target: {fileID: 6159895042676596390, guid: a5b588ed0b79b4524b702427b63cf126, type: 3}
-      propertyPath: settings.frequencyRanges.Array.data[3].lowFreq
-      value: 800
+      propertyPath: hypeLookAheadSeconds
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6159895042676596390, guid: a5b588ed0b79b4524b702427b63cf126, type: 3}
-      propertyPath: settings.frequencyRanges.Array.data[5].lowFreq
-      value: 400
+      propertyPath: hypeDropRiseMultiplier
+      value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 6159895042676596390, guid: a5b588ed0b79b4524b702427b63cf126, type: 3}
-      propertyPath: settings.frequencyRanges.Array.data[3].highFreq
-      value: 3500
-      objectReference: {fileID: 0}
-    - target: {fileID: 6159895042676596390, guid: a5b588ed0b79b4524b702427b63cf126, type: 3}
-      propertyPath: settings.frequencyRanges.Array.data[5].highFreq
-      value: 2500
+      propertyPath: simultaneousBeatWindow
+      value: 0.12
       objectReference: {fileID: 0}
     - target: {fileID: 8145292612178395988, guid: a5b588ed0b79b4524b702427b63cf126, type: 3}
       propertyPath: m_Name

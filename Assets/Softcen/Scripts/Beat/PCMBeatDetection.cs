@@ -19,16 +19,16 @@ public sealed class PCMBeatDetection : MonoBehaviour
     [SerializeField] private bool prettyPrintJson = true;
     [SerializeField] private bool destroyDecodedClipAfterAnalysis = true;
     [Header("Hype Analysis")]
-    [SerializeField, Min(0.1f)] private float hypeLookAheadSeconds = 4f;
+    [SerializeField, Min(0.1f)] private float hypeLookAheadSeconds = 3f;
     [SerializeField, Min(0.1f)] private float hypeSampleStepSeconds = 0.25f;
     [SerializeField, Min(0)] private int quietWindowBeatThreshold = 8;
     [SerializeField, Min(0f)] private float mediumBeatsPerSecond = 1.2f;
     [SerializeField, Range(0f, 1f)] private float highAverageIntensity = 0.4f; //0.4 - 0.45
     [SerializeField, Min(1)] private int highUniqueBeatTypes = 3;
-    [SerializeField, Min(0f)] private float simultaneousBeatWindow = 0.18f; // 0.12-0.18
+    [SerializeField, Min(0f)] private float simultaneousBeatWindow = 0.1f; // Recommended Value 0.08 - 0.12
     [SerializeField, Min(1)] private int moshUniqueBeatTypes = 3;
     [SerializeField, Min(0.2f)] private float hypeDropDetectionWindowSeconds = 2f;
-    [SerializeField, Min(1f)] private float hypeDropRiseMultiplier = 1.2f;
+    [SerializeField, Min(1f)] private float hypeDropRiseMultiplier = 1.25f;
 
     public float ProgressPercentage => progressPermille / 10f;
     public bool IsRunning => isRunning;

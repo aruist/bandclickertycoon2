@@ -111,13 +111,13 @@ MonoBehaviour:
   hopSize: 512
   prettyPrintJson: 1
   destroyDecodedClipAfterAnalysis: 1
-  hypeLookAheadSeconds: 4
+  hypeLookAheadSeconds: 3
   hypeSampleStepSeconds: 0.25
   quietWindowBeatThreshold: 8
   mediumBeatsPerSecond: 1.2
   highAverageIntensity: 0.4
   highUniqueBeatTypes: 3
-  simultaneousBeatWindow: 0.18
+  simultaneousBeatWindow: 0.12
   moshUniqueBeatTypes: 3
   hypeDropDetectionWindowSeconds: 2
-  hypeDropRiseMultiplier: 1.2
+  hypeDropRiseMultiplier: 1.25
