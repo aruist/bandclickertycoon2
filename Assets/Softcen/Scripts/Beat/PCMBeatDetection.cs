@@ -15,7 +15,7 @@ public sealed class PCMBeatDetection : MonoBehaviour
     public const int AnalysisVersion = 2;
     public const string AnalyzerId = "PCMBeatDetection";
     [SerializeField] private BeatDetection.BeatDetectionSettings settings = new BeatDetection.BeatDetectionSettings();
-    [SerializeField, Min(0)] private int hopSize = 1024;
+    [SerializeField, Min(0)] private int hopSize = 512;
     [SerializeField] private bool prettyPrintJson = true;
     [SerializeField] private bool destroyDecodedClipAfterAnalysis = true;
     [Header("Hype Analysis")]
@@ -365,11 +365,11 @@ public sealed class PCMBeatDetection : MonoBehaviour
         private readonly float[,] freqBandHistory;
         private readonly float[] currentFreqBands;
         private readonly Dictionary<BeatDetection.BeatType, float> lastBeatTimeByType = new Dictionary<BeatDetection.BeatType, float>();
-        private readonly double[] leftReal;
-        private readonly double[] leftImag;
-        private readonly double[] rightReal;
-        private readonly double[] rightImag;
-        private readonly double[] window;
+        private readonly float[] leftReal;
+        private readonly float[] leftImag;
+        private readonly float[] rightReal;
+        private readonly float[] rightImag;
+        private readonly float[] window;
         private readonly float[] spectrumLeft;
         private readonly float[] spectrumRight;
         private readonly float[] previousSpectrumLeft;
@@ -391,10 +391,10 @@ public sealed class PCMBeatDetection : MonoBehaviour
             freqBandHistory = new float[totalFreqBands, input.HistoryLength];
             currentFreqBands = new float[totalFreqBands];
 
-            leftReal = new double[input.FftSize];
-            leftImag = new double[input.FftSize];
-            rightReal = new double[input.FftSize];
-            rightImag = new double[input.FftSize];
+            leftReal = new float[input.FftSize];
+            leftImag = new float[input.FftSize];
+            rightReal = new float[input.FftSize];
+            rightImag = new float[input.FftSize];
             spectrumLeft = new float[input.FftSize / 2];
             spectrumRight = new float[input.FftSize / 2];
             previousSpectrumLeft = new float[input.FftSize / 2];
@@ -570,8 +570,8 @@ public sealed class PCMBeatDetection : MonoBehaviour
             for (int i = 0; i < input.FftSize; i++)
             {
                 int frame = frameOffset + i;
-                double left = 0.0;
-                double right = 0.0;
+                float left = 0f;
+                float right = 0f;
 
                 if (frame < totalFrames)
                 {
@@ -610,12 +610,12 @@ public sealed class PCMBeatDetection : MonoBehaviour
 
         private void FillSpectrums()
         {
-            double scale = 1.0 / input.FftSize;
+            float scale = 1f / input.FftSize;
 
             for (int i = 0; i < spectrumLeft.Length; i++)
             {
-                spectrumLeft[i] = (float)(Math.Sqrt(leftReal[i] * leftReal[i] + leftImag[i] * leftImag[i]) * scale);
-                spectrumRight[i] = (float)(Math.Sqrt(rightReal[i] * rightReal[i] + rightImag[i] * rightImag[i]) * scale);
+                spectrumLeft[i] = Mathf.Sqrt(leftReal[i] * leftReal[i] + leftImag[i] * leftImag[i]) * scale;
+                spectrumRight[i] = Mathf.Sqrt(rightReal[i] * rightReal[i] + rightImag[i] * rightImag[i]) * scale;
             }
         }
 
@@ -835,28 +835,28 @@ public sealed class PCMBeatDetection : MonoBehaviour
             });
         }
 
-        private static double[] CreateBlackmanHarrisWindow(int size)
+        private static float[] CreateBlackmanHarrisWindow(int size)
         {
-            double[] result = new double[size];
-            const double a0 = 0.35875;
-            const double a1 = 0.48829;
-            const double a2 = 0.14128;
-            const double a3 = 0.01168;
-            double denominator = Math.Max(1, size - 1);
+            float[] result = new float[size];
+            const float a0 = 0.35875f;
+            const float a1 = 0.48829f;
+            const float a2 = 0.14128f;
+            const float a3 = 0.01168f;
+            float denominator = Math.Max(1, size - 1);
 
             for (int i = 0; i < size; i++)
             {
-                double phase = 2.0 * Math.PI * i / denominator;
+                float phase = 2f * Mathf.PI * i / denominator;
                 result[i] = a0
-                            - a1 * Math.Cos(phase)
-                            + a2 * Math.Cos(2.0 * phase)
-                            - a3 * Math.Cos(3.0 * phase);
+                            - a1 * Mathf.Cos(phase)
+                            + a2 * Mathf.Cos(2f * phase)
+                            - a3 * Mathf.Cos(3f * phase);
             }
 
             return result;
         }
 
-        private static void FastFourierTransform(double[] real, double[] imag)
+        private static void FastFourierTransform(float[] real, float[] imag)
         {
             int n = real.Length;
             int j = 0;
@@ -881,14 +881,14 @@ public sealed class PCMBeatDetection : MonoBehaviour
 
             for (int length = 2; length <= n; length <<= 1)
             {
-                double angle = -2.0 * Math.PI / length;
-                double wLengthReal = Math.Cos(angle);
-                double wLengthImag = Math.Sin(angle);
+                float angle = -2f * Mathf.PI / length;
+                float wLengthReal = Mathf.Cos(angle);
+                float wLengthImag = Mathf.Sin(angle);
 
                 for (int i = 0; i < n; i += length)
                 {
-                    double wReal = 1.0;
-                    double wImag = 0.0;
+                    float wReal = 1f;
+                    float wImag = 0f;
                     int halfLength = length >> 1;
 
                     for (int k = 0; k < halfLength; k++)
@@ -896,15 +896,15 @@ public sealed class PCMBeatDetection : MonoBehaviour
                         int evenIndex = i + k;
                         int oddIndex = evenIndex + halfLength;
 
-                        double oddReal = real[oddIndex] * wReal - imag[oddIndex] * wImag;
-                        double oddImag = real[oddIndex] * wImag + imag[oddIndex] * wReal;
+                        float oddReal = real[oddIndex] * wReal - imag[oddIndex] * wImag;
+                        float oddImag = real[oddIndex] * wImag + imag[oddIndex] * wReal;
 
                         real[oddIndex] = real[evenIndex] - oddReal;
                         imag[oddIndex] = imag[evenIndex] - oddImag;
                         real[evenIndex] += oddReal;
                         imag[evenIndex] += oddImag;
 
-                        double nextWReal = wReal * wLengthReal - wImag * wLengthImag;
+                        float nextWReal = wReal * wLengthReal - wImag * wLengthImag;
                         wImag = wReal * wLengthImag + wImag * wLengthReal;
                         wReal = nextWReal;
                     }
@@ -912,9 +912,9 @@ public sealed class PCMBeatDetection : MonoBehaviour
             }
         }
 
-        private static void Swap(double[] values, int a, int b)
+        private static void Swap(float[] values, int a, int b)
         {
-            double temp = values[a];
+            float temp = values[a];
             values[a] = values[b];
             values[b] = temp;
         }
