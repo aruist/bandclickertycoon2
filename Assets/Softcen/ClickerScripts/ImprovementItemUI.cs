@@ -5,8 +5,8 @@ using OneP.InfinityScrollView;
 using TMPro;
 using System;
 
-public class ImprovementItemUI : InfinityBaseItem {
-    public Sprite[] sprIcons;
+public class ImprovementItemUI : MonoBehaviour {
+    [SerializeField] private CanvasGroup canvasGroup;
     public Image imgItemIcon;
     public GameObject goPressParticle;
     public GameObject goActivePanel;
@@ -34,7 +34,6 @@ public class ImprovementItemUI : InfinityBaseItem {
 
     private int _currentLevel = 0;
     private int _starsCount = 0;
-    private CanvasGroup canvasGroup;
 
     public float deactiveAlpha = 0.3f;
 	private double currentPrice;
@@ -43,18 +42,18 @@ public class ImprovementItemUI : InfinityBaseItem {
     private int updatedMin = -1;
     private int updatedSec = -1;
     private readonly char[] timeChars = { '0', '0', ':', '0', '0' };
+    private int Index;
 
 
     void Awake()
     {
-        canvasGroup = GetComponent<CanvasGroup>();
         sbTime = new StringBuilder(6,6);
         sbTime.Append("00:00\0");
 
     }
     void OnEnable()
     {
-        paIkKaHaLlItSiJa.OnRegionChanged += OnRegionChanged;
+        //paIkKaHaLlItSiJa.OnRegionChanged += OnRegionChanged;
         PlayerData.OnMoneyChanged += GameManager_OnMoneyChanged;
         if (!bMoneyAction)
         {
@@ -66,7 +65,7 @@ public class ImprovementItemUI : InfinityBaseItem {
 
     void OnDisable()
     {
-        paIkKaHaLlItSiJa.OnRegionChanged -= OnRegionChanged;
+        //paIkKaHaLlItSiJa.OnRegionChanged -= OnRegionChanged;
         if (bMoneyAction)
         {
             bMoneyAction = false;
@@ -76,10 +75,18 @@ public class ImprovementItemUI : InfinityBaseItem {
         keRrOIn.OnkeRrOInMuuTTUnut -= GameManager_OnMultiplerBonusChanged;
     }
 
-    private void OnRegionChanged()
+    public void Bind(ImprovementState state, int stateindex, Sprite sprite)
     {
+        Index = stateindex;
+        improvementState = state;
+        imgItemIcon.sprite = sprite;
         RefreshUI();
     }
+
+    // private void OnRegionChanged()
+    // {
+    //     RefreshUI();
+    // }
 
     void GameManager_OnMultiplyChanged ()
     {
@@ -114,7 +121,7 @@ public class ImprovementItemUI : InfinityBaseItem {
             txtCurrentProfit.SetText(NumToStr.GetNumStr(currentProfit));
             return;
         }
-
+        if (item == null) return;
         item.UpdateProfit();
         txtCurrentProfit.SetText(item.strCurrentProfit);
     }
@@ -219,13 +226,13 @@ public class ImprovementItemUI : InfinityBaseItem {
         UpdateTime(item._timer);
     }
 
-    public override void Reload(InfinityScrollView _infinity, int _index)
-    {
-        base.Reload(_infinity, _index);
-        //txtDuration.text = "00:00";
-        UpdateItem();
-        //UpdateTime();
-    }
+    // public override void Reload(InfinityScrollView _infinity, int _index)
+    // {
+    //     base.Reload(_infinity, _index);
+    //     //txtDuration.text = "00:00";
+    //     UpdateItem();
+    //     //UpdateTime();
+    // }
 
     private void UpdateTime(float timeLeft)
     {
@@ -253,10 +260,6 @@ public class ImprovementItemUI : InfinityBaseItem {
         if (improvementState == null || improvementState.Definition == null) return;
 
         txtTitle.SetText(improvementState.Definition.displayName);
-        if (Index >= 0 && Index < sprIcons.Length)
-        {
-            imgItemIcon.sprite = sprIcons[Index];
-        }
         if (improvementState.IsUnlocked)
         {
             canvasGroup.alpha = 1f;
@@ -385,16 +388,16 @@ public class ImprovementItemUI : InfinityBaseItem {
     private void UpdateItemLegacy()
     {
         item = paIkKaHaLlItSiJa.Instance.GetImprovementItem_Legacy(Index);
-        #if SOFTCEN_DEBUG
-        Debug.Log($"ImprovementItemUI - UpdateItem {gameObject.name} item name: {item.gameObject.name}", item.gameObject);
-        #endif
+        if (item == null)
+        {
+            return;
+        }
         if (item != null)
         {
+            #if SOFTCEN_DEBUG
+            Debug.Log($"ImprovementItemUI - UpdateItem {gameObject.name} item name: {item.gameObject.name}", item.gameObject);
+            #endif
             txtTitle.SetText(item.name);
-            if (Index >= 0 && Index < sprIcons.Length)
-            {
-                imgItemIcon.sprite = sprIcons[Index];
-            }
             if (item.owned)
             {
                 canvasGroup.alpha = 1f;

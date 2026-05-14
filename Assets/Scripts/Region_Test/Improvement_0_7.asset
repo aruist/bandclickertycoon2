@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Improvement_0_7
   m_EditorClassIdentifier: Assembly-CSharp::ImprovementDefinition
   id: 6
-  displayName: Staff
+  displayName: Audience
   startingPrice: 1000000
   startingProfit: 500000
   startingDurationSeconds: 5

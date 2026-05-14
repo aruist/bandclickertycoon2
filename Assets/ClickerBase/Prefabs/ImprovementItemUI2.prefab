@@ -64,17 +64,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5de3c6e977390e4f8139f7202d2dfed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprIcons:
-  - {fileID: 21300000, guid: 2f6425a8bdc24e84fb0d82613fc55d18, type: 3}
-  - {fileID: 21300000, guid: 9b29fd36bd2da3f418a3b9973c0a21ff, type: 3}
-  - {fileID: 21300000, guid: 86d21f7be58694044a46c4614b1204a2, type: 3}
-  - {fileID: 21300000, guid: 4b8bea02fe18f704f9e472b858c5ac09, type: 3}
-  - {fileID: 21300000, guid: 12d67082d80bc1d43a07b493c368ef67, type: 3}
-  - {fileID: 21300000, guid: e41b2d2143363cc4da54611a2b6f0a26, type: 3}
-  - {fileID: 21300000, guid: 99e9de6084264a7438006a7364a52e1f, type: 3}
-  - {fileID: 21300000, guid: c683fbc880e4e9848b81cd60fd076a56, type: 3}
-  - {fileID: 21300000, guid: 1fc64e178027ab245bbc542f3cc82c1f, type: 3}
-  - {fileID: 21300000, guid: 738ae9c8708fd1544be718bce7e72a93, type: 3}
+  canvasGroup: {fileID: 225784804377046750}
   imgItemIcon: {fileID: 114983225328692044}
   goPressParticle: {fileID: 1543180470050576}
   goActivePanel: {fileID: 1862020307819660}
@@ -44276,7 +44266,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2f6425a8bdc24e84fb0d82613fc55d18, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 47d90b39d8a2640689fd17d62eaacd03, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

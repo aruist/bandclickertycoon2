@@ -13,12 +13,11 @@ public class PlaceObjectItem : MonoBehaviour {
     }
     [SerializeField] private ScenePoolPrewarm.ParticleFX particleFX;
 
-    public bool isActiveUp = true;
+    public bool showWhenPurchased = true;
     public float delayBeforeStart = 0f;
     public float moveTime = 2f;
     public ParticleSystem _particleSystem;
-	private ObjectPooler _effectPool;
-    public bool isActivated = false;
+    public bool isPurchased = false;
 
     private state _state;
     private float _activePosition;
@@ -29,12 +28,15 @@ public class PlaceObjectItem : MonoBehaviour {
     private bool _effectPlayed;
     [SerializeField] private Vector3 originalPos;
     private GameObject _cachedGO;
+    private Vector3 targetPos;
+    private Vector3 startPos;
 
     void Awake()
     {
         rend = GetComponent<Renderer>();
         pathSpeed = GetComponent<MoveAlongPathWithSpeed>();
     }
+
 	void Update () {
         if (_state == state.NotActive || _cachedGO == null)
             return;
@@ -53,38 +55,59 @@ public class PlaceObjectItem : MonoBehaviour {
                 }
             }
         }
-        else if (_state == state.Moving)
+        if (_state == state.Moving)
         {
-            Vector3 pos = transform.localPosition;
-            pos.y = Mathf.Lerp(pos.y, _activePosition, _timer / moveTime);
+            float t = _timer / moveTime;
+            t = Mathf.Clamp01(t);
+            t = Mathf.SmoothStep(0f, 1f,t);
+            transform.localPosition = Vector3.LerpUnclamped(startPos, targetPos, t);
+
             if (_timer >= moveTime)
             {
-                pos.y = _activePosition;
-                _timer = 0;
+                transform.localPosition = targetPos;
                 enabled = false;
-				if (pathSpeed != null)
-				{
-					pathSpeed.enabled = true;
-				}
-                if (!isActiveUp) _cachedGO.SetActive(false);
+                _timer = 0;
+                _state = state.NotActive;
+                if (!showWhenPurchased) _cachedGO.SetActive(false);
             }
-            transform.localPosition = pos;
         }
-
 	}
 
-	public void StartActivate(float activePos, ObjectPooler pool)
+	public void StartActivate(float outOfViewPosY)
     {
-        if (_cachedGO == null) return;
-		_effectPool = pool;
-        _effectPlayed = false;
-        enabled = true;
-        if (isActiveUp) _activePosition = originalPos.y;
-        else _activePosition = activePos;
+        if (_cachedGO == null) _cachedGO = gameObject;
+
+        Vector3 pos = transform.localPosition;
+        isPurchased = true;
         _timer = 0f;
         _state = state.Start;
-        isActivated = true;
-        if (!_cachedGO.activeSelf) _cachedGO.SetActive(true);
+        _effectPlayed = false;
+        enabled = true;
+        _cachedGO.SetActive(true);
+
+        // Item purchased it is time to movi it
+        if (showWhenPurchased)
+        {
+            // Move from out of screen to screen
+            pos.y = outOfViewPosY;
+            transform.localPosition = pos;
+            startPos = pos;
+            targetPos = originalPos;
+        }
+        else
+        {
+            // Move from screen to out of screen
+            startPos = pos;
+            targetPos = originalPos;
+            targetPos.y = outOfViewPosY;
+        }
+
+        // if (showWhenPurchased) _activePosition = originalPos.y;
+        // else _activePosition = outOfViewPosY;
+        // _timer = 0f;
+        // _state = state.Start;
+        // isPurchased = true;
+        // if (!_cachedGO.activeSelf) _cachedGO.SetActive(true);
     }
 
     public void Initialize()
@@ -93,22 +116,59 @@ public class PlaceObjectItem : MonoBehaviour {
         _cachedGO = gameObject;
     }
 
-    public void SetObject(float yPos, bool isActive)
+    public void SetObject(float outOfViewPosY, bool isPurchased)
     {
-        if (_cachedGO == null) return;
+        if (_cachedGO == null) _cachedGO = gameObject;
         if (pathSpeed != null)
         {
-            pathSpeed.enabled = isActive;
+            pathSpeed.enabled = isPurchased;
         }
 
-		isActivated = isActive;
+		this.isPurchased = isPurchased;
 		_state = state.NotActive;
 		Vector3 pos = transform.localPosition;
-        if (isActiveUp && isActive) pos.y = originalPos.y;
-		else pos.y = yPos;
-		transform.localPosition = pos;
-        gameObject.SetActive(isActive);
-		enabled = false;
-        if (isActive && !isActiveUp) gameObject.SetActive(false);
+        if (isPurchased)
+        {
+            // Item purhased
+            if (showWhenPurchased) {
+                pos.y = originalPos.y;
+                gameObject.SetActive(true);
+                enabled = false; // this script can be turned off
+        		transform.localPosition = pos;
+                return;
+            }
+            else  {
+                // No need to show anymore and no need to be active
+                gameObject.SetActive(false);
+                return;
+            }
+        }
+        else
+        {
+            // Item Nor purhased yet
+            if (showWhenPurchased)
+            {
+                pos.y = outOfViewPosY;
+        		transform.localPosition = pos;
+                gameObject.SetActive(false);
+                return;
+            }
+            else
+            {
+                // Item should show if not purhased yet
+                pos.y = originalPos.y;
+        		transform.localPosition = pos;
+                gameObject.SetActive(true);
+            }
+
+        }
+
+		// Vector3 pos = transform.localPosition;
+        // if (showWhenPurchased && isActive) pos.y = originalPos.y;
+		// else pos.y = yPos;
+		// transform.localPosition = pos;
+        // gameObject.SetActive(isActive);
+		// enabled = false;
+        // if (isActive && !showWhenPurchased) gameObject.SetActive(false);
     }
 }

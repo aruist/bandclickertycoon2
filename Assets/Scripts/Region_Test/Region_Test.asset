@@ -29,8 +29,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ca3b259e9d39342f1bb2e16a65cb81de, type: 2}
   - {fileID: 11400000, guid: f35a526e69bf343fd9c39d5c74710f52, type: 2}
   - {fileID: 11400000, guid: 0ce3fe036698a4d408719889a8ca603f, type: 2}
-  - {fileID: 11400000, guid: ce7c0b377347944508c34541bb85f399, type: 2}
-  - {fileID: 11400000, guid: 4c07ee5f701c64d76812383df7ae7cc8, type: 2}
   resourceName: Bar01
   vaultSizes:
   - 50000

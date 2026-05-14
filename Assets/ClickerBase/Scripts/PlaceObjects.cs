@@ -7,8 +7,7 @@ public class PlaceObjects : MonoBehaviour {
 	private List<PlaceObjectItem> objList;
 	//private Stack<Transform> stackDestroy;
     public bool movingUp = true;
-	public float activePos = 0f;
-	public float deactivePos = -50f;
+	public float outOfViewPos = -50f;
 	//private int currentLevel;
 	public ObjectPooler _effectPool;
 
@@ -36,11 +35,11 @@ public class PlaceObjects : MonoBehaviour {
                 objList[i].Initialize();
                 if (i < level)
                 {
-                    objList[i].SetObject(activePos, true);
+                    objList[i].SetObject(outOfViewPos, true);
                 }
                 else
                 {
-                    objList[i].SetObject(deactivePos, false);
+                    objList[i].SetObject(outOfViewPos, false);
                 }
             }
         }
@@ -51,9 +50,9 @@ public class PlaceObjects : MonoBehaviour {
 		//currentLevel = level;
 		for (int i = 0; i < objList.Count; i++) {
 			if (i < level) {
-				if (!objList[i].isActivated)
+				if (!objList[i].isPurchased)
                 {
-					objList[i].StartActivate(activePos, _effectPool);
+					objList[i].StartActivate(outOfViewPos);
 				}
             }
 		}

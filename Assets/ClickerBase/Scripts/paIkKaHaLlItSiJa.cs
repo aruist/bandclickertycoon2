@@ -45,6 +45,7 @@ public class paIkKaHaLlItSiJa : MonoBehaviour {
     public bool UsesWorldDefinitionMotor => useWorldDefinitionMotor;
 
     private RegionState currentRegionState;
+    public RegionState CurrentRegionState => currentRegionState;
 
     public enum improvementProgress
     {
@@ -112,7 +113,7 @@ public class paIkKaHaLlItSiJa : MonoBehaviour {
         }
         SetTila(paikkaTila.ALOITA);
         currentPlaceId = 0;
-        OnGameLoadedLegacy();
+        // OnGameLoadedLegacy();
     }
 
     void Start()
@@ -1319,6 +1320,13 @@ public class paIkKaHaLlItSiJa : MonoBehaviour {
 
     public ImprovementItem GetImprovementItem_Legacy(int index)
     {
+        if (currentPlace == null || currentPlace.gameObject == null)
+        {
+            #if SOFTCEN_DEBUG
+            Debug.LogWarning($"paIkKaHaLlItSiJa GetImprovementItem index: index: {index}, currentPlace is null");
+            #endif
+            return null;
+        }
         #if SOFTCEN_DEBUG
         Debug.Log($"paIkKaHaLlItSiJa GetImprovementItem index: currentPlace: {currentPlace.gameObject.name}, index: {index}", currentPlace.gameObject);
         #endif

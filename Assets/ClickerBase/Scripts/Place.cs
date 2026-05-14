@@ -3,6 +3,7 @@ using WhiteCat.Paths;
 using System.Collections;
 
 public class Place : MonoBehaviour {
+	[SerializeField] private Transform cameraTarget;
 	public int id;
     public BezierPath camPath;
     public Path.KeyframeList keyFrameList;
@@ -14,8 +15,14 @@ public class Place : MonoBehaviour {
 	private bool moveSpot = false;
 	//private Vector3 spotTarget;
 	private float m_timer;
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+
+    void Awake()
+    {
+        if (BeatArenaCameraDirector.Instance != null) BeatArenaCameraDirector.Instance.BindPlaceCameraTarget(cameraTarget);
+    }
+
+    void Start () {
 		if (paIkKaHaLlItSiJa.Instance == null) return;
         for (int i = 0; i < placeObjects.Length; i++) {
             int lvl = paIkKaHaLlItSiJa.Instance.GetLevel(id, i);
@@ -24,12 +31,12 @@ public class Place : MonoBehaviour {
         CheckGroundWorkClose();
     }
 
-	void Update() {
-		if (moveSpot) {
-			m_timer += Time.deltaTime;
-			//spotLight.position = Vector3.Lerp (spotLight.position, spotTarget, m_timer / spotTransitionTime);
-		}
-	}
+	// void Update() {
+	// 	if (moveSpot) {
+	// 		m_timer += Time.deltaTime;
+	// 		//spotLight.position = Vector3.Lerp (spotLight.position, spotTarget, m_timer / spotTransitionTime);
+	// 	}
+	// }
 
 	void OnEnable() {
 		paIkKaHaLlItSiJa.onImprovePurchased += PlacesManager_onImprovePurchased;

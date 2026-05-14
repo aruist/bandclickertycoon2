@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class BeatArenaCameraDirector : MonoBehaviour
 {
+    public static BeatArenaCameraDirector Instance;
+
     public enum ShotType
     {
         Wide,
@@ -57,6 +59,14 @@ public class BeatArenaCameraDirector : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         if (beatPlay == null)
             beatPlay = FindFirstObjectByType<BeatPlay>();
 
@@ -108,6 +118,11 @@ public class BeatArenaCameraDirector : MonoBehaviour
 
         if (songTime >= nextSwitchSongTime)
             TrySwitchShot(songTime, false);
+    }
+
+    public void BindPlaceCameraTarget(Transform target = null)
+    {
+        if (target != null) stageTarget = target;
     }
 
     private void OnBeatDetected(BeatDetection.BeatType beatType, float intensity, float timestamp)

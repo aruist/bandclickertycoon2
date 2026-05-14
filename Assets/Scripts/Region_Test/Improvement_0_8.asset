@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Improvement_0_8
   m_EditorClassIdentifier: Assembly-CSharp::ImprovementDefinition
   id: 7
-  displayName: Environment
+  displayName: Band
   startingPrice: 10000000
   startingProfit: 5000000
   startingDurationSeconds: 5
