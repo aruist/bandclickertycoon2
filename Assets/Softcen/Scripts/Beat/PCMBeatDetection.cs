@@ -364,6 +364,12 @@ public sealed class PCMBeatDetection : MonoBehaviour
         private readonly float[] energyHistory;
         private readonly float[,] freqBandHistory;
         private readonly float[] currentFreqBands;
+        private readonly float[] previousFluxByBand;
+        private readonly float[] previousPreviousFluxByBand;
+        private readonly float[] previousThresholdByBand;
+        private readonly float[] previousTimeByBand;
+        private readonly bool[] hasPreviousFluxByBand;
+        private readonly bool[] hasPreviousPreviousFluxByBand;
         private readonly Dictionary<BeatDetection.BeatType, float> lastBeatTimeByType = new Dictionary<BeatDetection.BeatType, float>();
         private readonly float[] leftReal;
         private readonly float[] leftImag;
@@ -390,6 +396,12 @@ public sealed class PCMBeatDetection : MonoBehaviour
             energyHistory = new float[input.HistoryLength];
             freqBandHistory = new float[totalFreqBands, input.HistoryLength];
             currentFreqBands = new float[totalFreqBands];
+            previousFluxByBand = new float[totalFreqBands];
+            previousPreviousFluxByBand = new float[totalFreqBands];
+            previousThresholdByBand = new float[totalFreqBands];
+            previousTimeByBand = new float[totalFreqBands];
+            hasPreviousFluxByBand = new bool[totalFreqBands];
+            hasPreviousPreviousFluxByBand = new bool[totalFreqBands];
 
             leftReal = new float[input.FftSize];
             leftImag = new float[input.FftSize];
@@ -690,8 +702,8 @@ public sealed class PCMBeatDetection : MonoBehaviour
                 for (int i = 0; i < totalFreqBands; i++)
                 {
                     BeatDetection.BeatType beatType = input.FrequencyRanges[i].beatType;
-                    if (TryDetectBandBeat(i, songTime, beatType, out float intensity))
-                        RecordBeatEvent(beatEvents, beatType, songTime, intensity);
+                    if (TryDetectBandBeat(i, songTime, beatType, out float intensity, out float detectedTimestamp))
+                        RecordBeatEvent(beatEvents, beatType, detectedTimestamp, intensity);
                 }
             }
         }
@@ -714,22 +726,61 @@ public sealed class PCMBeatDetection : MonoBehaviour
             return isBeat;
         }
 
-        private bool TryDetectBandBeat(int bandIndex, float songTime, BeatDetection.BeatType beatType, out float intensity)
+        private bool TryDetectBandBeat(int bandIndex, float songTime, BeatDetection.BeatType beatType, out float intensity, out float detectedTimestamp)
         {
             float currentValue = currentFreqBands[bandIndex];
             float average = CalculateBandAverage(bandIndex);
             float variance = CalculateBandVariance(bandIndex, average);
             float adaptiveSensitivity = ComputeAdaptiveFrequencySensitivity(average, variance);
-            float threshold = adaptiveSensitivity * (average + variance * 0.3f);
+            float currentThreshold = adaptiveSensitivity * (average + variance * 0.3f);
+            float effectiveMinSeparation = Math.Max(0.06f, input.MinBeatSeparation);
 
-            bool isBeat = currentValue > threshold &&
-                          currentValue > input.MinFrequencyThreshold &&
-                          songTime - lastBeatTimeByType[beatType] >= input.MinBeatSeparation;
+            intensity = 0f;
+            detectedTimestamp = songTime;
 
-            intensity = isBeat ? CalculateIntensity(currentValue, threshold) : 0f;
+            if (!hasPreviousFluxByBand[bandIndex])
+            {
+                previousFluxByBand[bandIndex] = currentValue;
+                previousThresholdByBand[bandIndex] = currentThreshold;
+                previousTimeByBand[bandIndex] = songTime;
+                hasPreviousFluxByBand[bandIndex] = true;
+                return false;
+            }
+
+            if (!hasPreviousPreviousFluxByBand[bandIndex])
+            {
+                previousPreviousFluxByBand[bandIndex] = previousFluxByBand[bandIndex];
+                hasPreviousPreviousFluxByBand[bandIndex] = true;
+
+                previousFluxByBand[bandIndex] = currentValue;
+                previousThresholdByBand[bandIndex] = currentThreshold;
+                previousTimeByBand[bandIndex] = songTime;
+                return false;
+            }
+
+            float candidateFlux = previousFluxByBand[bandIndex];
+            float candidateThreshold = previousThresholdByBand[bandIndex];
+            float candidateTimestamp = previousTimeByBand[bandIndex];
+            float leftNeighbor = previousPreviousFluxByBand[bandIndex];
+            float rightNeighbor = currentValue;
+
+            bool isPeak = candidateFlux > leftNeighbor && candidateFlux >= rightNeighbor;
+            bool isBeat = isPeak &&
+                          candidateFlux > candidateThreshold &&
+                          candidateFlux > input.MinFrequencyThreshold &&
+                          candidateTimestamp - lastBeatTimeByType[beatType] >= effectiveMinSeparation;
 
             if (isBeat)
-                lastBeatTimeByType[beatType] = songTime;
+            {
+                intensity = CalculateIntensity(candidateFlux, candidateThreshold);
+                detectedTimestamp = candidateTimestamp;
+                lastBeatTimeByType[beatType] = candidateTimestamp;
+            }
+
+            previousPreviousFluxByBand[bandIndex] = previousFluxByBand[bandIndex];
+            previousFluxByBand[bandIndex] = currentValue;
+            previousThresholdByBand[bandIndex] = currentThreshold;
+            previousTimeByBand[bandIndex] = songTime;
 
             return isBeat;
         }
