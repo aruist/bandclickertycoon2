@@ -14,7 +14,7 @@ using static BeatDetection;
 /// - Add/keep LineRenderer on the same GameObject
 /// - Use an Unlit Transparent/Additive material
 /// </summary>
-public class BeatLaserSweep : MonoBehaviour
+public class BeatLaserSweep : PlaceObjectItemActivate
 {
     public enum LaserRenderMode
     {
@@ -149,6 +149,11 @@ public class BeatLaserSweep : MonoBehaviour
             UpdateQuadMesh(start, end, width, visible);
 
         ApplyColor(GetCurrentColor(), alpha);
+    }
+
+    public override void ActivateScript(bool state)
+    {
+        enabled = state;
     }
 
     private void UpdateSweepRotation()

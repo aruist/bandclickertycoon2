@@ -20,6 +20,9 @@ public class ImprovementDefinition : ScriptableObject
     [Tooltip("Profit multiplier. Example: 1.07 means every upgrade gives 7% more profit.")]
     public double profitGrowth = 1.07;
 
+    [Header("Visuals")]
+    public Sprite sprite;
+
     public const int MaxLevel = 200;
 
     public double GetUpgradeCost(int currentLevel)

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using WhiteCat.Paths;
 using Softcen.Clicker.Core;
+using System.Collections.Generic;
 
 public class PlaceObjectItem : MonoBehaviour {
 
@@ -12,6 +13,7 @@ public class PlaceObjectItem : MonoBehaviour {
         Moving,
     }
     [SerializeField] private ScenePoolPrewarm.ParticleFX particleFX;
+    [SerializeField] private List<PlaceObjectItemActivate> activateAfterShowUp;
 
     public bool showWhenPurchased = true;
     public float delayBeforeStart = 0f;
@@ -48,8 +50,9 @@ public class PlaceObjectItem : MonoBehaviour {
             {
                 _timer = 0;
                 _state = state.Moving;
-                if (!_effectPlayed)
+                if (!_effectPlayed && !showWhenPurchased)
                 {
+                    // Item dissapear so we need to show effect right away
                     PooledFxPool.Spawn(particleFX, transform.position);
                     _effectPlayed = true;
                 }
@@ -65,13 +68,30 @@ public class PlaceObjectItem : MonoBehaviour {
             if (_timer >= moveTime)
             {
                 transform.localPosition = targetPos;
+                if (!_effectPlayed && showWhenPurchased)
+                {
+                    // Item show up now it is right time to show effect
+                    PooledFxPool.Spawn(particleFX, transform.position);
+                    _effectPlayed = true;
+                }
                 enabled = false;
                 _timer = 0;
                 _state = state.NotActive;
                 if (!showWhenPurchased) _cachedGO.SetActive(false);
+                TryActivateAfterShowUp(true);
             }
         }
 	}
+
+    private void TryActivateAfterShowUp(bool state)
+    {
+        if (activateAfterShowUp == null || activateAfterShowUp.Count == 0) return;
+        for (int i=0; i < activateAfterShowUp.Count; i++)
+        {
+            if (activateAfterShowUp[i] == null) continue;
+            activateAfterShowUp[i].ActivateScript(state);
+        }
+    }
 
 	public void StartActivate(float outOfViewPosY)
     {
@@ -133,12 +153,14 @@ public class PlaceObjectItem : MonoBehaviour {
             if (showWhenPurchased) {
                 pos.y = originalPos.y;
                 gameObject.SetActive(true);
+                TryActivateAfterShowUp(true);
                 enabled = false; // this script can be turned off
         		transform.localPosition = pos;
                 return;
             }
             else  {
                 // No need to show anymore and no need to be active
+                TryActivateAfterShowUp(false);
                 gameObject.SetActive(false);
                 return;
             }
@@ -150,6 +172,7 @@ public class PlaceObjectItem : MonoBehaviour {
             {
                 pos.y = outOfViewPosY;
         		transform.localPosition = pos;
+                TryActivateAfterShowUp(false);
                 gameObject.SetActive(false);
                 return;
             }
@@ -158,6 +181,7 @@ public class PlaceObjectItem : MonoBehaviour {
                 // Item should show if not purhased yet
                 pos.y = originalPos.y;
         		transform.localPosition = pos;
+                TryActivateAfterShowUp(true);
                 gameObject.SetActive(true);
             }
 

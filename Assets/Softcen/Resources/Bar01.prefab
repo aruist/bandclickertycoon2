@@ -126,7 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjects
   objList: []
   movingUp: 1
-  outOfViewPos: -50
+  outOfViewPos: -5
   _effectPool: {fileID: 0}
 --- !u!1 &1424564596830657078
 GameObject:
@@ -176,9 +176,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -374,9 +375,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -436,7 +438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjects
   objList: []
   movingUp: 0
-  outOfViewPos: -50
+  outOfViewPos: -5
   _effectPool: {fileID: 0}
 --- !u!1 &2352659371348247302
 GameObject:
@@ -669,9 +671,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -725,7 +728,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjects
   objList: []
   movingUp: 1
-  outOfViewPos: -50
+  outOfViewPos: -5
   _effectPool: {fileID: 0}
 --- !u!1 &3235239866149436148
 GameObject:
@@ -785,7 +788,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjects
   objList: []
   movingUp: 1
-  outOfViewPos: -50
+  outOfViewPos: -5
   _effectPool: {fileID: 0}
 --- !u!1 &3328726250737314416
 GameObject:
@@ -933,7 +936,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjects
   objList: []
   movingUp: 1
-  outOfViewPos: -50
+  outOfViewPos: -5
   _effectPool: {fileID: 0}
 --- !u!1 &3775671796985320687
 GameObject:
@@ -991,7 +994,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjects
   objList: []
   movingUp: 1
-  outOfViewPos: -50
+  outOfViewPos: -5
   _effectPool: {fileID: 0}
 --- !u!1 &3849146936464677135
 GameObject:
@@ -1097,9 +1100,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -1159,7 +1163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjects
   objList: []
   movingUp: 0
-  outOfViewPos: -50
+  outOfViewPos: -5
   _effectPool: {fileID: 0}
 --- !u!1 &4561932731420459920
 GameObject:
@@ -1211,6 +1215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -1233,7 +1238,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2174315567534682751
 Transform:
   m_ObjectHideFlags: 0
@@ -1282,6 +1287,7 @@ MonoBehaviour:
   - {fileID: 765451016106866009}
   - {fileID: 4369215225906567109}
   - {fileID: 4174954958188130967}
+  - {fileID: 8316222945984152601}
   - {fileID: 8586976996828675075}
   - {fileID: 4133596773933667645}
   goGroundWork: {fileID: 0}
@@ -1480,9 +1486,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -1882,9 +1889,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -1934,7 +1942,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjects
   objList: []
   movingUp: 1
-  outOfViewPos: -50
+  outOfViewPos: -5
   _effectPool: {fileID: 0}
 --- !u!1 &8221685517643394729
 GameObject:
@@ -1983,9 +1991,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -2130,6 +2139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
   moveTime: 2
@@ -2436,6 +2446,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -2538,6 +2549,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -3298,6 +3310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -3423,78 +3436,27 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3698115286856763500, guid: c2eb1140a180e448193c32169775b651, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3698115286856763500, guid: c2eb1140a180e448193c32169775b651, type: 3}
       propertyPath: pointLight
       value: 
       objectReference: {fileID: 320982354784336943}
-    - target: {fileID: 3698115286856763500, guid: c2eb1140a180e448193c32169775b651, type: 3}
-      propertyPath: stageLightGroupIndex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3698115286856763500, guid: c2eb1140a180e448193c32169775b651, type: 3}
-      propertyPath: maxPointLightIntensity
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3698115286856763500, guid: c2eb1140a180e448193c32169775b651, type: 3}
-      propertyPath: minPointLightIntensity
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3698115286856763500, guid: c2eb1140a180e448193c32169775b651, type: 3}
-      propertyPath: pulsePointLightIntensity
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6238128184438468515, guid: c2eb1140a180e448193c32169775b651, type: 3}
       propertyPath: m_Name
       value: SC_SmallLightBeam (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 6238128184438468515, guid: c2eb1140a180e448193c32169775b651, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6238128184438468515, guid: c2eb1140a180e448193c32169775b651, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
+    - target: {fileID: 7399786332426231591, guid: c2eb1140a180e448193c32169775b651, type: 3}
+      propertyPath: moveTime
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6238128184438468515, guid: c2eb1140a180e448193c32169775b651, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4140102127481494653}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2eb1140a180e448193c32169775b651, type: 3}
 --- !u!4 &3303396005599117041 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2767461899911913398, guid: c2eb1140a180e448193c32169775b651, type: 3}
   m_PrefabInstance: {fileID: 846670980251164999}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &6714218663988039396 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6238128184438468515, guid: c2eb1140a180e448193c32169775b651, type: 3}
-  m_PrefabInstance: {fileID: 846670980251164999}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4140102127481494653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6714218663988039396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18ffa7bff1c6480409f56889d501a674, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
-  particleFX: 0
-  showWhenPurchased: 1
-  delayBeforeStart: 0
-  moveTime: 2
-  _particleSystem: {fileID: 0}
-  isPurchased: 0
-  originalPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &849027291849472549
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3583,9 +3545,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -3812,9 +3775,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -3974,6 +3938,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -4193,6 +4158,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Base_Floor_01 (73)
       objectReference: {fileID: 0}
+    - target: {fileID: 5580141628907397799, guid: 7068f38c7fb6a364a85b7461318e0f7d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6228576480856277874, guid: 7068f38c7fb6a364a85b7461318e0f7d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -4223,9 +4192,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -4660,6 +4630,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Steps_01_Corner_Outer_03 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3067110500922571231, guid: 699408a9ff57f004cb1c53e37f2488ad, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3571474008227682314, guid: 699408a9ff57f004cb1c53e37f2488ad, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -4695,9 +4669,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -5017,6 +4992,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -5192,6 +5168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -5291,6 +5268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -5703,6 +5681,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -5870,9 +5849,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -6683,6 +6663,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -6854,6 +6835,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -7234,6 +7216,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1644935858452610205}
     m_Modifications:
+    - target: {fileID: 2260176686699765044, guid: 2f874c3657f104a3ab6c06c3641a6e08, type: 3}
+      propertyPath: moveTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3422410563930238384, guid: 2f874c3657f104a3ab6c06c3641a6e08, type: 3}
       propertyPath: m_Name
       value: SC_SmallLightBeamSide (1)
@@ -7316,6 +7302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
   moveTime: 2
@@ -8074,6 +8061,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
   moveTime: 2
@@ -8346,6 +8334,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Steps_01 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8941641789137245137, guid: 49279bb56f3db21409e2e831fde95e13, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8372,9 +8364,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -8767,9 +8760,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -9023,6 +9017,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -9334,6 +9329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -9626,6 +9622,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7399786332426231591, guid: c2eb1140a180e448193c32169775b651, type: 3}
+      propertyPath: moveTime
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9657,6 +9657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
   moveTime: 2
@@ -9831,6 +9832,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -10005,9 +10007,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -10182,6 +10185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -10276,9 +10280,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -10306,6 +10311,10 @@ PrefabInstance:
     - target: {fileID: 1495017224404952961, guid: 99e35289e8807407994d9a72dcb5d01c, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2638059075027310341, guid: 99e35289e8807407994d9a72dcb5d01c, type: 3}
+      propertyPath: moveTime
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4051947130749331891, guid: 99e35289e8807407994d9a72dcb5d01c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -10413,6 +10422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
   moveTime: 2
@@ -11307,6 +11317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -11369,6 +11380,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Base_Floor_01 (74)
       objectReference: {fileID: 0}
+    - target: {fileID: 5580141628907397799, guid: 7068f38c7fb6a364a85b7461318e0f7d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6228576480856277874, guid: 7068f38c7fb6a364a85b7461318e0f7d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -11399,9 +11414,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -11856,6 +11872,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -11957,9 +11974,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -12019,6 +12037,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Steps_01_Corner_Outer_03
       objectReference: {fileID: 0}
+    - target: {fileID: 3067110500922571231, guid: 699408a9ff57f004cb1c53e37f2488ad, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3571474008227682314, guid: 699408a9ff57f004cb1c53e37f2488ad, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -12054,9 +12076,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -12368,6 +12391,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1644935858452610205}
     m_Modifications:
+    - target: {fileID: 2260176686699765044, guid: 2f874c3657f104a3ab6c06c3641a6e08, type: 3}
+      propertyPath: moveTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3422410563930238384, guid: 2f874c3657f104a3ab6c06c3641a6e08, type: 3}
       propertyPath: m_Name
       value: SC_SmallLightBeamSide
@@ -12455,6 +12482,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
   moveTime: 2
@@ -12551,9 +12579,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -13018,9 +13047,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -13133,11 +13163,55 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5562301457406304327}
   m_SourcePrefab: {fileID: 100100000, guid: 4f15df697297540d4be91186eff2bd8a, type: 3}
+--- !u!114 &252359136119253520 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5328478877883289536, guid: 4f15df697297540d4be91186eff2bd8a, type: 3}
+  m_PrefabInstance: {fileID: 5364350118186296784}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 011d67c42ca3e49edb3c7ac15d9726b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeatLaserSweep
 --- !u!4 &1240482111827505630 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6576684727743665166, guid: 4f15df697297540d4be91186eff2bd8a, type: 3}
   m_PrefabInstance: {fileID: 5364350118186296784}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4358813472495649934 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8507191671553515870, guid: 4f15df697297540d4be91186eff2bd8a, type: 3}
+  m_PrefabInstance: {fileID: 5364350118186296784}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 011d67c42ca3e49edb3c7ac15d9726b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeatLaserSweep
+--- !u!114 &4841719750505446807 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 667445851333793863, guid: 4f15df697297540d4be91186eff2bd8a, type: 3}
+  m_PrefabInstance: {fileID: 5364350118186296784}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 011d67c42ca3e49edb3c7ac15d9726b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeatLaserSweep
+--- !u!114 &5304170025450950161 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 283219402878806977, guid: 4f15df697297540d4be91186eff2bd8a, type: 3}
+  m_PrefabInstance: {fileID: 5364350118186296784}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 011d67c42ca3e49edb3c7ac15d9726b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeatLaserSweep
 --- !u!1 &7318242669266347287 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3458094833207050439, guid: 4f15df697297540d4be91186eff2bd8a, type: 3}
@@ -13156,9 +13230,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp:
+  - {fileID: 252359136119253520}
+  - {fileID: 4841719750505446807}
+  - {fileID: 4358813472495649934}
+  - {fileID: 5304170025450950161}
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -13230,6 +13309,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7399786332426231591, guid: c2eb1140a180e448193c32169775b651, type: 3}
+      propertyPath: moveTime
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13256,6 +13339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
   moveTime: 2
@@ -13405,6 +13489,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Steps_01
       objectReference: {fileID: 0}
+    - target: {fileID: 8941641789137245137, guid: 49279bb56f3db21409e2e831fde95e13, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13431,9 +13519,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -13852,6 +13941,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Base_Floor_Angled_01
       objectReference: {fileID: 0}
+    - target: {fileID: 8894092140034704684, guid: b02b15887b1a1034eb8a52e33495d886, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13878,9 +13971,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -14054,6 +14148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -14591,6 +14686,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -14680,9 +14776,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -15066,9 +15163,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -15219,6 +15317,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7399786332426231591, guid: c2eb1140a180e448193c32169775b651, type: 3}
+      propertyPath: moveTime
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15245,6 +15347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
   moveTime: 2
@@ -15787,9 +15890,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -15893,9 +15997,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -16150,6 +16255,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2638059075027310341, guid: 99e35289e8807407994d9a72dcb5d01c, type: 3}
+      propertyPath: moveTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4051947130749331891, guid: 99e35289e8807407994d9a72dcb5d01c, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.5663344
@@ -16253,6 +16362,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
   moveTime: 2
@@ -16528,6 +16638,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Base_Floor_01 (75)
       objectReference: {fileID: 0}
+    - target: {fileID: 5580141628907397799, guid: 7068f38c7fb6a364a85b7461318e0f7d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6228576480856277874, guid: 7068f38c7fb6a364a85b7461318e0f7d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -16563,9 +16677,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -17022,9 +17137,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -17315,6 +17431,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Steps_01_Angled_Outer_01
       objectReference: {fileID: 0}
+    - target: {fileID: 2031301092384328929, guid: 24c1cf5e84100a34e967ec3973d7a9ab, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17341,9 +17461,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}
@@ -17958,6 +18079,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 0
   delayBeforeStart: 0
   moveTime: 2
@@ -19025,9 +19147,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
   particleFX: 0
+  activateAfterShowUp: []
   showWhenPurchased: 1
   delayBeforeStart: 0
-  moveTime: 2
+  moveTime: 1
   _particleSystem: {fileID: 0}
   isPurchased: 0
   originalPos: {x: 0, y: 0, z: 0}

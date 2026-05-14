@@ -12,13 +12,15 @@ GameObject:
   - component: {fileID: 3872971450295623072}
   - component: {fileID: 4114204058801352369}
   - component: {fileID: 3698115286856763500}
+  - component: {fileID: 7399786332426231591}
+  - component: {fileID: 2851872717325508082}
   m_Layer: 0
   m_Name: SC_SmallLightBeam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 126
-  m_IsActive: 1
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
 --- !u!4 &2767461899911913398
 Transform:
   m_ObjectHideFlags: 0
@@ -99,13 +101,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6238128184438468515}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 381b5ccb6705d49248c9fec0d9f59541, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatLightBeamCone
   stageLightGroup: 0
-  stageLightGroupIndex: 0
+  stageLightGroupIndex: 1
   beatPlay: {fileID: 0}
   useGlobalBeatEvent: 1
   reactToBeats: 193
@@ -120,12 +122,57 @@ MonoBehaviour:
   pulseScale: 1
   widthScaleBoost: 0.18
   lengthScaleBoost: 0.1
+  pointLight: {fileID: 0}
+  pulsePointLightIntensity: 1
+  minPointLightIntensity: 0.6
+  maxPointLightIntensity: 4
   enableSweep: 1
   sweepAxis: {x: 1, y: 0, z: 0}
   sweepDegrees: 12
   sweepSpeed: 1.5
   sweepTransform: {fileID: 8797358303493218705}
   randomIntensityVariation: 0.1
+--- !u!114 &7399786332426231591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6238128184438468515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18ffa7bff1c6480409f56889d501a674, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
+  particleFX: 0
+  activateAfterShowUp:
+  - {fileID: 3698115286856763500}
+  showWhenPurchased: 1
+  delayBeforeStart: 0
+  moveTime: 2
+  _particleSystem: {fileID: 0}
+  isPurchased: 0
+  originalPos: {x: 0, y: 0, z: 0}
+--- !u!114 &2851872717325508082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6238128184438468515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18ffa7bff1c6480409f56889d501a674, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlaceObjectItem
+  particleFX: 0
+  activateAfterShowUp: []
+  showWhenPurchased: 1
+  delayBeforeStart: 0
+  moveTime: 2
+  _particleSystem: {fileID: 0}
+  isPurchased: 0
+  originalPos: {x: 0, y: 0, z: 0}
 --- !u!1 &7772503149193272873
 GameObject:
   m_ObjectHideFlags: 0

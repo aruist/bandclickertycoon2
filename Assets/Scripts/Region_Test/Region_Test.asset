@@ -25,8 +25,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8ab0790efd1ff43b9965ff022a3e8953, type: 2}
   - {fileID: 11400000, guid: da203edbb7ecb43d09004fa8673a83f5, type: 2}
   - {fileID: 11400000, guid: fa198ca27b32c47198080d52d380481c, type: 2}
-  - {fileID: 11400000, guid: 64c31568dcb7f4360b187cf6b3d5e127, type: 2}
   - {fileID: 11400000, guid: ca3b259e9d39342f1bb2e16a65cb81de, type: 2}
+  - {fileID: 11400000, guid: 64c31568dcb7f4360b187cf6b3d5e127, type: 2}
   - {fileID: 11400000, guid: f35a526e69bf343fd9c39d5c74710f52, type: 2}
   - {fileID: 11400000, guid: 0ce3fe036698a4d408719889a8ca603f, type: 2}
   resourceName: Bar01

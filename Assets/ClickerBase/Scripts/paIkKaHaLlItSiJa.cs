@@ -9,11 +9,11 @@ using System.Collections;
 using TMPro;
 
 public class paIkKaHaLlItSiJa : MonoBehaviour {
+    public static paIkKaHaLlItSiJa Instance = null;
     public static event Action OnRegionChanged;
 
     [SerializeField] private WorldDefinition worldDefinition;
 
-    public static paIkKaHaLlItSiJa Instance = null;
     public static event Action<int, int, int> onImprovePurchased;
     [SerializeField] private MoveAlongPathWithSpeed camMoveAlongPath;
     [SerializeField] private Transform camTransform;
@@ -46,6 +46,9 @@ public class paIkKaHaLlItSiJa : MonoBehaviour {
 
     private RegionState currentRegionState;
     public RegionState CurrentRegionState => currentRegionState;
+
+    private bool gigStarted;
+    public bool GigStarted => gigStarted;
 
     public enum improvementProgress
     {
@@ -280,6 +283,11 @@ public class paIkKaHaLlItSiJa : MonoBehaviour {
         // }
 		return 0;
 	}
+
+    private void TryToStartGig()
+    {
+
+    }
 
     public void PurchaseImprovement(int index, ImprovementItemUI uiItem)
     {
@@ -797,6 +805,11 @@ public class paIkKaHaLlItSiJa : MonoBehaviour {
         return true;
     }
 
+    public bool HasGigStarted()
+    {
+        if (currentRegionState == null) return false;
+        return currentRegionState.HasGigStarted();
+    }
     private bool IsDoubleSpeedMilestoneCrossed(int oldLevel, int newLevel)
     {
         for (int i = 0; i < starMilestones.Length; i++)

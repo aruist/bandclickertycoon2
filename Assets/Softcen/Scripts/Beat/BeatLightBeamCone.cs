@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 /// <summary>
 /// Pulses a fake light-beam cone from BeatPlay beat events.
@@ -12,7 +13,7 @@ using UnityEngine;
 /// This script uses MaterialPropertyBlock, so it does not create material instances at runtime.
 /// </summary>
 [DisallowMultipleComponent]
-public sealed class BeatLightBeamCone : MonoBehaviour
+public sealed class BeatLightBeamCone : PlaceObjectItemActivate
 {
     [SerializeField] private StageLightGroup stageLightGroup;
     [SerializeField] private int stageLightGroupIndex;
@@ -93,6 +94,7 @@ public sealed class BeatLightBeamCone : MonoBehaviour
     private bool started;
     private Color baseColor;
     private Color pulseColor;
+    private bool hasGigStarted;
 
     private void Reset()
     {
@@ -137,6 +139,7 @@ public sealed class BeatLightBeamCone : MonoBehaviour
 
     private void OnEnable()
     {
+        hasGigStarted = paIkKaHaLlItSiJa.Instance.HasGigStarted();
         Subscribe();
     }
 
@@ -145,8 +148,15 @@ public sealed class BeatLightBeamCone : MonoBehaviour
         Unsubscribe();
     }
 
+    public override void ActivateScript(bool state)
+    {
+        enabled = state;
+        hasGigStarted = paIkKaHaLlItSiJa.Instance.HasGigStarted();
+    }
+
     private void Update()
     {
+        if (!hasGigStarted) return;
         float speed = targetPulse > pulse ? attackSpeed : releaseSpeed;
         pulse = Mathf.MoveTowards(pulse, targetPulse, speed * Time.deltaTime);
         targetPulse = Mathf.MoveTowards(targetPulse, 0f, releaseSpeed * Time.deltaTime);

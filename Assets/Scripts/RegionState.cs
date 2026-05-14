@@ -149,6 +149,13 @@ public class RegionState
         return 0;
     }
 
+    public bool HasGigStarted()
+    {
+        if (Improvements == null || Improvements.Count < 8) return false;
+        if (Improvements[7].Level > 3) return true;
+        return false;
+    }
+
     public bool CanBuyImprovement(int improvementIndex, double money)
     {
         if (!IsUnlocked)

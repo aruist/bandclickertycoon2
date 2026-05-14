@@ -44,8 +44,7 @@ public class UIImprovementsItemsScrollView : MonoBehaviour
             {
                 if (regionState.Improvements[i] == null) continue;
                 Debug.Log($"UIImprovementsItemsScrollView {regionState.Improvements[i].Definition.displayName}, level: {regionState.Improvements[i].Level}");
-                Sprite icon = i < icons.Length ? icons[i] : null;
-                items[i].Bind(regionState.Improvements[i], i, icon);
+                items[i].Bind(regionState.Improvements[i], i);
                 items[i].gameObject.SetActive(true);
             }
             else

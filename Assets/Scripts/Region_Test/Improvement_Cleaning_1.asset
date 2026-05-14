@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0aa20eed5813d4b7cbdd54a99dc6c895, type: 3}
-  m_Name: Improvement_0_8
+  m_Name: Improvement_Cleaning_1
   m_EditorClassIdentifier: Assembly-CSharp::ImprovementDefinition
-  id: 7
-  displayName: Band
-  startingPrice: 10000000
-  startingProfit: 5000000
+  id: 0
+  displayName: Cleaning
+  startingPrice: 1
+  startingProfit: 0.5
   startingDurationSeconds: 5
   priceGrowth: 1.08
   profitGrowth: 1.07
+  sprite: {fileID: 21300000, guid: 2910dc377ba42485ca77d75067eafe06, type: 3}

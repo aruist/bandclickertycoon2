@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0aa20eed5813d4b7cbdd54a99dc6c895, type: 3}
-  m_Name: Improvement_0_6
+  m_Name: Improvement_Reorganize_2
   m_EditorClassIdentifier: Assembly-CSharp::ImprovementDefinition
-  id: 5
-  displayName: Instruments
-  startingPrice: 100000
-  startingProfit: 50000
+  id: 1
+  displayName: Reorganize
+  startingPrice: 10
+  startingProfit: 5
   startingDurationSeconds: 5
   priceGrowth: 1.08
   profitGrowth: 1.07
+  sprite: {fileID: 21300000, guid: fe25cabf32d214bd9b122eae6a91e5ee, type: 3}

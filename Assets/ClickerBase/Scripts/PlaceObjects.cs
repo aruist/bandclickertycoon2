@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class PlaceObjects : MonoBehaviour {
-	[SerializeField]
-	private List<PlaceObjectItem> objList;
+	[SerializeField] private List<PlaceObjectItem> objList;
 	//private Stack<Transform> stackDestroy;
     public bool movingUp = true;
 	public float outOfViewPos = -50f;

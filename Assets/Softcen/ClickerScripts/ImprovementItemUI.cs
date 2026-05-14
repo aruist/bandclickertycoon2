@@ -75,11 +75,10 @@ public class ImprovementItemUI : MonoBehaviour {
         keRrOIn.OnkeRrOInMuuTTUnut -= GameManager_OnMultiplerBonusChanged;
     }
 
-    public void Bind(ImprovementState state, int stateindex, Sprite sprite)
+    public void Bind(ImprovementState state, int stateindex)
     {
         Index = stateindex;
         improvementState = state;
-        imgItemIcon.sprite = sprite;
         RefreshUI();
     }
 
@@ -258,6 +257,8 @@ public class ImprovementItemUI : MonoBehaviour {
     private void RefreshUI()
     {
         if (improvementState == null || improvementState.Definition == null) return;
+
+        if (imgItemIcon != null) imgItemIcon.sprite = improvementState.Definition.sprite;
 
         txtTitle.SetText(improvementState.Definition.displayName);
         if (improvementState.IsUnlocked)

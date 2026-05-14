@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0aa20eed5813d4b7cbdd54a99dc6c895, type: 3}
-  m_Name: Improvement_0_7
+  m_Name: Improvement_Lightning
   m_EditorClassIdentifier: Assembly-CSharp::ImprovementDefinition
-  id: 6
-  displayName: Audience
-  startingPrice: 1000000
-  startingProfit: 500000
+  id: 4
+  displayName: Lightning
+  startingPrice: 10000
+  startingProfit: 5000
   startingDurationSeconds: 5
   priceGrowth: 1.08
   profitGrowth: 1.07
+  sprite: {fileID: 21300000, guid: cd51db743bfca460987d4b0f428490b2, type: 3}
