@@ -52,6 +52,7 @@ MonoBehaviour:
     displayName: Original
     audioClip: {fileID: 8300000, guid: 26418a808a183432c91a27262bb3dab3, type: 3}
     beatDataJson: {fileID: 4900000, guid: 7a23274b6c04942ceaff5df90d5dc21f, type: 3}
+  beatPlay: {fileID: 0}
 --- !u!114 &6159895042676596390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,25 +93,25 @@ MonoBehaviour:
     - lowFreq: 80
       highFreq: 400
       beatType: 8
-    - lowFreq: 1000
-      highFreq: 3000
+    - lowFreq: 800
+      highFreq: 3500
       beatType: 2
-    - lowFreq: 500
-      highFreq: 1000
+    - lowFreq: 200
+      highFreq: 800
       beatType: 256
-    - lowFreq: 1000
-      highFreq: 3000
+    - lowFreq: 400
+      highFreq: 2500
       beatType: 16
-    - lowFreq: 3000
-      highFreq: 8000
+    - lowFreq: 5000
+      highFreq: 12000
       beatType: 4
     - lowFreq: 8000
       highFreq: 16000
       beatType: 512
-  hopSize: 1024
+  hopSize: 512
   prettyPrintJson: 1
   destroyDecodedClipAfterAnalysis: 1
-  hypeLookAheadSeconds: 10
+  hypeLookAheadSeconds: 4
   hypeSampleStepSeconds: 0.25
   quietWindowBeatThreshold: 8
   mediumBeatsPerSecond: 1.2
@@ -118,3 +119,5 @@ MonoBehaviour:
   highUniqueBeatTypes: 3
   simultaneousBeatWindow: 0.18
   moshUniqueBeatTypes: 3
+  hypeDropDetectionWindowSeconds: 2
+  hypeDropRiseMultiplier: 1.2

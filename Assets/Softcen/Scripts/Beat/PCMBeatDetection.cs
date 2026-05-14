@@ -19,7 +19,7 @@ public sealed class PCMBeatDetection : MonoBehaviour
     [SerializeField] private bool prettyPrintJson = true;
     [SerializeField] private bool destroyDecodedClipAfterAnalysis = true;
     [Header("Hype Analysis")]
-    [SerializeField, Min(0.1f)] private float hypeLookAheadSeconds = 10f;
+    [SerializeField, Min(0.1f)] private float hypeLookAheadSeconds = 4f;
     [SerializeField, Min(0.1f)] private float hypeSampleStepSeconds = 0.25f;
     [SerializeField, Min(0)] private int quietWindowBeatThreshold = 8;
     [SerializeField, Min(0f)] private float mediumBeatsPerSecond = 1.2f;
@@ -646,16 +646,15 @@ public sealed class PCMBeatDetection : MonoBehaviour
             for (int i = lowIndex; i <= highIndex && i < spectrumLeft.Length; i++)
             {
                 float currentMagnitude = Math.Max(spectrumLeft[i], spectrumRight[i]);
-                if (!hasPreviousSpectrum)
-                {
-                    sum += 0f;
-                }
-                else
-                {
-                    float previousMagnitude = Math.Max(previousSpectrumLeft[i], previousSpectrumRight[i]);
-                    float delta = currentMagnitude - previousMagnitude;
-                    sum += Math.Max(0f, delta);
-                }
+                if (!hasPreviousSpectrum) continue;
+                float previousMagnitude = Math.Max(previousSpectrumLeft[i], previousSpectrumRight[i]);
+                // Log compression: log(1 + λ * x)
+                // This emphasizes onsets in quieter parts of the frequency band.
+                float currentLog = Mathf.Log(1f + 100f * currentMagnitude);
+                float previousLog = Mathf.Log(1f + 100f * previousMagnitude);
+                //float delta = currentMagnitude - previousMagnitude;
+                float delta = currentLog - previousLog;
+                sum += Math.Max(0f, delta);
                 count++;
             }
 
