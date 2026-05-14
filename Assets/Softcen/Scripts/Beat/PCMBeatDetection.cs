@@ -29,6 +29,12 @@ public sealed class PCMBeatDetection : MonoBehaviour
     [SerializeField, Min(1)] private int moshUniqueBeatTypes = 3;
     [SerializeField, Min(0.2f)] private float hypeDropDetectionWindowSeconds = 2f;
     [SerializeField, Min(1f)] private float hypeDropRiseMultiplier = 1.25f;
+    [Header("Spectral Weighting")]
+    [SerializeField, Min(0f)] private float highFrequencyPreEmphasis = 1f;
+    [SerializeField, Range(0f, 1f)] private float centerCoherenceWeight = 0.25f;
+    [SerializeField, Min(1f)] private float centerCoherencePower = 1.5f;
+    [Header("Hype Responsiveness")]
+    [SerializeField, Min(1f)] private float hypeRecentBeatWeightMax = 1.35f;
 
     public float ProgressPercentage => progressPermille / 10f;
     public bool IsRunning => isRunning;
@@ -237,7 +243,11 @@ public sealed class PCMBeatDetection : MonoBehaviour
             SimultaneousBeatWindow = Math.Max(0f, simultaneousBeatWindow),
             MoshUniqueBeatTypes = Math.Max(1, moshUniqueBeatTypes),
             HypeDropDetectionWindowSeconds = Math.Max(0.2f, hypeDropDetectionWindowSeconds),
-            HypeDropRiseMultiplier = Math.Max(1f, hypeDropRiseMultiplier)
+            HypeDropRiseMultiplier = Math.Max(1f, hypeDropRiseMultiplier),
+            HighFrequencyPreEmphasis = Math.Max(0f, highFrequencyPreEmphasis),
+            CenterCoherenceWeight = Mathf.Clamp01(centerCoherenceWeight),
+            CenterCoherencePower = Math.Max(1f, centerCoherencePower),
+            HypeRecentBeatWeightMax = Math.Max(1f, hypeRecentBeatWeightMax)
         };
     }
 
@@ -351,6 +361,10 @@ public sealed class PCMBeatDetection : MonoBehaviour
         public int MoshUniqueBeatTypes;
         public float HypeDropDetectionWindowSeconds;
         public float HypeDropRiseMultiplier;
+        public float HighFrequencyPreEmphasis;
+        public float CenterCoherenceWeight;
+        public float CenterCoherencePower;
+        public float HypeRecentBeatWeightMax;
         public volatile int ProgressPermille;
     }
 
@@ -502,6 +516,8 @@ public sealed class PCMBeatDetection : MonoBehaviour
 
             int beatCount = 0;
             float intensitySum = 0f;
+            float weightedIntensitySum = 0f;
+            float weightedIntensityWeight = 0f;
             float firstHalfIntensity = 0f;
             float secondHalfIntensity = 0f;
             float dropFirstHalfIntensity = 0f;
@@ -519,6 +535,10 @@ public sealed class PCMBeatDetection : MonoBehaviour
 
                 beatCount++;
                 intensitySum += beatEvent.intensity;
+                float beatProgress = Mathf.Clamp01((beatEvent.timestamp - timestamp) / Math.Max(Epsilon, lookAhead));
+                float recentWeight = Mathf.Lerp(1f, input.HypeRecentBeatWeightMax, beatProgress);
+                weightedIntensitySum += beatEvent.intensity * recentWeight;
+                weightedIntensityWeight += recentWeight;
 
                 if (beatEvent.timestamp < halfTime)
                     firstHalfIntensity += beatEvent.intensity;
@@ -544,7 +564,9 @@ public sealed class PCMBeatDetection : MonoBehaviour
             }
 
             float beatsPerSecond = beatCount / lookAhead;
-            float averageIntensity = beatCount > 0 ? intensitySum / beatCount : 0f;
+            float averageIntensity = weightedIntensityWeight > Epsilon
+                ? weightedIntensitySum / weightedIntensityWeight
+                : (beatCount > 0 ? intensitySum / beatCount : 0f);
             bool rising = secondHalfIntensity > firstHalfIntensity * 1.15f;
             bool dropWindowRising = dropSecondHalfIntensity > dropFirstHalfIntensity * input.HypeDropRiseMultiplier;
             bool quiet = beatCount <= input.QuietWindowBeatThreshold;
@@ -657,20 +679,37 @@ public sealed class PCMBeatDetection : MonoBehaviour
 
             for (int i = lowIndex; i <= highIndex && i < spectrumLeft.Length; i++)
             {
-                float currentMagnitude = Math.Max(spectrumLeft[i], spectrumRight[i]);
-                if (!hasPreviousSpectrum) continue;
-                float previousMagnitude = Math.Max(previousSpectrumLeft[i], previousSpectrumRight[i]);
-                // Log compression: log(1 + λ * x)
-                // This emphasizes onsets in quieter parts of the frequency band.
+                float currentMagnitude = ComputeWeightedMagnitude(spectrumLeft[i], spectrumRight[i], i);
+                if (!hasPreviousSpectrum)
+                    continue;
+
+                float previousMagnitude = ComputeWeightedMagnitude(previousSpectrumLeft[i], previousSpectrumRight[i], i);
                 float currentLog = Mathf.Log(1f + 100f * currentMagnitude);
                 float previousLog = Mathf.Log(1f + 100f * previousMagnitude);
-                //float delta = currentMagnitude - previousMagnitude;
                 float delta = currentLog - previousLog;
                 sum += Math.Max(0f, delta);
                 count++;
             }
 
             return count > 0 ? sum / count : 0f;
+        }
+
+        private float ComputeWeightedMagnitude(float leftMagnitude, float rightMagnitude, int binIndex)
+        {
+            float maxMagnitude = Math.Max(leftMagnitude, rightMagnitude);
+            float averageMagnitude = (leftMagnitude + rightMagnitude) * 0.5f;
+
+            // C) Center rule: center-panned signals get confidence boost.
+            float diff = Math.Abs(leftMagnitude - rightMagnitude);
+            float centerSimilarity = 1f - (diff / Math.Max(Epsilon, maxMagnitude));
+            centerSimilarity = Clamp01(centerSimilarity);
+            float centerBoost = 1f + input.CenterCoherenceWeight * (float)Math.Pow(centerSimilarity, input.CenterCoherencePower);
+
+            // A) Light frequency pre-emphasis for highs.
+            float normalizedBin = spectrumLeft.Length > 1 ? binIndex / (float)(spectrumLeft.Length - 1) : 0f;
+            float preEmphasis = 1f + normalizedBin * input.HighFrequencyPreEmphasis;
+
+            return Math.Max(maxMagnitude, averageMagnitude) * centerBoost * preEmphasis;
         }
 
         private void StoreCurrentSpectrumAsPrevious()
