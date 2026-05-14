@@ -77,6 +77,7 @@ public class AudienceManager : MonoBehaviour
     private Material fallbackRuntimeMaterial;
     private MaterialPropertyBlock instancedBlock;
     private float[] nextPoseChangeTimes;
+    private float[] cachedSpatialDelays;
     private Bounds audienceLocalBounds;
     private bool subscribedToBeatPlay;
     private bool subscribedToGlobalBeat;
@@ -110,6 +111,7 @@ public class AudienceManager : MonoBehaviour
                 : GetComponentsInChildren<AudienceMember>();
 
         audienceLocalBounds = audienceFloor != null ? GetAudienceFloorLocalBounds() : new Bounds(Vector3.zero, Vector3.one);
+        CacheSpatialDelays();
         ConfigurePoseFamilies();
         ConfigureInstancedRendering();
         ResetHypeState();
@@ -407,13 +409,36 @@ public class AudienceManager : MonoBehaviour
             if (members[i] == null || Random.value > chance)
                 continue;
 
-            float delay = Random.Range(0f, Mathf.Max(0f, randomLatencyMax)) + GetSpatialDelay(members[i]);
+            float delay = Random.Range(0f, Mathf.Max(0f, randomLatencyMax)) + GetSpatialDelay(i, members[i]);
             float triggerSongTime = beatTimestamp + audienceTimingOffset + delay;
             members[i].SetPose(i, motionStyle, poseGroup, strength, ignorePoseCooldown, triggerSongTime);
         }
     }
 
-    private float GetSpatialDelay(AudienceMember member)
+    private void CacheSpatialDelays()
+    {
+        if (members == null || members.Length == 0)
+        {
+            cachedSpatialDelays = System.Array.Empty<float>();
+            return;
+        }
+
+        if (cachedSpatialDelays == null || cachedSpatialDelays.Length != members.Length)
+            cachedSpatialDelays = new float[members.Length];
+
+        for (int i = 0; i < members.Length; i++)
+            cachedSpatialDelays[i] = CalculateSpatialDelay(members[i]);
+    }
+
+    private float GetSpatialDelay(int memberIndex, AudienceMember member)
+    {
+        if (cachedSpatialDelays != null && memberIndex >= 0 && memberIndex < cachedSpatialDelays.Length)
+            return cachedSpatialDelays[memberIndex];
+
+        return CalculateSpatialDelay(member);
+    }
+
+    private float CalculateSpatialDelay(AudienceMember member)
     {
         if (audienceFloor == null || member == null)
             return 0f;
