@@ -27,6 +27,8 @@ public sealed class PCMBeatDetection : MonoBehaviour
     [SerializeField, Min(1)] private int highUniqueBeatTypes = 3;
     [SerializeField, Min(0f)] private float simultaneousBeatWindow = 0.18f; // 0.12-0.18
     [SerializeField, Min(1)] private int moshUniqueBeatTypes = 3;
+    [SerializeField, Min(0.2f)] private float hypeDropDetectionWindowSeconds = 2f;
+    [SerializeField, Min(1f)] private float hypeDropRiseMultiplier = 1.2f;
 
     public float ProgressPercentage => progressPermille / 10f;
     public bool IsRunning => isRunning;
@@ -233,7 +235,9 @@ public sealed class PCMBeatDetection : MonoBehaviour
             HighAverageIntensity = Mathf.Clamp01(highAverageIntensity),
             HighUniqueBeatTypes = Math.Max(1, highUniqueBeatTypes),
             SimultaneousBeatWindow = Math.Max(0f, simultaneousBeatWindow),
-            MoshUniqueBeatTypes = Math.Max(1, moshUniqueBeatTypes)
+            MoshUniqueBeatTypes = Math.Max(1, moshUniqueBeatTypes),
+            HypeDropDetectionWindowSeconds = Math.Max(0.2f, hypeDropDetectionWindowSeconds),
+            HypeDropRiseMultiplier = Math.Max(1f, hypeDropRiseMultiplier)
         };
     }
 
@@ -345,6 +349,8 @@ public sealed class PCMBeatDetection : MonoBehaviour
         public int HighUniqueBeatTypes;
         public float SimultaneousBeatWindow;
         public int MoshUniqueBeatTypes;
+        public float HypeDropDetectionWindowSeconds;
+        public float HypeDropRiseMultiplier;
         public volatile int ProgressPermille;
     }
 
@@ -478,11 +484,16 @@ public sealed class PCMBeatDetection : MonoBehaviour
             float lookAhead = Math.Max(0.1f, input.HypeLookAheadSeconds);
             float windowEnd = timestamp + lookAhead;
             float halfTime = timestamp + lookAhead * 0.5f;
+            float dropWindow = Math.Min(lookAhead, Math.Max(0.2f, input.HypeDropDetectionWindowSeconds));
+            float dropWindowStart = timestamp + Math.Max(0f, lookAhead - dropWindow);
+            float dropHalfTime = dropWindowStart + dropWindow * 0.5f;
 
             int beatCount = 0;
             float intensitySum = 0f;
             float firstHalfIntensity = 0f;
             float secondHalfIntensity = 0f;
+            float dropFirstHalfIntensity = 0f;
+            float dropSecondHalfIntensity = 0f;
             HashSet<BeatDetection.BeatType> highTypes = new HashSet<BeatDetection.BeatType>();
             HashSet<BeatDetection.BeatType> simultaneousTypes = new HashSet<BeatDetection.BeatType>();
 
@@ -502,6 +513,14 @@ public sealed class PCMBeatDetection : MonoBehaviour
                 else
                     secondHalfIntensity += beatEvent.intensity;
 
+                if (beatEvent.timestamp >= dropWindowStart)
+                {
+                    if (beatEvent.timestamp < dropHalfTime)
+                        dropFirstHalfIntensity += beatEvent.intensity;
+                    else
+                        dropSecondHalfIntensity += beatEvent.intensity;
+                }
+
                 if (beatEvent.intensity >= input.HighAverageIntensity)
                     highTypes.Add(beatEvent.beatType);
 
@@ -515,10 +534,11 @@ public sealed class PCMBeatDetection : MonoBehaviour
             float beatsPerSecond = beatCount / lookAhead;
             float averageIntensity = beatCount > 0 ? intensitySum / beatCount : 0f;
             bool rising = secondHalfIntensity > firstHalfIntensity * 1.15f;
+            bool dropWindowRising = dropSecondHalfIntensity > dropFirstHalfIntensity * input.HypeDropRiseMultiplier;
             bool quiet = beatCount <= input.QuietWindowBeatThreshold;
             bool high = averageIntensity >= input.HighAverageIntensity &&
                         highTypes.Count >= input.HighUniqueBeatTypes &&
-                        (rising || beatsPerSecond >= input.MediumBeatsPerSecond);
+                        (rising || dropWindowRising || beatsPerSecond >= input.MediumBeatsPerSecond);
 
             HypeState state = HypeState.Medium;
             if (quiet)
