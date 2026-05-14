@@ -85,12 +85,64 @@ public class AudienceManager : MonoBehaviour
     private int hypeEventIndex;
     private float previousBeatTimestamp;
     private bool hypeEventsSorted;
+    private readonly List<GameObject> spawnedAudienceInstances = new List<GameObject>();
     public float CurrentAudienceSongTime => beatPlay != null ? beatPlay.CurrentSongTime : Time.time;
 
     private struct AudienceDrawEntry
     {
         public AudienceMember Member;
         public float Depth;
+    }
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        SpawnAudienceFromPrefabs();
+
+        if (members == null || members.Length == 0)
+            members = audienceFloor != null
+                ? audienceFloor.GetComponentsInChildren<AudienceMember>()
+                : GetComponentsInChildren<AudienceMember>();
+
+        audienceLocalBounds = audienceFloor != null ? GetAudienceFloorLocalBounds() : new Bounds(Vector3.zero, Vector3.one);
+        ConfigurePoseFamilies();
+        ConfigureInstancedRendering();
+        ResetHypeState();
+        CacheDrawOrder();
+        LogRenderDiagnosticsOnce();
+    }
+
+    private void LateUpdate()
+    {
+        DrawInstancedMembers();
+    }
+
+    private void OnEnable()
+    {
+        SubscribeToBeatEvents();
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeFromBeatEvents();
+    }
+
+    private void OnDestroy()
+    {
+        ClearSpawnedAudienceInstances();
+
+        if (Application.isPlaying)
+        {
+            if (instancedMaterial != null)
+                Destroy(instancedMaterial);
+            if (fallbackRuntimeMaterial != null)
+                Destroy(fallbackRuntimeMaterial);
+        }
     }
 
     private void CacheDrawOrder()
@@ -137,33 +189,12 @@ public class AudienceManager : MonoBehaviour
             sortedDrawMembers[i] = drawEntries[i].Member;
     }
 
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-        SpawnAudienceFromPrefabs();
-
-        if (members == null || members.Length == 0)
-            members = audienceFloor != null
-                ? audienceFloor.GetComponentsInChildren<AudienceMember>()
-                : GetComponentsInChildren<AudienceMember>();
-
-        audienceLocalBounds = audienceFloor != null ? GetAudienceFloorLocalBounds() : new Bounds(Vector3.zero, Vector3.one);
-        ConfigurePoseFamilies();
-        ConfigureInstancedRendering();
-        ResetHypeState();
-        CacheDrawOrder();
-        LogRenderDiagnosticsOnce();
-    }
-
     private void SpawnAudienceFromPrefabs()
     {
         if (!Application.isPlaying)
             return;
+
+        ClearSpawnedAudienceInstances();
 
         if (audiencePrefabs == null || audiencePrefabs.Length == 0 || audienceSize <= 0 || audienceFloor == null)
             return;
@@ -183,8 +214,27 @@ public class AudienceManager : MonoBehaviour
             Vector3 localPosition = new Vector3(localX, floorY, localZ);
             Quaternion spawnRotation = Quaternion.Euler(0f, floorYaw, 0f);
 
-            Instantiate(prefab, audienceFloor.TransformPoint(localPosition), spawnRotation, audienceFloor);
+            GameObject instance = Instantiate(prefab, audienceFloor.TransformPoint(localPosition), spawnRotation, audienceFloor);
+            if (instance != null)
+                spawnedAudienceInstances.Add(instance);
         }
+    }
+
+    private void ClearSpawnedAudienceInstances()
+    {
+        if (spawnedAudienceInstances.Count == 0)
+            return;
+
+        for (int i = spawnedAudienceInstances.Count - 1; i >= 0; i--)
+        {
+            GameObject instance = spawnedAudienceInstances[i];
+            if (instance == null)
+                continue;
+
+            Destroy(instance);
+        }
+
+        spawnedAudienceInstances.Clear();
     }
 
     private Bounds GetAudienceFloorLocalBounds()
@@ -207,32 +257,6 @@ public class AudienceManager : MonoBehaviour
         }
 
         return new Bounds(Vector3.zero, Vector3.one);
-    }
-
-    private void LateUpdate()
-    {
-        DrawInstancedMembers();
-    }
-
-    private void OnEnable()
-    {
-        SubscribeToBeatEvents();
-    }
-
-    private void OnDisable()
-    {
-        UnsubscribeFromBeatEvents();
-    }
-
-    private void OnDestroy()
-    {
-        if (Application.isPlaying)
-        {
-            if (instancedMaterial != null)
-                Destroy(instancedMaterial);
-            if (fallbackRuntimeMaterial != null)
-                Destroy(fallbackRuntimeMaterial);
-        }
     }
 
     private void SubscribeToBeatEvents()
