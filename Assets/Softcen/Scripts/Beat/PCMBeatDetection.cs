@@ -677,7 +677,8 @@ public sealed class PCMBeatDetection : MonoBehaviour
             float currentValue = currentFreqBands[bandIndex];
             float average = CalculateBandAverage(bandIndex);
             float variance = CalculateBandVariance(bandIndex, average);
-            float threshold = input.FrequencySensitivity * (average + variance * 0.3f);
+            float adaptiveSensitivity = ComputeAdaptiveFrequencySensitivity(average, variance);
+            float threshold = adaptiveSensitivity * (average + variance * 0.3f);
 
             bool isBeat = currentValue > threshold &&
                           currentValue > input.MinFrequencyThreshold &&
@@ -689,6 +690,21 @@ public sealed class PCMBeatDetection : MonoBehaviour
                 lastBeatTimeByType[beatType] = songTime;
 
             return isBeat;
+        }
+
+        private float ComputeAdaptiveFrequencySensitivity(float average, float variance)
+        {
+            // Use normalized variance to approximate section "busyness":
+            // higher values => stricter threshold to avoid ghost beats.
+            float safeAverage = Math.Max(Epsilon, average);
+            float stdDev = (float)Math.Sqrt(Math.Max(0f, variance));
+            float cv = stdDev / safeAverage; // coefficient of variation
+
+            // Map CV to a bounded multiplier around base sensitivity.
+            // Quiet/stable sections (low CV): slightly more permissive.
+            // Busy/dynamic sections (high CV): stricter detection.
+            float adaptiveScale = Mathf.Lerp(0.9f, 1.55f, Mathf.Clamp01(cv / 2.2f));
+            return input.FrequencySensitivity * adaptiveScale;
         }
 
         private void StoreCurrentFrameInHistory()
