@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8145292612178395988
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2818131429045469017}
+  - component: {fileID: 4038156424843073257}
+  - component: {fileID: 6159895042676596390}
+  m_Layer: 0
+  m_Name: SongLibraryManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2818131429045469017
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8145292612178395988}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4038156424843073257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8145292612178395988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 663069bce964a4bc192f9f189239efc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SongLibraryManager
+  pcmBeatDetection: {fileID: 6159895042676596390}
+  defaultBeatPlay: {fileID: 0}
+  originalSongs:
+  - songId: mainbackground
+    displayName: Original
+    audioClip: {fileID: 8300000, guid: 26418a808a183432c91a27262bb3dab3, type: 3}
+    beatDataJson: {fileID: 4900000, guid: 7a23274b6c04942ceaff5df90d5dc21f, type: 3}
+--- !u!114 &6159895042676596390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8145292612178395988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9701c681d99264fabab7b1dbb42245b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PCMBeatDetection
+  settings:
+    beatMode: 2
+    numSamples: 2048
+    historyLength: 43
+    minHistoryBeforeDetection: 8
+    minBeatSeparation: 0.05
+    energySensitivity: 1.5
+    frequencySensitivity: 1.8
+    minEnergyThreshold: 0.001
+    minFrequencyThreshold: 0.00001
+    intensityNormalizeRange: 2
+    resourcesSubFolder: BeatData
+    filePrefix: BeatData_
+    roundTimestamps: 1
+    timestampDecimals: 3
+    roundIntensities: 1
+    intensityDecimals: 3
+    invokeCallbackWhileRecording: 0
+    frequencyRanges:
+    - lowFreq: 30
+      highFreq: 80
+      beatType: 128
+    - lowFreq: 40
+      highFreq: 150
+      beatType: 1
+    - lowFreq: 80
+      highFreq: 400
+      beatType: 8
+    - lowFreq: 1000
+      highFreq: 3000
+      beatType: 2
+    - lowFreq: 500
+      highFreq: 1000
+      beatType: 256
+    - lowFreq: 1000
+      highFreq: 3000
+      beatType: 16
+    - lowFreq: 3000
+      highFreq: 8000
+      beatType: 4
+    - lowFreq: 8000
+      highFreq: 16000
+      beatType: 512
+  hopSize: 1024
+  prettyPrintJson: 1
+  destroyDecodedClipAfterAnalysis: 1
+  hypeLookAheadSeconds: 10
+  hypeSampleStepSeconds: 0.25
+  quietWindowBeatThreshold: 8
+  mediumBeatsPerSecond: 1.2
+  highAverageIntensity: 0.4
+  highUniqueBeatTypes: 3
+  simultaneousBeatWindow: 0.18
+  moshUniqueBeatTypes: 3

@@ -10,6 +10,8 @@ using UnityEditor;
 [Serializable]
 public class BeatData
 {
+    public int analysisVersion = 1;
+    public string analyzerId = "BeatDetection";
     public string clipName;
     public float audioLength;
     public int clipFrequency;

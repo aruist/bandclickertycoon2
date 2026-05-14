@@ -12,6 +12,8 @@ using UnityEngine.Networking;
 /// </summary>
 public sealed class PCMBeatDetection : MonoBehaviour
 {
+    public const int AnalysisVersion = 2;
+    public const string AnalyzerId = "PCMBeatDetection";
     [SerializeField] private BeatDetection.BeatDetectionSettings settings = new BeatDetection.BeatDetectionSettings();
     [SerializeField, Min(0)] private int hopSize = 1024;
     [SerializeField] private bool prettyPrintJson = true;
@@ -396,6 +398,8 @@ public sealed class PCMBeatDetection : MonoBehaviour
         {
             BeatData beatData = new BeatData
             {
+                analysisVersion = AnalysisVersion,
+                analyzerId = AnalyzerId,
                 clipName = input.ClipName,
                 audioLength = input.AudioLength,
                 clipFrequency = input.ClipFrequency,

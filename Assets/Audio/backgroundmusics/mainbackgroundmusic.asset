@@ -15,8 +15,12 @@ MonoBehaviour:
   songId: main
   mainBeamColors:
   - {r: 0.89615375, g: 1, b: 0.3254717, a: 0}
+  - {r: 1, g: 0.33336234, b: 0.13679248, a: 0}
+  - {r: 0.16509432, g: 0.30479613, b: 1, a: 0}
   mainBeamPulseColors:
   - {r: 0.84883726, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.23181818, b: 0, a: 1}
+  - {r: 0, g: 0.1604219, b: 0.9716981, a: 1}
   sideBeamColors:
   - {r: 0.2117647, g: 0.3755932, b: 1, a: 0}
   sideBeamPulseColors:

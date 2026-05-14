@@ -83,6 +83,7 @@ public class BeatPlay : MonoBehaviour
 
     private void Start()
     {
+        if (SongLibraryManager.Instance != null) SongLibraryManager.Instance.RegisterBeatPlay(this);
         if (playOnStart && audioSource != null)
             PlayFromStart();
     }

@@ -1,39 +1,12 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
-
-[Serializable]
-public class UserSongManifestEntry
-{
-    public string id;
-    public string displayName;
-    public string originalFileName;
-    public string audioPath;
-    public string beatDataPath;
-    public float duration;
-    public int clipFrequency;
-    public int analysisVersion = 1;
-}
-
-[Serializable]
-public class UserSongManifest
-{
-    public List<UserSongManifestEntry> songs = new List<UserSongManifestEntry>();
-}
 
 public class UserSongImportUI : MonoBehaviour
 {
     [Header("Dependencies")]
-    [SerializeField] private BeatPlay beatPlay;
-    [SerializeField] private PCMBeatDetection pcmBeatDetection;
-    [SerializeField] private AudioSource playbackAudioSource;
+    [SerializeField] private SongLibraryManager songLibraryManager;
 
     [Header("UI")]
     [SerializeField] private Button importSongButton;
@@ -45,34 +18,42 @@ public class UserSongImportUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI statusText;
     [SerializeField] private TextMeshProUGUI progressText;
 
-    [Header("Limits")]
-    [SerializeField, Min(30f)] private float maxSongDurationSeconds = 600f;
-
-    private UserSongManifest manifest = new UserSongManifest();
-    private Coroutine importCoroutine;
     private int selectedSongIndex;
-
-    private string UserSongsRoot => Path.Combine(Application.persistentDataPath, "UserSongs");
-    private string ManifestPath => Path.Combine(UserSongsRoot, "songs_manifest.json");
+    private bool busy;
 
     private void Awake()
     {
-        if (beatPlay == null)
-            beatPlay = FindFirstObjectByType<BeatPlay>();
 
-        if (pcmBeatDetection == null)
-            pcmBeatDetection = FindFirstObjectByType<PCMBeatDetection>();
-
-        if (playbackAudioSource == null && beatPlay != null)
-            playbackAudioSource = beatPlay.GetComponent<AudioSource>();
+        if (songLibraryManager == null)
+            songLibraryManager = SongLibraryManager.Instance != null
+                ? SongLibraryManager.Instance
+                : FindFirstObjectByType<SongLibraryManager>();
     }
 
     private void Start()
     {
-        Directory.CreateDirectory(UserSongsRoot);
-        LoadManifest();
+        if (songLibraryManager == null)
+        {
+            UpdateStatus("SongLibraryManager missing.");
+            return;
+        }
+
+        songLibraryManager.OnLibraryChanged += RefreshSongsDropdown;
+        songLibraryManager.OnAnalysisProgress += OnAnalysisProgress;
+        songLibraryManager.OnAnalysisFailed += OnAnalysisFailed;
+
         RefreshSongsDropdown();
         SetIdleUI();
+    }
+
+    private void OnDestroy()
+    {
+        if (songLibraryManager == null)
+            return;
+
+        songLibraryManager.OnLibraryChanged -= RefreshSongsDropdown;
+        songLibraryManager.OnAnalysisProgress -= OnAnalysisProgress;
+        songLibraryManager.OnAnalysisFailed -= OnAnalysisFailed;
     }
 
     private void OnEnable()
@@ -113,11 +94,31 @@ public class UserSongImportUI : MonoBehaviour
 
     private void OnImportSongClicked()
     {
-        if (importCoroutine != null || pcmBeatDetection == null)
+        if (busy || songLibraryManager == null)
             return;
 
+        SetBusyUI();
         UpdateStatus("Opening file picker...");
         NativeFilePicker.PickFile(OnFilePicked, GetPickerFileTypes());
+    }
+
+    private void OnFilePicked(string pickedPath)
+    {
+        if (string.IsNullOrWhiteSpace(pickedPath))
+        {
+            UpdateStatus("Import cancelled.");
+            SetIdleUI();
+            return;
+        }
+
+        songLibraryManager.ImportSong(pickedPath, (success, message, entry) =>
+        {
+            UpdateStatus(message);
+            if (success && entry != null)
+                LoadAndPlaySong(entry.songId);
+            else
+                SetIdleUI();
+        });
     }
 
     private static string[] GetPickerFileTypes()
@@ -126,7 +127,6 @@ public class UserSongImportUI : MonoBehaviour
         string mp3Uti = NativeFilePicker.ConvertExtensionToFileType("mp3");
         if (string.IsNullOrEmpty(mp3Uti))
             mp3Uti = "public.mp3";
-
         return new[] { "public.audio", mp3Uti };
 #elif UNITY_ANDROID && !UNITY_EDITOR
         return new[] { "audio/*" };
@@ -137,18 +137,18 @@ public class UserSongImportUI : MonoBehaviour
 
     private void OnCancelAnalysisClicked()
     {
-        if (pcmBeatDetection != null && pcmBeatDetection.IsRunning)
-        {
-            pcmBeatDetection.CancelAnalysis();
-            UpdateStatus("Cancelling analysis...");
-        }
+        if (songLibraryManager == null)
+            return;
+
+        songLibraryManager.CancelCurrentAnalysis();
+        UpdateStatus("Cancelling analysis...");
     }
 
     private void OnSelectSongClicked()
     {
-        if (manifest == null || manifest.songs == null || manifest.songs.Count == 0)
+        if (songLibraryManager == null || songLibraryManager.Songs.Count == 0)
         {
-            UpdateStatus("No imported songs.");
+            UpdateStatus("No songs.");
             return;
         }
 
@@ -157,288 +157,100 @@ public class UserSongImportUI : MonoBehaviour
             songsDropdown.gameObject.SetActive(true);
             songsDropdown.Show();
             UpdateStatus("Select a song from the list.");
-            return;
         }
-
-        selectedSongIndex = Mathf.Clamp(selectedSongIndex, 0, manifest.songs.Count - 1);
-        UpdateStatus($"Selected: {manifest.songs[selectedSongIndex].displayName}");
     }
 
     private void OnSongDropdownValueChanged(int index)
     {
-        selectedSongIndex = Mathf.Clamp(index, 0, manifest.songs.Count - 1);
-        if (manifest.songs != null && selectedSongIndex >= 0 && selectedSongIndex < manifest.songs.Count)
-            UpdateStatus($"Selected: {manifest.songs[selectedSongIndex].displayName}");
+        selectedSongIndex = Mathf.Clamp(index, 0, Mathf.Max(0, songLibraryManager.Songs.Count - 1));
+        if (songLibraryManager.Songs.Count > selectedSongIndex)
+            UpdateStatus($"Selected: {songLibraryManager.Songs[selectedSongIndex].displayName}");
     }
 
     private void OnPlaySelectedClicked()
     {
-        if (manifest == null || manifest.songs == null || manifest.songs.Count == 0)
+        if (songLibraryManager == null || songLibraryManager.Songs.Count == 0)
         {
-            UpdateStatus("No imported songs.");
+            UpdateStatus("No songs.");
             return;
         }
 
-        int index = manifest.songs.Count - 1;
-        if (songsDropdown != null && songsDropdown.options.Count > 0)
-            index = Mathf.Clamp(songsDropdown.value, 0, manifest.songs.Count - 1);
-        else
-            index = Mathf.Clamp(selectedSongIndex, 0, manifest.songs.Count - 1);
+        int index = songsDropdown != null && songsDropdown.options.Count > 0
+            ? Mathf.Clamp(songsDropdown.value, 0, songLibraryManager.Songs.Count - 1)
+            : Mathf.Clamp(selectedSongIndex, 0, songLibraryManager.Songs.Count - 1);
 
-        if (index < 0 || index >= manifest.songs.Count)
-            return;
-
-        StartCoroutine(LoadAndPlaySong(manifest.songs[index]));
+        LoadAndPlaySong(songLibraryManager.Songs[index].songId);
     }
 
-    private void OnFilePicked(string pickedPath)
+    private void LoadAndPlaySong(string songId)
     {
-        if (string.IsNullOrWhiteSpace(pickedPath))
-        {
-            UpdateStatus("Import cancelled.");
+        if (songLibraryManager == null)
             return;
-        }
 
-        if (!File.Exists(pickedPath))
-        {
-            UpdateStatus("Picked file is not accessible.");
-            return;
-        }
-
-        importCoroutine = StartCoroutine(ImportSongRoutine(pickedPath));
-    }
-
-    private IEnumerator ImportSongRoutine(string sourcePath)
-    {
         SetBusyUI();
-        progressSlider.value = 0f;
-        UpdateProgressText(0f);
-
-        string originalName = Path.GetFileName(sourcePath);
-        byte[] bytes;
-        try
-        {
-            UpdateStatus("Copying song...");
-            bytes = File.ReadAllBytes(sourcePath);
-        }
-        catch (Exception ex)
-        {
-            UpdateStatus($"Copy failed: {ex.Message}");
-            SetIdleUI();
-            importCoroutine = null;
-            yield break;
-        }
-
-        string songId = ComputeSha1(bytes);
-        string songFolder = Path.Combine(UserSongsRoot, songId);
-        string targetMp3Path = Path.Combine(songFolder, "original.mp3");
-        string beatJsonPath = Path.Combine(songFolder, "beatdata.json");
-
-        Directory.CreateDirectory(songFolder);
-        File.WriteAllBytes(targetMp3Path, bytes);
-        bytes = null;
-
-        UpdateStatus("Analyzing beats...");
-        pcmBeatDetection.AnalyzeMp3File(targetMp3Path, beatJsonPath);
-
-        while (pcmBeatDetection.IsRunning)
-        {
-            float p = Mathf.Clamp01(pcmBeatDetection.ProgressPercentage / 100f);
-            progressSlider.value = p;
-            UpdateProgressText(p * 100f);
-            yield return null;
-        }
-
-        if (!pcmBeatDetection.IsComplete || !string.IsNullOrEmpty(pcmBeatDetection.ErrorMessage))
-        {
-            UpdateStatus($"Analysis failed: {pcmBeatDetection.ErrorMessage}");
-            SetIdleUI();
-            importCoroutine = null;
-            yield break;
-        }
-
-        BeatData beatData = pcmBeatDetection.LastBeatData;
-        if (beatData == null || beatData.beatEvents == null || beatData.beatEvents.Count == 0)
-        {
-            UpdateStatus("Analysis produced no beat data.");
-            SetIdleUI();
-            importCoroutine = null;
-            yield break;
-        }
-
-        if (beatData.audioLength > maxSongDurationSeconds)
-        {
-            UpdateStatus($"Song too long ({beatData.audioLength:0}s). Max is {maxSongDurationSeconds:0}s.");
-            SetIdleUI();
-            importCoroutine = null;
-            yield break;
-        }
-
-        UserSongManifestEntry entry = FindEntryById(songId);
-        if (entry == null)
-        {
-            entry = new UserSongManifestEntry();
-            manifest.songs.Add(entry);
-        }
-
-        entry.id = songId;
-        entry.displayName = Path.GetFileNameWithoutExtension(originalName);
-        entry.originalFileName = originalName;
-        entry.audioPath = targetMp3Path;
-        entry.beatDataPath = beatJsonPath;
-        entry.duration = beatData.audioLength;
-        entry.clipFrequency = beatData.clipFrequency;
-        entry.analysisVersion = 1;
-
-        SaveManifest();
-        RefreshSongsDropdown();
-        progressSlider.value = 1f;
-        UpdateProgressText(100f);
-        UpdateStatus("Song imported.");
-
-        yield return LoadAndPlaySong(entry);
-
-        SetIdleUI();
-        importCoroutine = null;
-    }
-
-    private IEnumerator LoadAndPlaySong(UserSongManifestEntry entry)
-    {
-        if (entry == null || beatPlay == null || playbackAudioSource == null)
-        {
-            UpdateStatus("Playback setup missing.");
-            yield break;
-        }
-
-        if (!File.Exists(entry.audioPath) || !File.Exists(entry.beatDataPath))
-        {
-            UpdateStatus("Song files missing.");
-            yield break;
-        }
-        Debug.Log($"{entry.beatDataPath}");
         UpdateStatus("Loading song...");
-        string uri = new Uri(Path.GetFullPath(entry.audioPath)).AbsoluteUri;
-        using (UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(uri, AudioType.MPEG))
+        songLibraryManager.LoadAndPlaySong(songId, (success, message) =>
         {
-            yield return request.SendWebRequest();
-            if (request.result != UnityWebRequest.Result.Success)
-            {
-                UpdateStatus($"Audio load failed: {request.error}");
-                yield break;
-            }
-
-            AudioClip clip = DownloadHandlerAudioClip.GetContent(request);
-            if (clip == null)
-            {
-                UpdateStatus("Audio load failed.");
-                yield break;
-            }
-
-            string json = File.ReadAllText(entry.beatDataPath);
-            if (!beatPlay.LoadRuntimeBeatData(json))
-            {
-                UpdateStatus("Beat data parse failed.");
-                yield break;
-            }
-
-            playbackAudioSource.clip = clip;
-            beatPlay.PlayFromStart();
-            UpdateStatus($"Playing: {entry.displayName}");
-        }
-    }
-
-    private void LoadManifest()
-    {
-        manifest = new UserSongManifest();
-        if (!File.Exists(ManifestPath))
-            return;
-
-        try
-        {
-            string json = File.ReadAllText(ManifestPath);
-            UserSongManifest loaded = JsonUtility.FromJson<UserSongManifest>(json);
-            if (loaded != null && loaded.songs != null)
-                manifest = loaded;
-        }
-        catch (Exception ex)
-        {
-            Debug.LogWarning($"Could not load user song manifest: {ex.Message}", this);
-        }
-    }
-
-    private void SaveManifest()
-    {
-        string json = JsonUtility.ToJson(manifest, true);
-        File.WriteAllText(ManifestPath, json);
+            UpdateStatus(message);
+            SetIdleUI();
+        });
     }
 
     private void RefreshSongsDropdown()
     {
-        if (songsDropdown == null)
+        if (songLibraryManager == null || songsDropdown == null)
             return;
 
         songsDropdown.ClearOptions();
         List<string> labels = new List<string>();
+        IReadOnlyList<SongLibraryEntry> songs = songLibraryManager.Songs;
 
-        for (int i = 0; i < manifest.songs.Count; i++)
-            labels.Add(manifest.songs[i].displayName);
+        for (int i = 0; i < songs.Count; i++)
+            labels.Add(songs[i].displayName);
 
         if (labels.Count == 0)
             labels.Add("No songs");
 
         songsDropdown.AddOptions(labels);
-        if (manifest.songs.Count > 0)
-            selectedSongIndex = Mathf.Clamp(selectedSongIndex, 0, manifest.songs.Count - 1);
-        else
-            selectedSongIndex = 0;
-
+        selectedSongIndex = songs.Count > 0 ? Mathf.Clamp(selectedSongIndex, 0, songs.Count - 1) : 0;
         songsDropdown.value = selectedSongIndex;
         songsDropdown.RefreshShownValue();
-        songsDropdown.gameObject.SetActive(manifest.songs.Count > 0);
+        songsDropdown.gameObject.SetActive(songs.Count > 0);
+
+        if (selectSongButton != null)
+            selectSongButton.interactable = songs.Count > 0;
     }
 
-    private UserSongManifestEntry FindEntryById(string id)
+    private void OnAnalysisProgress(string songId, float progress)
     {
-        for (int i = 0; i < manifest.songs.Count; i++)
-        {
-            if (manifest.songs[i].id == id)
-                return manifest.songs[i];
-        }
+        if (progressSlider != null)
+            progressSlider.value = progress;
 
-        return null;
+        UpdateProgressText(progress * 100f);
     }
 
-    private static string ComputeSha1(byte[] bytes)
+    private void OnAnalysisFailed(string message)
     {
-        using (SHA1 sha1 = SHA1.Create())
-        {
-            byte[] hash = sha1.ComputeHash(bytes);
-            StringBuilder builder = new StringBuilder(hash.Length * 2);
-            for (int i = 0; i < hash.Length; i++)
-                builder.Append(hash[i].ToString("x2"));
-            return builder.ToString();
-        }
+        UpdateStatus($"Analysis failed: {message}");
+        SetIdleUI();
     }
 
     private void SetBusyUI()
     {
+        busy = true;
         if (importSongButton != null)
             importSongButton.interactable = false;
-
         if (cancelAnalysisButton != null)
             cancelAnalysisButton.gameObject.SetActive(true);
     }
 
     private void SetIdleUI()
     {
+        busy = false;
         if (importSongButton != null)
             importSongButton.interactable = true;
-
         if (cancelAnalysisButton != null)
             cancelAnalysisButton.gameObject.SetActive(false);
-
-        if (selectSongButton != null)
-            selectSongButton.interactable = manifest != null && manifest.songs != null && manifest.songs.Count > 0;
     }
 
     private void UpdateStatus(string text)
