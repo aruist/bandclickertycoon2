@@ -366,6 +366,9 @@ public sealed class PCMBeatDetection : MonoBehaviour
         private readonly double[] window;
         private readonly float[] spectrumLeft;
         private readonly float[] spectrumRight;
+        private readonly float[] previousSpectrumLeft;
+        private readonly float[] previousSpectrumRight;
+        private bool hasPreviousSpectrum;
 
         private int historyCount;
         private int historyIndex;
@@ -388,6 +391,8 @@ public sealed class PCMBeatDetection : MonoBehaviour
             rightImag = new double[input.FftSize];
             spectrumLeft = new float[input.FftSize / 2];
             spectrumRight = new float[input.FftSize / 2];
+            previousSpectrumLeft = new float[input.FftSize / 2];
+            previousSpectrumRight = new float[input.FftSize / 2];
             window = CreateBlackmanHarrisWindow(input.FftSize);
 
             foreach (BeatDetection.BeatType beatType in OutputBeatTypes)
@@ -427,6 +432,7 @@ public sealed class PCMBeatDetection : MonoBehaviour
                 CalculateFrequencyBands();
                 DetectAndRecord(songTime, beatData.beatEvents);
                 StoreCurrentFrameInHistory();
+                StoreCurrentSpectrumAsPrevious();
 
                 input.ProgressPermille = (int)Math.Round((windowIndex + 1) / (double)totalWindows * 1000.0);
             }
@@ -619,11 +625,28 @@ public sealed class PCMBeatDetection : MonoBehaviour
 
             for (int i = lowIndex; i <= highIndex && i < spectrumLeft.Length; i++)
             {
-                sum += Math.Max(spectrumLeft[i], spectrumRight[i]);
+                float currentMagnitude = Math.Max(spectrumLeft[i], spectrumRight[i]);
+                if (!hasPreviousSpectrum)
+                {
+                    sum += 0f;
+                }
+                else
+                {
+                    float previousMagnitude = Math.Max(previousSpectrumLeft[i], previousSpectrumRight[i]);
+                    float delta = currentMagnitude - previousMagnitude;
+                    sum += Math.Max(0f, delta);
+                }
                 count++;
             }
 
             return count > 0 ? sum / count : 0f;
+        }
+
+        private void StoreCurrentSpectrumAsPrevious()
+        {
+            Array.Copy(spectrumLeft, previousSpectrumLeft, spectrumLeft.Length);
+            Array.Copy(spectrumRight, previousSpectrumRight, spectrumRight.Length);
+            hasPreviousSpectrum = true;
         }
 
         private int FrequencyToIndex(float frequency)
