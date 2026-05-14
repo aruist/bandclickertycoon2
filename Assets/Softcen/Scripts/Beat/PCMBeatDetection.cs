@@ -707,7 +707,9 @@ public sealed class PCMBeatDetection : MonoBehaviour
 
             // A) Light frequency pre-emphasis for highs.
             float normalizedBin = spectrumLeft.Length > 1 ? binIndex / (float)(spectrumLeft.Length - 1) : 0f;
-            float preEmphasis = 1f + normalizedBin * input.HighFrequencyPreEmphasis;
+            // float preEmphasis = 1f + normalizedBin * input.HighFrequencyPreEmphasis;
+            // Better results in orchestral or complex music is use exponential scale
+            float preEmphasis = 1f + (float)Math.Pow(normalizedBin, 2) * input.HighFrequencyPreEmphasis;
 
             return Math.Max(maxMagnitude, averageMagnitude) * centerBoost * preEmphasis;
         }
