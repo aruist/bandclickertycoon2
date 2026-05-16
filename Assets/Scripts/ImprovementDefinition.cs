@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Localization;
 
 [CreateAssetMenu(menuName = "Idle Game/Improvement Definition")]
 public class ImprovementDefinition : ScriptableObject
@@ -7,6 +8,9 @@ public class ImprovementDefinition : ScriptableObject
     [Header("Identity")]
     public int id;
     public string displayName;
+    public LocalizedString localizedDisplayName;
+    public LocalizedString localizedCardTitle;
+    public LocalizedString localizedCardDescription;
 
     [Header("Base Economy")]
     public double startingPrice = 10;

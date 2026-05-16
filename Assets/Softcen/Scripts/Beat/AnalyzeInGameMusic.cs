@@ -5,6 +5,7 @@ public class AnalyzeInGameMusic : MonoBehaviour
 {
     public PCMBeatDetection beatDetection;
     public AudioClip clip;
+    #if UNITY_EDITOR
     void Start()
     {
         if (clip == null || beatDetection == null) return;
@@ -28,4 +29,6 @@ public class AnalyzeInGameMusic : MonoBehaviour
         beatDetection.ProgressChanged -= percent => Debug.Log(percent);
         beatDetection.AnalysisCompleted -= (data, json) => Debug.Log($"AnalysisCompleted, beatEvent count: {data.beatEvents.Count}");
         beatDetection.AnalysisFailed -= error => Debug.LogError(error);
-    }}
+    }
+    #endif
+}

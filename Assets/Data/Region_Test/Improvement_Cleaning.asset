@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aa20eed5813d4b7cbdd54a99dc6c895, type: 3}
+  m_Name: Improvement_Cleaning
+  m_EditorClassIdentifier: Assembly-CSharp::ImprovementDefinition
+  id: 0
+  displayName: Clean
+  localizedDisplayName:
+    m_TableReference:
+      m_TableCollectionName: GUID:c58c3f388b5e44796a03f9698aa079bb
+    m_TableEntryReference:
+      m_KeyId: 21365028544512
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedCardTitle:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedCardDescription:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  startingPrice: 1
+  startingProfit: 0.5
+  startingDurationSeconds: 5
+  priceGrowth: 1.08
+  profitGrowth: 1.07
+  sprite: {fileID: 21300000, guid: 2910dc377ba42485ca77d75067eafe06, type: 3}
+  references:
+    version: 2
+    RefIds: []

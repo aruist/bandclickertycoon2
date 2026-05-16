@@ -196,18 +196,18 @@ public class KAyttOLiITTyma : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            for (int i = 0; i < dialogs.Length; i++)
-            {
-                if (dialogs[i].gameObject.activeSelf)
-                {
-                    dialogs[i].CloseDialog();
-                    return;
-                }
-            }
-            AvaaNakyma("ExitGame");
-        }
+        // if (Input.GetKeyUp(KeyCode.Escape))
+        // {
+        //     for (int i = 0; i < dialogs.Length; i++)
+        //     {
+        //         if (dialogs[i].gameObject.activeSelf)
+        //         {
+        //             dialogs[i].CloseDialog();
+        //             return;
+        //         }
+        //     }
+        //     AvaaNakyma("ExitGame");
+        // }
     }
 
     public void AvaaNakyma(string name)
@@ -258,8 +258,8 @@ public class KAyttOLiITTyma : MonoBehaviour
 
     public void AvaAKaSSaKAApPi()
     {
-        SoundFXManager.PlayUIOneShot(SoundFXManager.DefaultSounds.UI_KEYBOARD_CLICK);
-        AvaaNakyma(GameConsts.Nakymat.Vault);
+        // SoundFXManager.PlayUIOneShot(SoundFXManager.DefaultSounds.UI_KEYBOARD_CLICK);
+        // AvaaNakyma(GameConsts.Nakymat.Vault);
     }
     public void KIItoKSetAuKAsu()
     {
@@ -269,41 +269,41 @@ public class KAyttOLiITTyma : MonoBehaviour
 
     private void tARkistARahaKERtyMa()
     {
-        if (paIkKaHaLlItSiJa.Instance == null || pELiNhaLLitSIJa.Instance == null) return;
+        // if (paIkKaHaLlItSiJa.Instance == null || pELiNhaLLitSIJa.Instance == null) return;
 
-        DialogPanel dlg = getDialog(GameConsts.Nakymat.Vault);
-        // if (dlg == null || !paIkKaHaLlItSiJa.Instance.IsImprovementsProgressReached(paIkKaHaLlItSiJa.improvementProgress.STEP2)) return;
+        // DialogPanel dlg = getDialog(GameConsts.Nakymat.Vault);
+        // // if (dlg == null || !paIkKaHaLlItSiJa.Instance.IsImprovementsProgressReached(paIkKaHaLlItSiJa.improvementProgress.STEP2)) return;
 
-        //WelcomeBackDlg dlgWelcomeBack = dlg.gameObject.GetComponent<WelcomeBackDlg>();
-        if (!dlg.gameObject.activeSelf)
-        {
-            long _lastUsedTicks = pELiNhaLLitSIJa.Instance.playerData._lastusedTicks;
-            long _currentTicks = DateTime.UtcNow.Ticks;
-            TimeSpan timeSpan = TimeSpan.FromTicks(_currentTicks - _lastUsedTicks);
-            double totalSeconds = timeSpan.TotalSeconds;
-            #if SOFTCEN_DEBUG
-            Debug.Log("tARkistARahaKERtyMa: " + totalSeconds + " sec");
-            #endif
-            //if (totalSeconds >= GameConsts.Game.welcomeRefresh)
-            {
-                //double profit = paIkKaHaLlItSiJa.Instance.GetProfitPerSec();
-                //double totalProfit = profit * totalSeconds;
-                //if (totalProfit > 0)
-                {
-                    #if SOFTCEN_DEBUG
-                    //Debug.Log("Pause profit: " + profit + ", time: " + NumToStr.GetTimeStr(totalSeconds));
-                    #endif
-                    //dlgWelcomeBack.UpdateMoney(totalProfit);
-                    kAsSAKaaPPIIkkuNA ikkuna = dlg.gameObject.GetComponent<kAsSAKaaPPIIkkuNA>();
-                    if (ikkuna != null)
-                    {
-                        ikkuna.bWelcomeBack = true;
-                        dlg.gameObject.SetActive(true);
-                        //pELiNhaLLitSIJa.Instance.playerData._lastusedTicks = DateTime.UtcNow.Ticks;
-                    }
-                }
-            }
-        }
+        // //WelcomeBackDlg dlgWelcomeBack = dlg.gameObject.GetComponent<WelcomeBackDlg>();
+        // if (!dlg.gameObject.activeSelf)
+        // {
+        //     long _lastUsedTicks = pELiNhaLLitSIJa.Instance.playerData._lastusedTicks;
+        //     long _currentTicks = DateTime.UtcNow.Ticks;
+        //     TimeSpan timeSpan = TimeSpan.FromTicks(_currentTicks - _lastUsedTicks);
+        //     double totalSeconds = timeSpan.TotalSeconds;
+        //     #if SOFTCEN_DEBUG
+        //     Debug.Log("tARkistARahaKERtyMa: " + totalSeconds + " sec");
+        //     #endif
+        //     //if (totalSeconds >= GameConsts.Game.welcomeRefresh)
+        //     {
+        //         //double profit = paIkKaHaLlItSiJa.Instance.GetProfitPerSec();
+        //         //double totalProfit = profit * totalSeconds;
+        //         //if (totalProfit > 0)
+        //         {
+        //             #if SOFTCEN_DEBUG
+        //             //Debug.Log("Pause profit: " + profit + ", time: " + NumToStr.GetTimeStr(totalSeconds));
+        //             #endif
+        //             //dlgWelcomeBack.UpdateMoney(totalProfit);
+        //             kAsSAKaaPPIIkkuNA ikkuna = dlg.gameObject.GetComponent<kAsSAKaaPPIIkkuNA>();
+        //             if (ikkuna != null)
+        //             {
+        //                 ikkuna.bWelcomeBack = true;
+        //                 dlg.gameObject.SetActive(true);
+        //                 //pELiNhaLLitSIJa.Instance.playerData._lastusedTicks = DateTime.UtcNow.Ticks;
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     public void AvAAArKKuNaKYmA()

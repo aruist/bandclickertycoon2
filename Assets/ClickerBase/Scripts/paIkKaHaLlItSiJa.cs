@@ -151,6 +151,13 @@ public class paIkKaHaLlItSiJa : MonoBehaviour {
 
     }
 
+    public ImprovementDefinition GetCurrentRegionImprovement(int index)
+    {
+        if (currentRegionState == null) return null;
+        if (index >= currentRegionState.Improvements.Count) return null;
+        return currentRegionState.Improvements[index].Definition;
+    }
+
     private void UpdateRegion()
     {
         currentRegionState = GetRegion(currentPlaceId);

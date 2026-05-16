@@ -95,3 +95,9 @@ Screenshots/
 mono_crash*
 *.af~lock~
 Recordings/
+
+# Ignore local Google Sheets provider secrets
+Assets/GoogleSheetsProvider.asset
+Assets/GoogleSheetsProvider.asset.meta
+Assets/Localization/Google Sheets Service.asset
+Assets/Localization/Google Sheets Service.meta

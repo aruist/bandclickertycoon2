@@ -99,11 +99,11 @@ public class SCScreenShots : MonoBehaviour {
         if (screenShotOngoing)
             return;
 
-        if (Input.GetKeyDown(ScreenShotKey) && screenShotSizes.Count > 0)
-        {
-            sizeIndex = 0;
-            NextScreenShot();
-        }
+        // if (Input.GetKeyDown(ScreenShotKey) && screenShotSizes.Count > 0)
+        // {
+        //     sizeIndex = 0;
+        //     NextScreenShot();
+        // }
     }
 
     private void NextScreenShot()

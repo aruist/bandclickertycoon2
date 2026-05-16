@@ -6,10 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/beatTest.unity
-    guid: cf84b7b31566c4d948777b22d6d44fb5
-  - enabled: 1
     path: Assets/Softcen/Scenes/game.unity
     guid: d2e2956c2a4582540a251baabe6748e1
-  m_configObjects: {}
+  - enabled: 1
+    path: Assets/Scenes/beatTest.unity
+    guid: cf84b7b31566c4d948777b22d6d44fb5
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: b8d4dc7dcea67413297bafcd915e59fb, type: 2}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: c821803146c354e949b06c8ef81026f0, type: 3}
+    com.unity.localization.settings: {fileID: 11400000, guid: 0f0b1144b28004220a69d3a056afce67, type: 2}
   m_UseUCBPForAssetBundles: 0
