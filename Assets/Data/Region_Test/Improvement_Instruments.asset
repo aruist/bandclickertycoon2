@@ -14,9 +14,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ImprovementDefinition
   id: 5
   displayName: Instruments
+  localizedDisplayName:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedCardTitle:
+    m_TableReference:
+      m_TableCollectionName: GUID:c58c3f388b5e44796a03f9698aa079bb
+    m_TableEntryReference:
+      m_KeyId: 165184000745472
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedCardDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:c58c3f388b5e44796a03f9698aa079bb
+    m_TableEntryReference:
+      m_KeyId: 165295678283776
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   startingPrice: 100000
   startingProfit: 50000
   startingDurationSeconds: 5
   priceGrowth: 1.08
   profitGrowth: 1.07
   sprite: {fileID: 21300000, guid: d30b34e35298f4f0396d6797d454bab4, type: 3}
+  references:
+    version: 2
+    RefIds: []

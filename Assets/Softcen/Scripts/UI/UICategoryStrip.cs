@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class UICategoryStrip : MonoBehaviour
 {
@@ -11,9 +12,10 @@ public class UICategoryStrip : MonoBehaviour
         for(int i = 0; i < tabs.Length; i++)
         {
             if (tabs[i] == null) continue;
-            tabs[i].Bind(this, 0);
+            tabs[i].Bind(this, i);
         }
         ClearSelection();
+        if (tabs[0] != null) tabs[0].SetActive(true);
     }
 
     public void ClearSelection()

@@ -25,11 +25,103 @@ MonoBehaviour:
       m_Items:
       - rid: 8041439163111702781
   - m_Id: 121660249202688
-    m_Key: card_clean_title
+    m_Key: improvement_clean_title
     m_Metadata:
       m_Items: []
   - m_Id: 121812842176512
-    m_Key: card_clean_describtion
+    m_Key: improvement_clean_desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145795574652928
+    m_Key: improvement_reorganize_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145864755503104
+    m_Key: improvement_reorganize_desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145970829451264
+    m_Key: menu_main_prepare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164314693492736
+    m_Key: improvement_stage_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164363980759040
+    m_Key: improvement_stage_desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165051183915008
+    m_Key: improvement_decor_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165095949721600
+    m_Key: improvement_decor_desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165184000745472
+    m_Key: improvement_sound_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165295678283776
+    m_Key: improvement_sound_desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165338170777600
+    m_Key: improvement_lights_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165384287150080
+    m_Key: improvement_lights_desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165447428202496
+    m_Key: improvement_audience_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165513379438592
+    m_Key: improvement_audience_desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165565254590464
+    m_Key: improvement_gig_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165632246013952
+    m_Key: improvement_gig_desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457357736796160
+    m_Key: poster_title_clean
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457484400582656
+    m_Key: poster_title_reorganize
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457556827824128
+    m_Key: poster_title_stage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457650356609024
+    m_Key: poster_title_decor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457749006639104
+    m_Key: poster_title_lights
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457775166513152
+    m_Key: poster_title_audience
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457817478651904
+    m_Key: poster_title_gig
+    m_Metadata:
+      m_Items: []
+  - m_Id: 460618376142848
+    m_Key: ui_region
     m_Metadata:
       m_Items: []
   m_Metadata:

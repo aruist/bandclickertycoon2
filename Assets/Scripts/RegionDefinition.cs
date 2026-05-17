@@ -8,6 +8,7 @@ public class RegionDefinition : ScriptableObject
     [Header("Identity")]
     public int id;
     public string displayName;
+    public string regionName;
 
     [Header("Unlock")]
     [Tooltip("How many stars are required from the previous region to unlock this region.")]

@@ -273,7 +273,7 @@ public class paIkKaHaLlItSiJa : MonoBehaviour {
             if (placeId >= 0 && placeId < World.Regions.Count)
             {
                 RegionState region = World.Regions[placeId];
-                Debug.Log($"GetLevel: placeId: {placeId}, improvementId: {improvementId}, level: {region.Improvements[improvementId].Level}");
+                // Debug.Log($"GetLevel: placeId: {placeId}, improvementId: {improvementId}, level: {region.Improvements[improvementId].Level}");
                 if (region != null && improvementId >= 0 && improvementId < region.Improvements.Count)
                     return region.Improvements[improvementId].Level;
             }
@@ -296,7 +296,7 @@ public class paIkKaHaLlItSiJa : MonoBehaviour {
 
     }
 
-    public void PurchaseImprovement(int index, ImprovementItemUI uiItem)
+    public void PurchaseImprovement(int index, ImprovementItemUI uiItem = null)
     {
         if (UseWorldMotorForPlace(currentPlaceId))
         {
@@ -306,7 +306,7 @@ public class paIkKaHaLlItSiJa : MonoBehaviour {
             {
                 onImprovePurchased(currentPlaceId, index, purchasedLevel);
             }
-            uiItem.Refresh();
+            if (uiItem != null) uiItem.Refresh();
             return;
         }
         PurchaseImprovement_Legacy(index, uiItem);

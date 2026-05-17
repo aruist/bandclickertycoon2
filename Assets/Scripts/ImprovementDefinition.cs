@@ -11,6 +11,7 @@ public class ImprovementDefinition : ScriptableObject
     public LocalizedString localizedDisplayName;
     public LocalizedString localizedCardTitle;
     public LocalizedString localizedCardDescription;
+    public LocalizedString localizedPosterTitle;
 
     [Header("Base Economy")]
     public double startingPrice = 10;
@@ -26,6 +27,7 @@ public class ImprovementDefinition : ScriptableObject
 
     [Header("Visuals")]
     public Sprite sprite;
+    public Sprite posterSprite;
 
     public const int MaxLevel = 200;
 

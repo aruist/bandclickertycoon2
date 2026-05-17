@@ -25,18 +25,27 @@ MonoBehaviour:
     m_LocalVariables: []
   localizedCardTitle:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:c58c3f388b5e44796a03f9698aa079bb
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 121660249202688
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   localizedCardDescription:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:c58c3f388b5e44796a03f9698aa079bb
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 121812842176512
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedPosterTitle:
+    m_TableReference:
+      m_TableCollectionName: GUID:c58c3f388b5e44796a03f9698aa079bb
+    m_TableEntryReference:
+      m_KeyId: 457357736796160
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -47,6 +56,7 @@ MonoBehaviour:
   priceGrowth: 1.08
   profitGrowth: 1.07
   sprite: {fileID: 21300000, guid: 2910dc377ba42485ca77d75067eafe06, type: 3}
+  posterSprite: {fileID: 294522528, guid: cac6f54c3ec92437e94308132985488a, type: 3}
   references:
     version: 2
     RefIds: []

@@ -81,7 +81,7 @@ GameObject:
   - component: {fileID: 8620288060614548674}
   - component: {fileID: 4369215225906567109}
   m_Layer: 0
-  m_Name: Environment
+  m_Name: Decor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1256,8 +1256,8 @@ Transform:
   - {fileID: 3971960899927402746}
   - {fileID: 926243277742888143}
   - {fileID: 8620288060614548674}
-  - {fileID: 970140988559556186}
   - {fileID: 1644935858452610205}
+  - {fileID: 970140988559556186}
   - {fileID: 3545910805281443909}
   - {fileID: 9090700294412164408}
   - {fileID: 1191574176610862501}

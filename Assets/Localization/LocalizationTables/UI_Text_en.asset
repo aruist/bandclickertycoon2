@@ -33,7 +33,101 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 121812842176512
-    m_Localized: A clean venue makes a great first impression
+    m_Localized: A clean venue makes a great first impression.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145795574652928
+    m_Localized: Reorganize Backstage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145970829451264
+    m_Localized: Prepare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164314693492736
+    m_Localized: Upgrade the Main Stage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164363980759040
+    m_Localized: Build a sturdier, grander platform for your headliners to rock out
+      on.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145864755503104
+    m_Localized: Tidy up the gear chaos so your roadies and band can move faster.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165051183915008
+    m_Localized: Club Decorations
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165095949721600
+    m_Localized: Turn a boring underground basement into a legendary rock sanctuary.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165184000745472
+    m_Localized: Heavy Duty PA System
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165295678283776
+    m_Localized: Crisp highs and chest-thumping bass that keeps the front row screaming.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165338170777600
+    m_Localized: Dynamic Stage Lighting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165384287150080
+    m_Localized: Blind them with epic strobe sequences and blinding laser arrays.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165447428202496
+    m_Localized: Gate Capacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165513379438592
+    m_Localized: Open up the floor gates to pack more bodies into the mosh pit.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165565254590464
+    m_Localized: Book Live Gigs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165632246013952
+    m_Localized: Sign local underground talent to sell out tickets and blow the roof
+      off.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457357736796160
+    m_Localized: First Impressions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457484400582656
+    m_Localized: Make Some Room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457556827824128
+    m_Localized: Center Stage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457650356609024
+    m_Localized: Set The Mood
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457749006639104
+    m_Localized: Light The Night
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457775166513152
+    m_Localized: Word Gets Around
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457817478651904
+    m_Localized: Show Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 460618376142848
+    m_Localized: Region {0}
     m_Metadata:
       m_Items: []
   references:

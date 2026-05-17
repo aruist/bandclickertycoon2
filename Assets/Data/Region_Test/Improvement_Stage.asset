@@ -14,9 +14,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ImprovementDefinition
   id: 2
   displayName: Stage
+  localizedDisplayName:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedCardTitle:
+    m_TableReference:
+      m_TableCollectionName: GUID:c58c3f388b5e44796a03f9698aa079bb
+    m_TableEntryReference:
+      m_KeyId: 164314693492736
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedCardDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:c58c3f388b5e44796a03f9698aa079bb
+    m_TableEntryReference:
+      m_KeyId: 164363980759040
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedPosterTitle:
+    m_TableReference:
+      m_TableCollectionName: GUID:c58c3f388b5e44796a03f9698aa079bb
+    m_TableEntryReference:
+      m_KeyId: 457556827824128
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   startingPrice: 100
   startingProfit: 50
   startingDurationSeconds: 5
   priceGrowth: 1.08
   profitGrowth: 1.07
   sprite: {fileID: 21300000, guid: a57fd8801dcfd4554ae6137aa7c556af, type: 3}
+  posterSprite: {fileID: 668307830, guid: cac6f54c3ec92437e94308132985488a, type: 3}
+  references:
+    version: 2
+    RefIds: []
