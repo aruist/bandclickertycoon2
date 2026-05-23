@@ -99,3 +99,10 @@ Recordings/
 # Ignore local Google Sheets provider secrets
 Assets/Localization/Google Sheets Service.asset
 Assets/Localization/Google Sheets Service.meta
+
+Assets/Feel/FeelDemos
+Assets/Feel/FeelDemos.meta
+Assets/Feel/FeelDemosHDRP
+Assets/Feel/FeelDemosHDRP.meta
+Assets/Feel/FeelDemosURP
+Assets/Feel/FeelDemosURP.meta

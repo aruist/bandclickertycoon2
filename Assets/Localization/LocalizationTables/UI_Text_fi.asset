@@ -23,7 +23,108 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 21365028544512
-    m_Localized: Puhdistus
+    m_Localized: Siivoa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 121660249202688
+    m_Localized: Siivoa keikkapaikka
+    m_Metadata:
+      m_Items: []
+  - m_Id: 121812842176512
+    m_Localized: "Siisti keikkapaikka tekee hyv\xE4n ensivaikutelman."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145795574652928
+    m_Localized: "J\xE4rjestele backstage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145864755503104
+    m_Localized: "Siivoa kalustokaaos, jotta roadiet ja b\xE4ndi liikkuvat nopeammin."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145970829451264
+    m_Localized: Valmistele
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164314693492736
+    m_Localized: "P\xE4ivit\xE4 p\xE4\xE4lava"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164363980759040
+    m_Localized: "Rakenna suurempi ja tukevampi lava p\xE4\xE4esiintyjille."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165051183915008
+    m_Localized: Klubikoristeet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165095949721600
+    m_Localized: "Muuta tyls\xE4 kellari legendaariseksi rock-pyh\xE4t\xF6ksi."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165184000745472
+    m_Localized: "Tehokas PA-j\xE4rjestelm\xE4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165295678283776
+    m_Localized: "Ter\xE4v\xE4t korkeat \xE4\xE4net ja jytisev\xE4 basso pit\xE4v\xE4t
+      eturivin huutamassa."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165338170777600
+    m_Localized: Dynaamiset lavavalot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165384287150080
+    m_Localized: "Sokaise yleis\xF6 eeppisill\xE4 stroboilla ja lasereilla."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165447428202496
+    m_Localized: "Yleis\xF6kapasiteetti"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165513379438592
+    m_Localized: "Avaa portit suuremmalle mosh pit -yleis\xF6lle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165565254590464
+    m_Localized: Varaa livekeikkoja
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165632246013952
+    m_Localized: Sopimuksia paikallisten artistien kanssa loppuunmyytyihin keikkoihin.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457357736796160
+    m_Localized: Ensivaikutelma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457484400582656
+    m_Localized: Tee tilaa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457556827824128
+    m_Localized: Parrasvaloissa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457650356609024
+    m_Localized: Luo tunnelma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457749006639104
+    m_Localized: "Valaise y\xF6"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457775166513152
+    m_Localized: "Sana levi\xE4\xE4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457817478651904
+    m_Localized: Showtime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 460618376142848
+    m_Localized: Alue {0}
     m_Metadata:
       m_Items: []
   references:

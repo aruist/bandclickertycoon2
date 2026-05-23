@@ -23,7 +23,111 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 21365028544512
-    m_Localized: Limpieza
+    m_Localized: Limpiar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 121660249202688
+    m_Localized: Limpiar recinto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 121812842176512
+    m_Localized: "Un recinto limpio da una gran primera impresi\xF3n."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145795574652928
+    m_Localized: Reorganizar backstage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145864755503104
+    m_Localized: "Ordena el caos del equipo para que la banda y el staff se muevan
+      m\xE1s r\xE1pido."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145970829451264
+    m_Localized: Preparar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164314693492736
+    m_Localized: Mejorar escenario principal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164363980759040
+    m_Localized: "Construye un escenario m\xE1s grande y resistente para tus artistas
+      principales."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165051183915008
+    m_Localized: "Decoraci\xF3n del club"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165095949721600
+    m_Localized: "Convierte un s\xF3tano aburrido en un legendario santuario del
+      rock."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165184000745472
+    m_Localized: Sistema de sonido potente
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165295678283776
+    m_Localized: "Agudos n\xEDtidos y bajos potentes que hacen gritar a la primera
+      fila."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165338170777600
+    m_Localized: "Luces din\xE1micas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165384287150080
+    m_Localized: "Desl\xFAmbralos con estrobos \xE9picos y l\xE1seres cegadores."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165447428202496
+    m_Localized: "Capacidad del p\xFAblico"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165513379438592
+    m_Localized: "Abre las puertas para meter m\xE1s gente en el mosh pit."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165565254590464
+    m_Localized: Reservar conciertos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165632246013952
+    m_Localized: Contrata talento local para agotar entradas y volar el techo.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457357736796160
+    m_Localized: "Primera impresi\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457484400582656
+    m_Localized: Haz espacio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457556827824128
+    m_Localized: Centro del escenario
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457650356609024
+    m_Localized: Crear ambiente
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457749006639104
+    m_Localized: Ilumina la noche
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457775166513152
+    m_Localized: Corre la voz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457817478651904
+    m_Localized: Hora del show
+    m_Metadata:
+      m_Items: []
+  - m_Id: 460618376142848
+    m_Localized: "Regi\xF3n {0}"
     m_Metadata:
       m_Items: []
   references:

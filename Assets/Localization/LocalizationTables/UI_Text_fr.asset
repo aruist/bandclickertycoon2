@@ -23,7 +23,111 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 21365028544512
-    m_Localized: Nettoyage
+    m_Localized: Nettoyer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 121660249202688
+    m_Localized: Nettoyer la salle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 121812842176512
+    m_Localized: "Une salle propre donne une excellente premi\xE8re impression."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145795574652928
+    m_Localized: "R\xE9organiser les coulisses"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145864755503104
+    m_Localized: "Range le chaos du mat\xE9riel pour que les roadies et le groupe
+      bougent plus vite."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 145970829451264
+    m_Localized: "Pr\xE9parer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164314693492736
+    m_Localized: "Am\xE9liorer la sc\xE8ne principale"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164363980759040
+    m_Localized: "Construis une sc\xE8ne plus grande et plus solide pour tes t\xEAtes
+      d'affiche."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165051183915008
+    m_Localized: "D\xE9corations du club"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165095949721600
+    m_Localized: "Transforme un sous-sol banal en sanctuaire rock l\xE9gendaire."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165184000745472
+    m_Localized: Sono puissante
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165295678283776
+    m_Localized: Des aigus nets et des basses puissantes qui font hurler le premier
+      rang.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165338170777600
+    m_Localized: "\xC9clairage dynamique"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165384287150080
+    m_Localized: "\xC9blouis-les avec des stroboscopes \xE9piques et des lasers aveuglants."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165447428202496
+    m_Localized: "Capacit\xE9 du public"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165513379438592
+    m_Localized: Ouvre les portes pour faire entrer plus de monde dans le pogo.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165565254590464
+    m_Localized: "R\xE9server des concerts"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 165632246013952
+    m_Localized: Signe des talents locaux pour vendre toutes les places et retourner
+      la salle.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457357736796160
+    m_Localized: "Premi\xE8re impression"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457484400582656
+    m_Localized: Faire de la place
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457556827824128
+    m_Localized: Sous les projecteurs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457650356609024
+    m_Localized: "Cr\xE9er l'ambiance"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457749006639104
+    m_Localized: Illumine la nuit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457775166513152
+    m_Localized: "Le bouche-\xE0-oreille"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 457817478651904
+    m_Localized: Showtime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 460618376142848
+    m_Localized: "R\xE9gion {0}"
     m_Metadata:
       m_Items: []
   references:
